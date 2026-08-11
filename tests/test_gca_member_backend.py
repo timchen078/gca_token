@@ -566,8 +566,18 @@ class GcaMemberBackendTests(unittest.TestCase):
                 "available": True,
                 "ok": True,
                 "recordCount": 12,
+                "serviceRoutesIncluded": True,
                 "supportQueue": {"rows": 3, "replyReadyRows": 1, "statusCounts": {"reply_ready": 1}},
-                "report": {"pendingManualReserveTransfers": 2, "privateRecord": "private-user@example.com"},
+                "report": {
+                    "serviceRequestRecords": 6,
+                    "serviceRequestsPendingReview": 2,
+                    "serviceRequestsAwaitingMemberFollowup": 1,
+                    "serviceRequestsAwaitingDelivery": 1,
+                    "deliveredServiceRequests": 2,
+                    "serviceRequestFollowupRecords": 1,
+                    "pendingManualReserveTransfers": 2,
+                    "privateRecord": "private-user@example.com",
+                },
                 "holdingPeriod": {"observedEligibleFor30Days": 1, "walletsChecked": 4},
             },
             "supportQueue": {"available": True, "ok": True, "rows": 3, "replyReadyRows": 1},
@@ -602,12 +612,18 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertEqual(digest["dailyOps"]["baseScanPreflight"]["snapshotAlignmentMissingCurrentDate"], 1)
         self.assertIn("official-domain-email", digest["dailyOps"]["baseScanPreflight"]["missingOrBlockedRequirements"])
         self.assertEqual(digest["memberOps"]["recordCount"], 12)
+        self.assertTrue(digest["memberOps"]["serviceRoutesIncluded"])
+        self.assertEqual(digest["memberOps"]["report"]["serviceRequestsPendingReview"], 2)
+        self.assertEqual(digest["memberOps"]["report"]["serviceRequestsAwaitingMemberFollowup"], 1)
+        self.assertEqual(digest["memberOps"]["report"]["serviceRequestsAwaitingDelivery"], 1)
+        self.assertEqual(digest["memberOps"]["report"]["deliveredServiceRequests"], 2)
         self.assertEqual(digest["supportQueue"]["replyReadyRows"], 1)
         self.assertEqual(digest["holdingPeriod"]["counts"]["observedEligibleFor30Days"], 1)
         self.assertFalse(digest["boundaries"]["writesProductionData"])
         self.assertFalse(digest["boundaries"]["walletCalls"])
         self.assertFalse(digest["boundaries"]["requiresSignature"])
         self.assertFalse(digest["boundaries"]["automaticTokenTransfer"])
+        self.assertTrue(digest["boundaries"]["serviceRouteReportsReadOnly"])
         serialized = json.dumps(digest)
         self.assertNotIn("private-user@example.com", serialized)
         self.assertNotIn("stdoutTail", serialized)
@@ -658,7 +674,16 @@ class GcaMemberBackendTests(unittest.TestCase):
             "memberOps": {
                 "available": True,
                 "ok": True,
+                "serviceRoutesIncluded": True,
                 "supportQueue": {"rows": 2, "replyReadyRows": 1},
+                "report": {
+                    "serviceRequestsPendingReview": 3,
+                    "serviceRequestsMissingCreditLedger": 1,
+                    "serviceRequestsInsufficientCredits": 1,
+                    "serviceRequestsExpiredCreditLedger": 0,
+                    "serviceRequestsAwaitingMemberFollowup": 1,
+                    "serviceRequestsAwaitingDelivery": 2,
+                },
             },
             "supportQueue": {"available": True, "ok": True, "rows": 2, "replyReadyRows": 1},
             "holdingPeriod": {"available": True, "ok": True, "counts": {"observedEligibleFor30Days": 1}},
@@ -672,6 +697,10 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertTrue(plan["sourceStatus"]["operatorDigestOk"])
         item_ids = {item["id"] for item in plan["items"]}
         self.assertIn("review-support-replies", item_ids)
+        self.assertIn("review-queued-service-requests", item_ids)
+        self.assertIn("resolve-service-credit-eligibility", item_ids)
+        self.assertIn("review-service-followups", item_ids)
+        self.assertIn("complete-approved-service-deliveries", item_ids)
         self.assertIn("review-pending-reserve-transfers", item_ids)
         self.assertIn("review-holding-ready-wallets", item_ids)
         self.assertIn("complete-basescan-preflight", item_ids)
@@ -686,12 +715,18 @@ class GcaMemberBackendTests(unittest.TestCase):
         self.assertIn("--evidence-dir launch/domain_email_evidence", evidence_command)
         self.assertIn("launch/domain_email_evidence_packet.json", evidence_command)
         self.assertIn("check_domain_email_public_switch.py", action_by_id["complete-public-email-switch"]["command"])
+        self.assertIn("review_cloudflare_service_request.py", action_by_id["review-queued-service-requests"]["command"])
+        self.assertIn("review_cloudflare_service_request.py", action_by_id["complete-approved-service-deliveries"]["command"])
+        self.assertEqual(plan["totals"]["serviceRequestsPendingReview"], 3)
+        self.assertEqual(plan["totals"]["serviceRequestsAwaitingMemberFollowup"], 1)
+        self.assertEqual(plan["totals"]["serviceRequestsAwaitingDelivery"], 2)
         self.assertTrue(plan["supportReviewPreview"])
         self.assertEqual(plan["supportReviewPreview"][0]["memberLedgerId"], response["memberLedger"]["memberLedgerId"])
         self.assertFalse(plan["boundaries"]["writesProductionData"])
         self.assertFalse(plan["boundaries"]["walletCalls"])
         self.assertFalse(plan["boundaries"]["requiresSignature"])
         self.assertFalse(plan["boundaries"]["automaticTokenTransfer"])
+        self.assertTrue(plan["boundaries"]["serviceRouteReportsReadOnly"])
         serialized = json.dumps(plan)
         self.assertNotIn("member@example.com", serialized)
         self.assertNotIn("private-user@example.com", serialized)

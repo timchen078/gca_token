@@ -224,7 +224,12 @@ class GcaMemberAccessReportTests(unittest.TestCase):
             self.assertEqual(summary["counts"]["accounts"], 1)
             self.assertEqual(summary["counts"]["creditLedgerRecorded"], 1)
             self.assertEqual(summary["counts"]["serviceRequestRecords"], 1)
+            self.assertEqual(summary["counts"]["serviceRequestsPendingReview"], 1)
             self.assertEqual(summary["counts"]["queuedServiceRequests"], 1)
+            self.assertEqual(summary["counts"]["serviceRequestsExpiredCreditLedger"], 0)
+            self.assertEqual(summary["counts"]["serviceRequestsAwaitingMemberFollowup"], 0)
+            self.assertEqual(summary["counts"]["serviceRequestsAwaitingDelivery"], 0)
+            self.assertEqual(summary["counts"]["deliveredServiceRequests"], 0)
             self.assertEqual(summary["counts"]["requestedCreditHoldQueued"], 10)
             self.assertEqual(summary["counts"]["serviceRequestReviewRecords"], 1)
             self.assertEqual(summary["counts"]["serviceRequestReviewsNeedMoreInformation"], 1)
@@ -239,6 +244,7 @@ class GcaMemberAccessReportTests(unittest.TestCase):
             self.assertEqual(summary["counts"]["memberBenefitReviewQueueRows"], 2)
             self.assertFalse(summary["boundaries"]["writesProductionData"])
             self.assertFalse(summary["boundaries"]["automaticTokenTransfer"])
+            self.assertTrue(summary["boundaries"]["serviceRouteReportsReadOnly"])
             self.assertTrue(summary_output.exists())
             self.assertTrue(Path(summary["outputs"]["serviceRequestsCsv"]).exists())
             self.assertTrue(Path(summary["outputs"]["serviceRequestReviewsCsv"]).exists())
@@ -249,6 +255,45 @@ class GcaMemberAccessReportTests(unittest.TestCase):
                 rows = list(csv.DictReader(handle))
             self.assertEqual(rows[0]["reviewLane"], "pending_manual_reserve_transfer")
             self.assertEqual(rows[1]["reviewLane"], "holding_period_review")
+
+    def test_build_report_counts_current_service_request_lanes(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            payload = member_access_export_payload()
+            statuses = (
+                "queued_operator_review",
+                "queued_insufficient_credits",
+                "queued_expired_credit_ledger",
+                "queued_missing_credit_ledger",
+                "needs_more_information",
+                "approved_operator_review",
+                "delivered",
+                "rejected_operator_review",
+                "cancelled_by_account",
+            )
+            payload["datasets"]["service-requests"]["records"] = [
+                {
+                    "serviceRequestId": f"gca_service_req_{index}",
+                    "status": status,
+                    "requestedCreditHold": 1,
+                }
+                for index, status in enumerate(statuses, start=1)
+            ]
+
+            summary = build_report(payload, root / "report", root / "report" / "summary.json")
+            counts = summary["counts"]
+
+            self.assertEqual(counts["serviceRequestRecords"], 9)
+            self.assertEqual(counts["serviceRequestsPendingReview"], 4)
+            self.assertEqual(counts["queuedServiceRequests"], 1)
+            self.assertEqual(counts["serviceRequestsInsufficientCredits"], 1)
+            self.assertEqual(counts["serviceRequestsExpiredCreditLedger"], 1)
+            self.assertEqual(counts["serviceRequestsMissingCreditLedger"], 1)
+            self.assertEqual(counts["serviceRequestsAwaitingMemberFollowup"], 1)
+            self.assertEqual(counts["serviceRequestsAwaitingDelivery"], 1)
+            self.assertEqual(counts["deliveredServiceRequests"], 1)
+            self.assertEqual(counts["rejectedServiceRequests"], 1)
+            self.assertEqual(counts["cancelledServiceRequests"], 1)
 
     def test_load_export_rejects_wrong_packet(self):
         with tempfile.TemporaryDirectory() as temp:

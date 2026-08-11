@@ -138,6 +138,7 @@ def summarize_member_ops(payload: dict[str, Any] | None) -> dict[str, Any]:
             "ok": False,
             "generatedAt": "",
             "recordCount": 0,
+            "serviceRoutesIncluded": False,
             "report": {},
             "supportQueue": {},
             "holdingPeriod": {},
@@ -154,6 +155,27 @@ def summarize_member_ops(payload: dict[str, Any] | None) -> dict[str, Any]:
         "gcaMemberEligibleWallets",
         "creditLedgerRecords",
         "creditLedgerRecorded",
+        "serviceRequestRecords",
+        "serviceRequestsPendingReview",
+        "queuedServiceRequests",
+        "serviceRequestsMissingCreditLedger",
+        "serviceRequestsInsufficientCredits",
+        "serviceRequestsExpiredCreditLedger",
+        "serviceRequestsAwaitingMemberFollowup",
+        "serviceRequestsAwaitingDelivery",
+        "deliveredServiceRequests",
+        "rejectedServiceRequests",
+        "cancelledServiceRequests",
+        "serviceRequestReviewRecords",
+        "serviceRequestReviewsApproved",
+        "serviceRequestReviewsRejected",
+        "serviceRequestReviewsNeedMoreInformation",
+        "serviceRequestReviewsDelivered",
+        "serviceRequestFollowupRecords",
+        "requestedCreditHoldQueued",
+        "creditUsageRecords",
+        "creditUsageRecorded",
+        "creditsConsumed",
         "memberLedgerRecords",
         "activeGcaMembers",
         "queuedGcaMembers",
@@ -177,6 +199,7 @@ def summarize_member_ops(payload: dict[str, Any] | None) -> dict[str, Any]:
         "source": str(payload.get("source") or ""),
         "recordCount": as_int(export.get("recordCount")),
         "datasetCount": as_int(export.get("datasetCount")),
+        "serviceRoutesIncluded": bool(payload.get("serviceRoutesIncluded")),
         "report": {key: as_int(report.get(key)) for key in allowed_report_keys if key in report},
         "supportQueue": {
             "rows": as_int(support.get("rows")),
@@ -250,6 +273,30 @@ def build_next_actions(daily: dict[str, Any], member_ops: dict[str, Any], suppor
         actions.append(f"Review {reply_ready} support queue row(s) manually before sending any user reply.")
 
     report_counts = member_ops.get("report", {})
+    pending_service_reviews = as_int(report_counts.get("serviceRequestsPendingReview"))
+    missing_credit_ledgers = as_int(report_counts.get("serviceRequestsMissingCreditLedger"))
+    insufficient_credits = as_int(report_counts.get("serviceRequestsInsufficientCredits"))
+    expired_credit_ledgers = as_int(report_counts.get("serviceRequestsExpiredCreditLedger"))
+    awaiting_member_followup = as_int(report_counts.get("serviceRequestsAwaitingMemberFollowup"))
+    awaiting_delivery = as_int(report_counts.get("serviceRequestsAwaitingDelivery"))
+    if pending_service_reviews:
+        actions.append(
+            f"Review {pending_service_reviews} current service request(s) in the protected manual review queue; do not request secrets, custody, or trading permission."
+        )
+    blocked_credit_requests = missing_credit_ledgers + insufficient_credits + expired_credit_ledgers
+    if blocked_credit_requests:
+        actions.append(
+            f"Resolve credit eligibility for {blocked_credit_requests} queued service request(s) before approval "
+            f"(missing ledger: {missing_credit_ledgers}, insufficient: {insufficient_credits}, expired: {expired_credit_ledgers})."
+        )
+    if awaiting_member_followup:
+        actions.append(
+            f"Review account follow-up evidence for {awaiting_member_followup} service request(s) currently waiting for more information."
+        )
+    if awaiting_delivery:
+        actions.append(
+            f"Complete or reject {awaiting_delivery} approved service request(s); mark delivered only after the work is complete and settle credits once."
+        )
     pending_transfers = as_int(report_counts.get("pendingManualReserveTransfers"))
     holding_reviews = as_int(report_counts.get("holdingPeriodReviewsNeeded"))
     if pending_transfers:
@@ -315,6 +362,17 @@ def render_markdown(digest: dict[str, Any]) -> str:
         f"- Support queue rows: `{member.get('supportQueue', {}).get('rows', support.get('rows', 0))}`",
         f"- Reply-ready rows: `{member.get('supportQueue', {}).get('replyReadyRows', support.get('replyReadyRows', 0))}`",
         f"- Pending manual reserve transfers: `{member.get('report', {}).get('pendingManualReserveTransfers', 0)}`",
+        "",
+        "## Service Operations",
+        "",
+        f"- Service routes included: `{str(member.get('serviceRoutesIncluded')).lower()}`",
+        f"- Service requests: `{member.get('report', {}).get('serviceRequestRecords', 0)}`",
+        f"- Pending manual review: `{member.get('report', {}).get('serviceRequestsPendingReview', 0)}`",
+        f"- Waiting for member information: `{member.get('report', {}).get('serviceRequestsAwaitingMemberFollowup', 0)}`",
+        f"- Approved and awaiting delivery: `{member.get('report', {}).get('serviceRequestsAwaitingDelivery', 0)}`",
+        f"- Delivered: `{member.get('report', {}).get('deliveredServiceRequests', 0)}`",
+        f"- Follow-up records: `{member.get('report', {}).get('serviceRequestFollowupRecords', 0)}`",
+        f"- Credits consumed: `{member.get('report', {}).get('creditsConsumed', 0)}`",
         "",
         "## Holding Evidence",
         "",
@@ -389,6 +447,7 @@ def build_operator_digest(
             "automaticTokenTransfer": False,
             "memberBenefitTransferAutomatic": False,
             "doesNotApproveMemberBenefitByItself": True,
+            "serviceRouteReportsReadOnly": True,
         },
     }
     markdown = render_markdown(digest)

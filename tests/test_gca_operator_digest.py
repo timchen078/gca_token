@@ -43,7 +43,19 @@ class GcaOperatorDigestTests(unittest.TestCase):
                 "generatedAt": "2026-05-20T16:01:00Z",
                 "source": "cloudflare-admin-api:https://worker.example",
                 "export": {"datasetCount": 4, "recordCount": 12},
+                "serviceRoutesIncluded": True,
                 "report": {
+                    "serviceRequestRecords": 8,
+                    "serviceRequestsPendingReview": 3,
+                    "queuedServiceRequests": 1,
+                    "serviceRequestsMissingCreditLedger": 1,
+                    "serviceRequestsInsufficientCredits": 1,
+                    "serviceRequestsExpiredCreditLedger": 0,
+                    "serviceRequestsAwaitingMemberFollowup": 1,
+                    "serviceRequestsAwaitingDelivery": 1,
+                    "deliveredServiceRequests": 2,
+                    "serviceRequestFollowupRecords": 1,
+                    "creditsConsumed": 10,
                     "pendingManualReserveTransfers": 1,
                     "holdingPeriodReviewsNeeded": 2,
                     "privateRecord": "private-user@example.com",
@@ -86,18 +98,32 @@ class GcaOperatorDigestTests(unittest.TestCase):
             self.assertEqual(digest["dailyOps"]["steps"][0]["id"], "public-site")
             self.assertNotIn("stdoutTail", digest["dailyOps"]["steps"][0])
             self.assertEqual(digest["memberOps"]["recordCount"], 12)
+            self.assertTrue(digest["memberOps"]["serviceRoutesIncluded"])
+            self.assertEqual(digest["memberOps"]["report"]["serviceRequestsPendingReview"], 3)
+            self.assertEqual(digest["memberOps"]["report"]["serviceRequestsAwaitingMemberFollowup"], 1)
+            self.assertEqual(digest["memberOps"]["report"]["serviceRequestsAwaitingDelivery"], 1)
+            self.assertEqual(digest["memberOps"]["report"]["deliveredServiceRequests"], 2)
             self.assertEqual(digest["supportQueue"]["replyReadyRows"], 2)
             self.assertEqual(digest["holdingPeriod"]["counts"]["observedEligibleFor30Days"], 1)
             self.assertTrue(any("support queue" in action for action in digest["nextActions"]))
+            self.assertTrue(any("current service request" in action for action in digest["nextActions"]))
+            self.assertTrue(any("credit eligibility" in action for action in digest["nextActions"]))
+            self.assertTrue(any("account follow-up evidence" in action for action in digest["nextActions"]))
+            self.assertTrue(any("approved service request" in action for action in digest["nextActions"]))
             self.assertTrue(any("pending manual reserve-transfer" in action for action in digest["nextActions"]))
             self.assertTrue(any("observed 30-day" in action for action in digest["nextActions"]))
             self.assertFalse(digest["boundaries"]["writesProductionData"])
             self.assertFalse(digest["boundaries"]["walletCalls"])
             self.assertFalse(digest["boundaries"]["requiresSignature"])
             self.assertFalse(digest["boundaries"]["automaticTokenTransfer"])
+            self.assertTrue(digest["boundaries"]["serviceRouteReportsReadOnly"])
             self.assertTrue(markdown.exists())
             self.assertTrue(json_output.exists())
-            serialized = json.dumps(digest) + markdown.read_text(encoding="utf-8") + json_output.read_text(encoding="utf-8")
+            rendered = markdown.read_text(encoding="utf-8")
+            self.assertIn("## Service Operations", rendered)
+            self.assertIn("Pending manual review: `3`", rendered)
+            self.assertIn("Approved and awaiting delivery: `1`", rendered)
+            serialized = json.dumps(digest) + rendered + json_output.read_text(encoding="utf-8")
             self.assertNotIn("private-user@example.com", serialized)
 
     def test_build_digest_surfaces_basescan_snapshot_alignment(self):

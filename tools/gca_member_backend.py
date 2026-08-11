@@ -1915,6 +1915,7 @@ class GcaMemberBackend:
                 "available": False,
                 "ok": False,
                 "recordCount": 0,
+                "serviceRoutesIncluded": False,
                 "supportQueue": {},
                 "report": {},
                 "holdingPeriod": {},
@@ -1951,6 +1952,7 @@ class GcaMemberBackend:
                 "requiresTransaction": False,
                 "automaticTokenTransfer": False,
                 "memberBenefitTransferAutomatic": False,
+                "serviceRouteReportsReadOnly": True,
             },
         }
         if not digest_path.exists():
@@ -2055,6 +2057,7 @@ class GcaMemberBackend:
                 "generatedAt": safe_operator_text(member.get("generatedAt"), 80),
                 "recordCount": safe_operator_int(member.get("recordCount")),
                 "datasetCount": safe_operator_int(member.get("datasetCount")),
+                "serviceRoutesIncluded": safe_operator_bool(member.get("serviceRoutesIncluded")),
                 "supportQueue": safe_operator_mapping(member.get("supportQueue"), ("rows", "replyReadyRows", "statusCounts")),
                 "report": safe_operator_mapping(
                     member.get("report"),
@@ -2064,10 +2067,34 @@ class GcaMemberBackend:
                         "holderBonusEligibleWallets",
                         "gcaMemberEligibleWallets",
                         "creditLedgerRecords",
+                        "creditLedgerRecorded",
+                        "serviceRequestRecords",
+                        "serviceRequestsPendingReview",
+                        "queuedServiceRequests",
+                        "serviceRequestsMissingCreditLedger",
+                        "serviceRequestsInsufficientCredits",
+                        "serviceRequestsExpiredCreditLedger",
+                        "serviceRequestsAwaitingMemberFollowup",
+                        "serviceRequestsAwaitingDelivery",
+                        "deliveredServiceRequests",
+                        "rejectedServiceRequests",
+                        "cancelledServiceRequests",
+                        "serviceRequestReviewRecords",
+                        "serviceRequestReviewsApproved",
+                        "serviceRequestReviewsRejected",
+                        "serviceRequestReviewsNeedMoreInformation",
+                        "serviceRequestReviewsDelivered",
+                        "serviceRequestFollowupRecords",
+                        "requestedCreditHoldQueued",
+                        "creditUsageRecords",
+                        "creditUsageRecorded",
+                        "creditsConsumed",
+                        "memberLedgerRecords",
                         "activeGcaMembers",
                         "queuedGcaMembers",
                         "pendingManualReserveTransfers",
                         "holdingPeriodReviewsNeeded",
+                        "memberBenefitReviewQueueRows",
                     ),
                 ),
                 "holdingPeriod": safe_operator_mapping(
@@ -2264,6 +2291,50 @@ class GcaMemberBackend:
                 "support-queue",
             )
 
+        member_ops = digest.get("memberOps") if isinstance(digest.get("memberOps"), dict) else {}
+        service_report = member_ops.get("report") if isinstance(member_ops.get("report"), dict) else {}
+        pending_service_reviews = safe_operator_int(service_report.get("serviceRequestsPendingReview"))
+        missing_credit_ledgers = safe_operator_int(service_report.get("serviceRequestsMissingCreditLedger"))
+        insufficient_credits = safe_operator_int(service_report.get("serviceRequestsInsufficientCredits"))
+        expired_credit_ledgers = safe_operator_int(service_report.get("serviceRequestsExpiredCreditLedger"))
+        awaiting_member_followup = safe_operator_int(service_report.get("serviceRequestsAwaitingMemberFollowup"))
+        awaiting_delivery = safe_operator_int(service_report.get("serviceRequestsAwaitingDelivery"))
+        if pending_service_reviews:
+            add_item(
+                "review-queued-service-requests",
+                "high",
+                "Review queued service requests",
+                f"{pending_service_reviews} current service request(s) require protected manual review. Do not request credentials, custody, or trading permission.",
+                "service-requests",
+                ".venv/bin/python tools/review_cloudflare_service_request.py --help",
+            )
+        blocked_credit_requests = missing_credit_ledgers + insufficient_credits + expired_credit_ledgers
+        if blocked_credit_requests:
+            add_item(
+                "resolve-service-credit-eligibility",
+                "medium",
+                "Resolve service credit eligibility",
+                f"{blocked_credit_requests} queued request(s) have a missing, insufficient, or expired credit ledger. Resolve eligibility before approval; do not deduct credits manually.",
+                "service-requests",
+            )
+        if awaiting_member_followup:
+            add_item(
+                "review-service-followups",
+                "medium",
+                "Review service follow-up evidence",
+                f"{awaiting_member_followup} service request(s) are waiting for more information. Review the matched account follow-up before recording another decision.",
+                "service-request-followups",
+            )
+        if awaiting_delivery:
+            add_item(
+                "complete-approved-service-deliveries",
+                "high",
+                "Complete approved service deliveries",
+                f"{awaiting_delivery} approved service request(s) await delivery. Mark delivered only after work is complete; the controlled flow settles credits at most once.",
+                "service-request-reviews",
+                ".venv/bin/python tools/review_cloudflare_service_request.py --help",
+            )
+
         pending_transfers = safe_operator_int(totals.get("pendingManualReserveTransfers"))
         if pending_transfers:
             add_item(
@@ -2321,7 +2392,7 @@ class GcaMemberBackend:
                 "no-immediate-action",
                 "low",
                 "No immediate operator action",
-                "Available summaries do not show urgent public health, support, holding, or transfer work.",
+                "Available summaries do not show urgent public health, support, service, holding, or transfer work.",
                 "operator-summary",
             )
 
@@ -2364,6 +2435,9 @@ class GcaMemberBackend:
                 "queuedMembers": queued_members,
                 "pendingManualReserveTransfers": pending_transfers,
                 "memberBenefitTransfers": safe_operator_int(totals.get("memberBenefitTransfers")),
+                "serviceRequestsPendingReview": pending_service_reviews,
+                "serviceRequestsAwaitingMemberFollowup": awaiting_member_followup,
+                "serviceRequestsAwaitingDelivery": awaiting_delivery,
             },
             "boundaries": {
                 "localhostOnly": True,
@@ -2378,6 +2452,7 @@ class GcaMemberBackend:
                 "automaticTokenTransfer": False,
                 "automaticUserReply": False,
                 "memberBenefitTransferAutomatic": False,
+                "serviceRouteReportsReadOnly": True,
             },
         }
 
