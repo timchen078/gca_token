@@ -539,8 +539,8 @@
         <div class="panel">
           <h2>生产接口验收</h2>
           <p class="note"><code>/gca/service-requests</code>、<code>/gca/service-request-reviews</code>、<code>/gca/service-request-followups</code>、<code>/gca/credit-usage</code>、<code>/gca/member-reviews</code> 和证据路由已完成远端 D1 migration、Worker 部署、公开 HTTP 401 检查和管理员 HTTP 200 只读检查。</p>
-          <pre>python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes</pre>
-          <pre>python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes</pre>
+          <pre>python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes</pre>
+          <pre>python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes</pre>
         </div>
       </section>
 

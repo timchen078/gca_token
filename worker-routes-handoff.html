@@ -421,7 +421,7 @@
           <div class="row"><span>1. Read-only readiness</span><strong>Run the deploy-readiness checker and require <code>cloudflare-auth-session</code>, D1 visibility, and Worker deploy permission to pass.</strong></div>
           <div class="row"><span>2. Remote D1 migrations</span><strong>Apply pending migrations through <code>0015_service_request_followups.sql</code> only after Gate 1 passes.</strong></div>
           <div class="row"><span>3. Worker deploy</span><strong>Deploy the updated Worker only after remote migrations complete successfully.</strong></div>
-          <div class="row"><span>4. Post-Deploy Public Smoke</span><strong>Confirm health/config versions, CORS, and unauthenticated admin-read rejection with <code>--include-pending-routes</code>.</strong></div>
+          <div class="row"><span>4. Post-Deploy Public Smoke</span><strong>Confirm health/config versions, CORS, and unauthenticated admin-read rejection with <code>--include-service-routes</code>.</strong></div>
           <div class="row"><span>5. Post-Deploy Admin Smoke</span><strong>Use the local admin token file to check token-protected response shape without printing tokens or user records.</strong></div>
           <div class="row"><span>6. Status update</span><strong>Only after Gates 1-5 pass, update public API status pages from prepared to live token-protected status.</strong></div>
         </div>
@@ -450,19 +450,19 @@ npx wrangler deploy</pre>
           <h2>Gate 4 Command</h2>
           <p class="note">Public route check; no admin token required and no write test record.</p>
           <pre>cd /Users/abc/Desktop/gca_token
-python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes</pre>
+python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes</pre>
         </div>
         <div class="panel">
           <h2>Gate 5 Command</h2>
           <p class="note">Local operator check. Keep <code>ADMIN_READ_TOKEN</code> in the ignored token file and do not paste it into chat, commits, logs, or public pages.</p>
           <pre>cd /Users/abc/Desktop/gca_token
-python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes</pre>
+python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes</pre>
         </div>
         <div class="panel">
           <h2>Optional Export After Success</h2>
           <p class="note">Internal operator artifact only. Do not publish full user records.</p>
           <pre>cd /Users/abc/Desktop/gca_token
-python3 tools/export_cloudflare_member_access.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 100 --include-pending-routes --output .gca_access_data/cloudflare_member_access_export.json</pre>
+python3 tools/export_cloudflare_member_access.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 100 --include-service-routes --output .gca_access_data/cloudflare_member_access_export.json</pre>
         </div>
       </section>
 

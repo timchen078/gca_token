@@ -214,6 +214,10 @@
         color: var(--gold);
       }
 
+      .bad {
+        color: var(--red);
+      }
+
       .note,
       li {
         color: var(--muted);
@@ -250,6 +254,32 @@
         background: #fff9e8;
       }
 
+      .market-snapshot-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .market-snapshot-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+      }
+
+      .market-snapshot-header .button {
+        flex: 0 0 auto;
+        min-width: 160px;
+        white-space: nowrap;
+      }
+
+      .market-snapshot-summary {
+        min-height: 24px;
+        margin: 14px 0 0;
+        font-weight: 750;
+      }
+
       code {
         padding: 2px 5px;
         border-radius: 6px;
@@ -267,8 +297,14 @@
       @media (max-width: 860px) {
         .facts,
         .grid,
-        .two {
+        .two,
+        .market-snapshot-grid {
           grid-template-columns: 1fr;
+        }
+
+        .market-snapshot-header {
+          align-items: stretch;
+          flex-direction: column;
         }
 
         nav {
@@ -292,6 +328,7 @@
     </style>
       <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <script src="assets/gca-site.js?v=20260711" defer></script>
+    <script src="assets/market-snapshot.js?v=20260811-1" defer></script>
   </head>
   <body>
     <header>
@@ -357,6 +394,26 @@
           <span class="label">GeckoTerminal</span>
           <span class="value good">Approved 2026-05-11</span>
         </div>
+      </section>
+
+      <section class="section panel" aria-labelledby="snapshotTitle" data-gca-market-snapshot>
+        <div class="market-snapshot-header">
+          <div>
+            <h2 id="snapshotTitle">Live Read-Only Pool Snapshot</h2>
+            <p class="note">Browser-time data from the GeckoTerminal Public API for the exact official Base Mainnet GCA/USDT pool. The page validates the pool, GCA, USDT, and Uniswap v4 identifiers before displaying values.</p>
+          </div>
+          <button class="button" type="button" data-market-action>Refresh snapshot</button>
+        </div>
+        <p class="market-snapshot-summary pending" role="status" aria-live="polite" data-market-summary>Waiting for live snapshot</p>
+        <div class="market-snapshot-grid" aria-label="Live official pool snapshot">
+          <div class="fact"><span class="label">GCA Price</span><span class="value" data-market-field="price">Waiting</span></div>
+          <div class="fact"><span class="label">Pool Reserve</span><span class="value" data-market-field="reserve">Waiting</span></div>
+          <div class="fact"><span class="label">24h Volume</span><span class="value" data-market-field="volume">Waiting</span></div>
+          <div class="fact"><span class="label">24h Trades</span><span class="value" data-market-field="trades">Waiting</span></div>
+          <div class="fact"><span class="label">24h Price Change</span><span class="value" data-market-field="change">Waiting</span></div>
+          <div class="fact"><span class="label">Observed At</span><span class="value" data-market-field="source">Waiting</span></div>
+        </div>
+        <p class="note" style="margin-top:14px">This aggregate snapshot can be delayed or unavailable and is not a wallet quote, executable price, trading signal, or guarantee. Confirm current values and price impact on the <a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">official GeckoTerminal pool page</a>.</p>
       </section>
 
       <section class="section two" aria-label="Official route">

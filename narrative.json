@@ -105,6 +105,13 @@
       "status": "published-deploy-gate-handoff",
       "publicUrl": "https://gcagochina.com/worker-routes-handoff.html",
       "claimBoundary": "public deployment record; /gca/service-requests and /gca/credit-usage are live, token-protected, and verified by public/admin read-only smoke checks"
+    },
+    {
+      "id": "official-pool-market-snapshot",
+      "status": "live-browser-read-only",
+      "verifiedAt": "2026-08-11",
+      "publicUrl": "https://gcagochina.com/markets.html",
+      "claimBoundary": "browser-time GeckoTerminal aggregate for the identity-pinned official GCA/USDT pool; not a wallet quote, executable price, trading signal, transaction, or guarantee"
     }
   ],
   "publishedProductProofs": [
@@ -134,9 +141,9 @@
     }
   ],
   "buildNext": [
-    "operate and monitor the live token-protected service request Worker route",
-    "operate and monitor the live token-protected credit usage Worker route",
-    "Weekly Go China Radar issue 004"
+    "monitor all production service routes in the daily public Worker check",
+    "operator review and social publication decision for Weekly Go China Radar issues 004 and 005",
+    "release-gated connected research market data without wallet or trading permissions"
   ],
   "weeklyRadar": {
     "status": "weekly-go-china-radar-issue-003-published",

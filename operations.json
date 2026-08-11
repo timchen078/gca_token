@@ -188,16 +188,16 @@
       "/gca/service-request-reviews": 401,
       "/gca/service-request-followups": 401
     },
-    "pendingRoutePostDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-pending-routes",
-    "pendingRoutePostDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-pending-routes",
+    "pendingRoutePostDeployPublicSmokeCommand": "python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes",
+    "pendingRoutePostDeployAdminSmokeCommand": "python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes",
     "pendingRouteReleaseGates": [
       "cloudflare-auth-session passes",
       "D1 visibility passes",
       "Worker deploy permission passes",
       "remote D1 migrations apply successfully",
       "wrangler deploy succeeds",
-      "public smoke check passes with --include-pending-routes",
-      "admin smoke check passes with --include-pending-routes"
+      "public smoke check passes with --include-service-routes",
+      "admin smoke check passes with --include-service-routes"
     ],
     "serviceRequestQueueWorkerEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-requests",
     "serviceRequestReviewEndpoint": "https://gca-registration-api.gcagochina.workers.dev/gca/service-request-reviews",
