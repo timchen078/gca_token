@@ -3391,6 +3391,11 @@ def validate_zh_supply_page(text: str) -> None:
         "不能宣传为技术上不可流通",
         "储备多签、锁仓或归属合约尚未完成",
         "不要通过人工制造交易活动、自我成交或误导性宣传来改善市场数据",
+        "实时只读储备余额",
+        "data-gca-reserve-balance",
+        "assets/reserve-balance.js?v=20260811-1",
+        "不证明锁仓、归属、多签",
+        "circulating supply",
         "供应资料",
         "继续查看总量和储备",
         "zh-cn.html",
@@ -11818,6 +11823,78 @@ def validate_contract_identity_script(text: str) -> None:
         assert_not_contains(text, forbidden, label)
 
 
+def validate_reserve_balance_script(text: str) -> None:
+    label = "/assets/reserve-balance.js"
+    for expected in (
+        'const RPC_URL = "https://mainnet.base.org"',
+        'const CONTRACT_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"',
+        'const RESERVE_ADDRESS = "0x5e8F84748612B913aAcC937492AC25dc5630E246"',
+        "const EXPECTED_CHAIN_ID = 8453n",
+        'const EXPECTED_CHAIN_ID_HEX = "0x2105"',
+        "const EXPECTED_TOTAL_SUPPLY_RAW = 1000000000000000000000000000n",
+        "const PUBLISHED_RESERVE_RAW = 600000000000000000000000000n",
+        "const DECIMALS = 18n",
+        "const REQUEST_TIMEOUT_MS = 8000",
+        "const MAX_RESPONSE_BYTES = 65536",
+        "0x70a08231",
+        'data: "0x18160ddd"',
+        'method: "eth_chainId"',
+        'method: "eth_blockNumber"',
+        'method: "eth_call"',
+        'method: "POST"',
+        'mode: "cors"',
+        'credentials: "omit"',
+        'cache: "no-store"',
+        'redirect: "error"',
+        "JSON.stringify(requests)",
+        "response.text()",
+        "buildStateRequests(blockNumberHex)",
+        'params: [{ to: CONTRACT_ADDRESS, data: "0x18160ddd" }, blockNumberHex]',
+        "params: [{ to: CONTRACT_ADDRESS, data: BALANCE_OF_CALL_DATA }, blockNumberHex]",
+        "BigInt",
+        "data-gca-reserve-balance",
+        "data-reserve-summary",
+        "data-reserve-field",
+        "data-reserve-action",
+        "textContent",
+        "Read-only check passed",
+        "published 600,000,000 GCA reserve reference",
+        "只读核验成功",
+        "已发布的 600,000,000 GCA 储备参考值",
+        "public Base RPC is rate-limited",
+        "Base 公共 RPC 有频率限制",
+        'source: "Base 公共 RPC"',
+        'locale: "zh-CN"',
+        "Intl.DateTimeFormat(COPY.locale",
+    ):
+        assert_contains(text, expected, label)
+
+    methods = set(re.findall(r'method:\s*"([^"]+)"', text))
+    if methods != {"POST", "eth_chainId", "eth_blockNumber", "eth_call"}:
+        raise SiteCheckError(f"{label}: unexpected RPC or HTTP method set {sorted(methods)}")
+
+    for forbidden in (
+        "authorization:",
+        "innerHTML",
+        "localStorage",
+        "sessionStorage",
+        "document.cookie",
+        "window.ethereum",
+        "ethereum.request",
+        "eth_sendTransaction",
+        "eth_sendRawTransaction",
+        "personal_sign",
+        "eth_sign",
+        "wallet_",
+        "0x095ea7b3",
+        "0xa9059cbb",
+        "0x23b872dd",
+        'credentials: "include"',
+        "eval(",
+    ):
+        assert_not_contains(text, forbidden, label)
+
+
 def validate_api_health_styles(text: str) -> None:
     label = "/assets/api-health.css"
     for expected in (
@@ -13264,6 +13341,11 @@ def validate_supply_page(text: str) -> None:
     assert_contains(text, RESERVE_TX_2, label)
     assert_contains(text, "not be described as locked, vested, or multisig-controlled", label)
     assert_contains(text, "Do not claim the reserve provides price support", label)
+    assert_contains(text, "Live Read-Only Reserve Balance", label)
+    assert_contains(text, "data-gca-reserve-balance", label)
+    assert_contains(text, "assets/reserve-balance.js?v=20260811-1", label)
+    assert_contains(text, "does not prove a lock, vesting schedule, multisig", label)
+    assert_contains(text, "or circulating supply", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
     for forbidden in (
         'href="supply.json"',
@@ -17968,6 +18050,7 @@ CHECKS: list[EndpointCheck] = [
     ("/assets/api-health.css", validate_api_health_styles),
     ("/assets/market-snapshot.js", validate_market_snapshot_script),
     ("/assets/contract-identity.js", validate_contract_identity_script),
+    ("/assets/reserve-balance.js", validate_reserve_balance_script),
     ("/daily-status.html", validate_daily_status_page),
     ("/daily-status.json", validate_daily_status_json),
     ("/review-queue.html", validate_review_queue_page),
