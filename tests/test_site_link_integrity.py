@@ -1,8 +1,10 @@
+import ssl
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
-from tools.check_site_links import scan_site
+from tools.check_site_links import build_ssl_context, scan_site
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -10,6 +12,20 @@ SITE = ROOT / "site"
 
 
 class SiteLinkIntegrityTests(unittest.TestCase):
+    def test_live_tls_context_uses_certifi_when_available(self):
+        try:
+            import certifi
+        except ImportError:
+            expected_arguments = {}
+        else:
+            expected_arguments = {"cafile": certifi.where()}
+
+        with patch("tools.check_site_links.ssl.create_default_context", wraps=ssl.create_default_context) as create_context:
+            context = build_ssl_context()
+
+        self.assertIsInstance(context, ssl.SSLContext)
+        create_context.assert_called_once_with(**expected_arguments)
+
     def test_current_public_site_has_no_broken_links_or_fragments(self):
         report = scan_site(SITE)
 

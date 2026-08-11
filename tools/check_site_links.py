@@ -343,6 +343,14 @@ def fetch_internal_target(base_url: str, target: str, timeout: float, context: s
     return None
 
 
+def build_ssl_context() -> ssl.SSLContext:
+    try:
+        import certifi
+    except ImportError:
+        return ssl.create_default_context()
+    return ssl.create_default_context(cafile=certifi.where())
+
+
 def check_live_targets(
     targets: Iterable[str],
     *,
@@ -353,7 +361,7 @@ def check_live_targets(
     base_parts = urlsplit(base_url)
     if base_parts.scheme != "https" or not base_parts.hostname:
         return ("base URL must be an absolute HTTPS URL",)
-    context = ssl.create_default_context()
+    context = build_ssl_context()
     errors: list[str] = []
     unique_targets = tuple(sorted(set(targets)))
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
