@@ -63,6 +63,7 @@ DEFAULT_API_BASE_URL = "https://gca-registration-api.gcagochina.workers.dev"
 CommandRunner = Callable[[Sequence[str], Path, float], subprocess.CompletedProcess[str]]
 BASESCAN_PUBLIC_PROFILE_STEP_ID = "basescan-public-profile-status"
 BASESCAN_PREFLIGHT_STEP_ID = "basescan-resubmission-preflight-status"
+MARKET_HEALTH_STEP_ID = "official-pool-market-health"
 
 
 def utc_now() -> str:
@@ -228,6 +229,103 @@ def summarize_basescan_public_profile(stdout: str) -> dict[str, Any]:
     }
 
 
+def default_market_health_summary(status: str = "not-run", error: str = "") -> dict[str, Any]:
+    summary = {
+        "available": False,
+        "status": status,
+        "identityVerified": False,
+        "checkedAt": "",
+        "poolAddress": "",
+        "contractAddress": "",
+        "quoteAssetAddress": "",
+        "dexId": "",
+        "poolName": "",
+        "poolCreatedAt": "",
+        "baseTokenPriceUsd": "",
+        "reserveInUsd": "",
+        "volumeUsd24h": "",
+        "priceChangePercentage24h": "",
+        "transactions24h": {
+            "buys": 0,
+            "sells": 0,
+            "buyers": 0,
+            "sellers": 0,
+            "total": 0,
+        },
+        "liquidityDepthStatus": "starter-depth-only",
+        "activityStatus": "not-observed",
+        "sourceProvider": "GeckoTerminal Public API",
+        "sourceApiUrl": "",
+        "publicPoolUrl": "",
+        "nextAction": "",
+    }
+    if error:
+        summary["error"] = error
+    return summary
+
+
+def summarize_market_health(stdout: str) -> dict[str, Any]:
+    try:
+        payload = json.loads(stdout or "{}")
+    except json.JSONDecodeError as exc:
+        return default_market_health_summary(
+            "unreadable-market-output",
+            f"invalid JSON: {exc}",
+        )
+    if not isinstance(payload, dict):
+        return default_market_health_summary(
+            "unreadable-market-output",
+            "market output must be a JSON object",
+        )
+    observed = payload.get("observed") if isinstance(payload.get("observed"), dict) else {}
+    transactions = (
+        observed.get("transactions24h")
+        if isinstance(observed.get("transactions24h"), dict)
+        else {}
+    )
+    interpretation = (
+        payload.get("interpretation")
+        if isinstance(payload.get("interpretation"), dict)
+        else {}
+    )
+    source = payload.get("source") if isinstance(payload.get("source"), dict) else {}
+    return {
+        "available": payload.get("ok") is True,
+        "status": str(payload.get("status") or "unreadable-market-output"),
+        "identityVerified": payload.get("identityVerified") is True,
+        "checkedAt": str(payload.get("checkedAt") or ""),
+        "poolAddress": str(payload.get("poolAddress") or ""),
+        "contractAddress": str(payload.get("contractAddress") or ""),
+        "quoteAssetAddress": str(payload.get("quoteAssetAddress") or ""),
+        "dexId": str(payload.get("dexId") or ""),
+        "poolName": str(observed.get("poolName") or ""),
+        "poolCreatedAt": str(observed.get("poolCreatedAt") or ""),
+        "baseTokenPriceUsd": str(observed.get("baseTokenPriceUsd") or ""),
+        "reserveInUsd": str(observed.get("reserveInUsd") or ""),
+        "volumeUsd24h": str(observed.get("volumeUsd24h") or ""),
+        "priceChangePercentage24h": str(observed.get("priceChangePercentage24h") or ""),
+        "transactions24h": {
+            key: value if isinstance(value, int) and not isinstance(value, bool) and value >= 0 else 0
+            for key, value in {
+                "buys": transactions.get("buys"),
+                "sells": transactions.get("sells"),
+                "buyers": transactions.get("buyers"),
+                "sellers": transactions.get("sellers"),
+                "total": transactions.get("total"),
+            }.items()
+        },
+        "liquidityDepthStatus": str(
+            interpretation.get("liquidityDepthStatus") or "starter-depth-only"
+        ),
+        "activityStatus": str(interpretation.get("activityStatus") or "not-observed"),
+        "sourceProvider": str(source.get("provider") or "GeckoTerminal Public API"),
+        "sourceApiUrl": str(source.get("apiUrl") or ""),
+        "publicPoolUrl": str(source.get("publicPoolUrl") or ""),
+        "nextAction": str(interpretation.get("nextAction") or ""),
+        **({"error": str(payload.get("error"))} if payload.get("error") else {}),
+    }
+
+
 def run_step(
     *,
     step_id: str,
@@ -252,6 +350,8 @@ def run_step(
             result["statusSummary"] = summarize_basescan_preflight(completed.stdout or "")
         elif step_id == BASESCAN_PUBLIC_PROFILE_STEP_ID:
             result["statusSummary"] = summarize_basescan_public_profile(completed.stdout or "")
+        elif step_id == MARKET_HEALTH_STEP_ID:
+            result["statusSummary"] = summarize_market_health(completed.stdout or "")
         return result
     except subprocess.TimeoutExpired as exc:
         return {
@@ -290,7 +390,16 @@ def run_step(
                         )
                     }
                     if step_id == BASESCAN_PUBLIC_PROFILE_STEP_ID
-                    else {}
+                    else (
+                        {
+                            "statusSummary": default_market_health_summary(
+                                "market-check-timeout",
+                                f"timeout after {timeout} seconds",
+                            )
+                        }
+                        if step_id == MARKET_HEALTH_STEP_ID
+                        else {}
+                    )
                 )
             ),
         }
@@ -309,6 +418,7 @@ def build_steps(
     holding_force_same_day: bool,
     include_basescan_public_profile_status: bool,
     include_basescan_preflight_status: bool,
+    include_market_health: bool,
 ) -> list[tuple[str, list[str], float, bool]]:
     if include_holding_report and not include_member_ops:
         raise ValueError("--include-holding-report requires --include-member-ops")
@@ -344,6 +454,21 @@ def build_steps(
             True,
         ),
     ]
+    if include_market_health:
+        steps.append(
+            (
+                MARKET_HEALTH_STEP_ID,
+                [
+                    python,
+                    "tools/check_gca_market_health.py",
+                    "--json",
+                    "--timeout",
+                    str(timeout),
+                ],
+                max(timeout * 3, 60),
+                False,
+            )
+        )
     if include_basescan_public_profile_status:
         steps.append(
             (
@@ -416,6 +541,7 @@ def run_daily_ops(
     holding_force_same_day: bool = False,
     include_basescan_public_profile_status: bool = True,
     include_basescan_preflight_status: bool = True,
+    include_market_health: bool = True,
     summary_output: Path = DEFAULT_SUMMARY_OUTPUT,
     build_digest: bool = False,
     digest_output: Path = DEFAULT_DIGEST_OUTPUT,
@@ -446,8 +572,17 @@ def run_daily_ops(
             holding_force_same_day=holding_force_same_day,
             include_basescan_public_profile_status=include_basescan_public_profile_status,
             include_basescan_preflight_status=include_basescan_preflight_status,
+            include_market_health=include_market_health,
         )
     ]
+    market_health = next(
+        (
+            step.get("statusSummary")
+            for step in steps
+            if step.get("id") == MARKET_HEALTH_STEP_ID and isinstance(step.get("statusSummary"), dict)
+        ),
+        default_market_health_summary(),
+    )
     basescan_public_profile = next(
         (
             step.get("statusSummary")
@@ -494,6 +629,8 @@ def run_daily_ops(
         "holdingForceSameDay": holding_force_same_day,
         "includeBaseScanPublicProfileStatus": include_basescan_public_profile_status,
         "includeBaseScanPreflightStatus": include_basescan_preflight_status,
+        "includeMarketHealth": include_market_health,
+        "marketHealth": market_health,
         "baseScanPublicProfile": basescan_public_profile,
         "baseScanPreflight": basescan_preflight,
         "buildDigest": build_digest,
@@ -540,6 +677,10 @@ def run_daily_ops(
             "baseScanPublicProfileBlocksDailyOps": False,
             "baseScanPreflightStatusOnly": True,
             "baseScanPreflightBlocksDailyOps": False,
+            "marketHealthReadOnly": True,
+            "marketHealthBlocksDailyOps": False,
+            "marketHealthBuildsExecutableQuote": False,
+            "marketHealthSubmitsTrade": False,
             "submitsBaseScanRequest": False,
             "writesPublicStatusArtifactsOnlyWhenRequested": True,
             "synchronizesBaseScanSnapshotReferencesOnlyForCanonicalPublicOutputs": True,
@@ -636,6 +777,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--holding-force-same-day", action="store_true", help="Append a fresh holding snapshot even if today already exists.")
     parser.add_argument("--skip-basescan-public-profile-status", action="store_true", help="Skip the non-blocking read-only BaseScan public profile check.")
     parser.add_argument("--skip-basescan-preflight-status", action="store_true", help="Skip the non-blocking BaseScan resubmission preflight status step.")
+    parser.add_argument("--skip-market-health", action="store_true", help="Skip the non-blocking read-only official GCA/USDT market check.")
     parser.add_argument("--summary-output", type=Path, default=DEFAULT_SUMMARY_OUTPUT, help="Daily summary JSON output.")
     parser.add_argument("--build-digest", action="store_true", help="Also build the redacted local operator digest from summary files.")
     parser.add_argument("--digest-output", type=Path, default=DEFAULT_DIGEST_OUTPUT, help="Markdown operator digest output path.")
@@ -672,6 +814,7 @@ def main(argv: list[str] | None = None) -> int:
         holding_force_same_day=args.holding_force_same_day,
         include_basescan_public_profile_status=not args.skip_basescan_public_profile_status,
         include_basescan_preflight_status=not args.skip_basescan_preflight_status,
+        include_market_health=not args.skip_market_health,
         summary_output=args.summary_output,
         build_digest=args.build_digest,
         digest_output=args.digest_output,

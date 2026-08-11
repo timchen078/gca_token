@@ -101,6 +101,76 @@ BASESCAN_PUBLIC_PROFILE_OUTPUT = json.dumps({
     "nextAction": "Submit one owner-controlled BaseScan update after final preflight.",
 })
 
+MARKET_HEALTH_OUTPUT = json.dumps({
+    "ok": True,
+    "packetVersion": "gca_market_health_check_v1",
+    "checkedAt": "2026-08-11T20:00:00Z",
+    "status": "official-pool-observed",
+    "identityVerified": True,
+    "network": "Base Mainnet",
+    "chainId": 8453,
+    "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "quoteAssetAddress": "0xfde4c96c8593536e31f229ea8f37b2ada2699bb2",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "dexId": "uniswap-v4-base",
+    "source": {
+        "provider": "GeckoTerminal Public API",
+        "apiUrl": "https://api.geckoterminal.com/api/v2/networks/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+        "publicPoolUrl": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    },
+    "observed": {
+        "poolName": "GCA / USDT 0.01%",
+        "poolCreatedAt": "2026-05-10T14:54:55Z",
+        "baseTokenPriceUsd": "0.00000180452417",
+        "reserveInUsd": "41.8349",
+        "volumeUsd24h": "2.5",
+        "priceChangePercentage24h": "-1.25",
+        "transactions24h": {
+            "buys": 2,
+            "sells": 1,
+            "buyers": 2,
+            "sellers": 1,
+            "total": 3,
+        },
+    },
+    "interpretation": {
+        "liquidityDepthStatus": "starter-depth-only",
+        "activityStatus": "24h-transactions-observed",
+        "doesNotProveOrganicDemand": True,
+        "nextAction": "Keep the official route consistent.",
+    },
+})
+
+MARKET_HEALTH_SUMMARY = {
+    "available": True,
+    "status": "official-pool-observed",
+    "identityVerified": True,
+    "checkedAt": "2026-08-11T20:00:00Z",
+    "poolAddress": "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
+    "quoteAssetAddress": "0xfde4c96c8593536e31f229ea8f37b2ada2699bb2",
+    "dexId": "uniswap-v4-base",
+    "poolName": "GCA / USDT 0.01%",
+    "poolCreatedAt": "2026-05-10T14:54:55Z",
+    "baseTokenPriceUsd": "0.00000180452417",
+    "reserveInUsd": "41.8349",
+    "volumeUsd24h": "2.5",
+    "priceChangePercentage24h": "-1.25",
+    "transactions24h": {
+        "buys": 2,
+        "sells": 1,
+        "buyers": 2,
+        "sellers": 1,
+        "total": 3,
+    },
+    "liquidityDepthStatus": "starter-depth-only",
+    "activityStatus": "24h-transactions-observed",
+    "sourceProvider": "GeckoTerminal Public API",
+    "sourceApiUrl": "https://api.geckoterminal.com/api/v2/networks/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "publicPoolUrl": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
+    "nextAction": "Keep the official route consistent.",
+}
+
 
 class GcaDailyOpsTests(unittest.TestCase):
     def test_daily_ops_public_only_runs_site_and_api_checks(self):
@@ -112,6 +182,8 @@ class GcaDailyOpsTests(unittest.TestCase):
                 return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_PUBLIC_PROFILE_OUTPUT, stderr="")
             if any("check_basescan_resubmission_readiness.py" in part for part in command):
                 return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_BLOCKED_OUTPUT, stderr="")
+            if any("check_gca_market_health.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=MARKET_HEALTH_OUTPUT, stderr="")
             return subprocess.CompletedProcess(command, 0, stdout='{"ok": true}', stderr="")
 
         with tempfile.TemporaryDirectory() as temp:
@@ -130,6 +202,7 @@ class GcaDailyOpsTests(unittest.TestCase):
             [
                 "public-site",
                 "registration-api-public",
+                "official-pool-market-health",
                 "basescan-public-profile-status",
                 "basescan-resubmission-preflight-status",
             ],
@@ -139,10 +212,20 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertFalse(summary["boundaries"]["automaticTokenTransfer"])
         self.assertTrue(summary["includeBaseScanPublicProfileStatus"])
         self.assertTrue(summary["includeBaseScanPreflightStatus"])
+        self.assertTrue(summary["includeMarketHealth"])
+        self.assertEqual(summary["marketHealth"]["status"], "official-pool-observed")
+        self.assertTrue(summary["marketHealth"]["identityVerified"])
+        self.assertEqual(summary["marketHealth"]["reserveInUsd"], "41.8349")
+        self.assertEqual(summary["marketHealth"]["volumeUsd24h"], "2.5")
+        self.assertEqual(summary["marketHealth"]["transactions24h"]["total"], 3)
         self.assertTrue(summary["boundaries"]["baseScanPublicProfileReadOnly"])
         self.assertFalse(summary["boundaries"]["baseScanPublicProfileBlocksDailyOps"])
         self.assertTrue(summary["boundaries"]["baseScanPreflightStatusOnly"])
         self.assertFalse(summary["boundaries"]["baseScanPreflightBlocksDailyOps"])
+        self.assertTrue(summary["boundaries"]["marketHealthReadOnly"])
+        self.assertFalse(summary["boundaries"]["marketHealthBlocksDailyOps"])
+        self.assertFalse(summary["boundaries"]["marketHealthBuildsExecutableQuote"])
+        self.assertFalse(summary["boundaries"]["marketHealthSubmitsTrade"])
         self.assertFalse(summary["boundaries"]["submitsBaseScanRequest"])
         self.assertFalse(summary["baseScanPreflight"]["readyForBaseScanResubmission"])
         self.assertEqual(summary["baseScanPublicProfile"]["status"], "token-profile-not-published")
@@ -174,6 +257,7 @@ class GcaDailyOpsTests(unittest.TestCase):
         commands = [" ".join(item["command"]) for item in seen]
         self.assertTrue(any("tools/check_public_site.py" in command for command in commands))
         self.assertTrue(any("tools/check_gca_registration_api.py" in command and "--public-only" in command for command in commands))
+        self.assertTrue(any("tools/check_gca_market_health.py" in command and "--json" in command for command in commands))
         self.assertTrue(any("tools/check_basescan_public_profile.py" in command and "--json" in command for command in commands))
         self.assertTrue(any("tools/check_basescan_resubmission_readiness.py" in command and "--skip-url-checks" in command for command in commands))
 
@@ -193,7 +277,12 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertTrue(summary["includeBaseScanPublicProfileStatus"])
         self.assertEqual(
             [step["id"] for step in summary["steps"]],
-            ["public-site", "registration-api-public", "basescan-public-profile-status"],
+            [
+                "public-site",
+                "registration-api-public",
+                "official-pool-market-health",
+                "basescan-public-profile-status",
+            ],
         )
         self.assertFalse(summary["baseScanPreflight"]["available"])
         self.assertEqual(summary["baseScanPreflight"]["status"], "not-run")
@@ -202,6 +291,27 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertEqual(summary["baseScanPreflight"]["oldEmailFilePaths"], [])
         self.assertEqual(summary["baseScanPreflight"]["forbiddenLegacyEmailFilePaths"], [])
         self.assertEqual(summary["baseScanPreflight"]["missingTargetEmailFilePaths"], [])
+
+    def test_daily_ops_can_skip_market_health_explicitly(self):
+        def runner(command, cwd, timeout):
+            if any("check_basescan_public_profile.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_PUBLIC_PROFILE_OUTPUT, stderr="")
+            if any("check_basescan_resubmission_readiness.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_BLOCKED_OUTPUT, stderr="")
+            return subprocess.CompletedProcess(command, 0, stdout='{"ok": true}', stderr="")
+
+        with tempfile.TemporaryDirectory() as temp:
+            summary = run_daily_ops(
+                summary_output=Path(temp) / "summary.json",
+                include_market_health=False,
+                runner=runner,
+            )
+
+        self.assertTrue(summary["ok"])
+        self.assertFalse(summary["includeMarketHealth"])
+        self.assertNotIn("official-pool-market-health", [step["id"] for step in summary["steps"]])
+        self.assertFalse(summary["marketHealth"]["available"])
+        self.assertEqual(summary["marketHealth"]["status"], "not-run")
 
     def test_daily_ops_summarizes_basescan_snapshot_alignment_status(self):
         def runner(command, cwd, timeout):
@@ -398,6 +508,8 @@ class GcaDailyOpsTests(unittest.TestCase):
                 return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_PUBLIC_PROFILE_OUTPUT, stderr="")
             if any("check_basescan_resubmission_readiness.py" in part for part in command):
                 return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_BLOCKED_OUTPUT, stderr="")
+            if any("check_gca_market_health.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=MARKET_HEALTH_OUTPUT, stderr="")
             return subprocess.CompletedProcess(command, 0, stdout='{"ok": true}', stderr="")
 
         with tempfile.TemporaryDirectory() as temp:
@@ -544,6 +656,7 @@ class GcaDailyOpsTests(unittest.TestCase):
                 ],
                 "nextAction": "Do not resubmit BaseScan yet.",
             },
+            "marketHealth": MARKET_HEALTH_SUMMARY,
             "steps": [
                 {
                     "id": "public-site",
@@ -556,6 +669,12 @@ class GcaDailyOpsTests(unittest.TestCase):
                     "ok": True,
                     "blocksSummaryOk": True,
                     "command": "/Users/abc/Desktop/gca_token/.venv/bin/python tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 20",
+                },
+                {
+                    "id": "official-pool-market-health",
+                    "ok": True,
+                    "blocksSummaryOk": False,
+                    "command": "/Users/abc/Desktop/gca_token/.venv/bin/python tools/check_gca_market_health.py --json --timeout 20",
                 },
                 {
                     "id": "basescan-public-profile-status",
@@ -585,9 +704,14 @@ class GcaDailyOpsTests(unittest.TestCase):
             self.assertEqual(payload["snapshotGeneratedAt"], "2026-05-30T10:11:12Z")
             self.assertEqual(payload["dailyOps"]["steps"][0]["id"], "public-site")
             self.assertEqual(payload["dailyOps"]["steps"][0]["command"], "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20")
-            self.assertEqual(payload["dailyOps"]["steps"][2]["id"], "basescan-public-profile-status")
+            self.assertEqual(payload["dailyOps"]["steps"][2]["id"], "official-pool-market-health")
             self.assertEqual(payload["dailyOps"]["steps"][2]["blocksSummaryOk"], False)
+            self.assertEqual(payload["dailyOps"]["steps"][3]["id"], "basescan-public-profile-status")
             self.assertEqual(payload["dailyOps"]["steps"][3]["blocksSummaryOk"], False)
+            self.assertEqual(payload["dailyOps"]["steps"][4]["blocksSummaryOk"], False)
+            self.assertTrue(payload["marketHealth"]["identityVerified"])
+            self.assertEqual(payload["marketHealth"]["reserveInUsd"], "41.8349")
+            self.assertEqual(payload["marketHealth"]["transactions24h"]["total"], 3)
             self.assertEqual(payload["baseScanPublicProfile"]["status"], "token-profile-not-published")
             self.assertFalse(payload["baseScanPublicProfile"]["profilePublished"])
             self.assertEqual(payload["baseScanPreflight"]["filesStillUsingOldEmail"], 3)
@@ -602,6 +726,9 @@ class GcaDailyOpsTests(unittest.TestCase):
             serialized = json_output.read_text(encoding="utf-8")
             page = html_output.read_text(encoding="utf-8")
             self.assertIn("2026-05-30T10:11:12Z", page)
+            self.assertIn("GCA/USDT Market Health", page)
+            self.assertIn("$41.8349", page)
+            self.assertIn("3 (2 buys / 1 sells)", page)
             self.assertIn("<code>filesStillUsingOldEmail</code> as 3 tracked files", page)
             self.assertIn("<code>filesPublishingForbiddenLegacyEmail</code> as 3 tracked files", page)
             self.assertIn("<code>site/support.html</code>", page)

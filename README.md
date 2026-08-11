@@ -147,6 +147,7 @@ The command requires explicit confirmations that the manual transfer is complete
 - Local redacted operator digest builder: `tools/build_gca_operator_digest.py`
 - GitHub Actions public daily ops check: `.github/workflows/check-gca-daily-ops.yml`
 - Read-only live registration API check: `tools/check_gca_registration_api.py`
+- Read-only official GCA/USDT pool identity and aggregate market check: `tools/check_gca_market_health.py`
 - GitHub Actions public registration API check: `.github/workflows/check-gca-registration-api.yml`
 - Public Chinese member rules page: `site/zh-members.html`
 - Public roadmap page: `site/roadmap.html`

@@ -14,7 +14,7 @@ class BaseScanReviewerChecklistTests(unittest.TestCase):
         self.assertTrue(report["readyForCleanResubmission"])
         self.assertEqual(report["latestReturnNoticeDate"], "2026-05-23")
         self.assertEqual(report["baseScanFinalSubmissionPackageGeneratedAt"], "2026-08-11T18:56:43Z")
-        self.assertEqual(report["dailyStatusGeneratedAt"], "2026-08-11T17:22:15Z")
+        self.assertEqual(report["dailyStatusGeneratedAt"], "2026-08-11T19:25:21Z")
         self.assertEqual(report["targetDomainEmail"], "support@gcagochina.com")
         self.assertEqual(report["blockedItems"], [])
 
@@ -72,7 +72,7 @@ class BaseScanReviewerChecklistTests(unittest.TestCase):
         self.assertIn("# GCA BaseScan Reviewer Checklist", markdown)
         self.assertIn("Ready for clean resubmission: `true`", markdown)
         self.assertIn("Final submission package: `2026-08-11T18:56:43Z`", markdown)
-        self.assertIn("Daily public status: `2026-08-11T17:22:15Z`", markdown)
+        self.assertIn("Daily public status: `2026-08-11T19:25:21Z`", markdown)
         self.assertIn("tools/check_site_links.py parsed", markdown)
         self.assertIn("Sender email matches project domain", markdown)
         self.assertIn("does not submit BaseScan requests", markdown)

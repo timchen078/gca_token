@@ -27,6 +27,13 @@ BASESCAN_TOKEN_URL = f"https://basescan.org/token/{MAINNET_ADDRESS}"
 BASESCAN_ADDRESS_URL = f"https://basescan.org/address/{MAINNET_ADDRESS}#code"
 TARGET_DOMAIN_EMAIL = "support@gcagochina.com"
 CURRENT_PUBLIC_EMAIL = TARGET_DOMAIN_EMAIL
+OFFICIAL_POOL_ADDRESS = "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
+OFFICIAL_USDT_ADDRESS = "0xfde4c96c8593536e31f229ea8f37b2ada2699bb2"
+OFFICIAL_DEX_ID = "uniswap-v4-base"
+MARKET_PAGE_URL = "https://gcagochina.com/markets.html"
+GECKOTERMINAL_POOL_URL = (
+    f"https://www.geckoterminal.com/base/pools/{OFFICIAL_POOL_ADDRESS}"
+)
 
 
 class DailyStatusSnapshotError(ValueError):
@@ -141,6 +148,7 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
     steps = step_by_id(summary)
     public_site_step = public_step(steps.get("public-site"))
     registration_step = public_step(steps.get("registration-api-public"))
+    market_step = public_step(steps.get("official-pool-market-health"))
     basescan_profile_step = public_step(steps.get("basescan-public-profile-status"))
     basescan_step = public_step(steps.get("basescan-resubmission-preflight-status"))
     basescan_profile = (
@@ -148,6 +156,7 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
         if isinstance(summary.get("baseScanPublicProfile"), dict)
         else {}
     )
+    market = summary.get("marketHealth") if isinstance(summary.get("marketHealth"), dict) else {}
     basescan = summary.get("baseScanPreflight") if isinstance(summary.get("baseScanPreflight"), dict) else {}
     missing_requirements = [
         str(item) for item in basescan.get("missingOrBlockedRequirements", []) if str(item)
@@ -252,6 +261,24 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
             "or publication claim is made."
         )
 
+    market_identity_verified = market.get("identityVerified") is True
+    market_status = str(market.get("status") or "not-run")
+    market_transactions = (
+        market.get("transactions24h")
+        if isinstance(market.get("transactions24h"), dict)
+        else {}
+    )
+    if market_identity_verified:
+        market_public_summary = (
+            "The latest read-only GeckoTerminal check verified the exact Base Mainnet "
+            "GCA/USDT pool, GCA, USDT, and Uniswap v4 identifiers."
+        )
+    else:
+        market_public_summary = (
+            "The latest public market snapshot was unavailable or did not verify the exact "
+            "official pool identity; no live market-data claim is made from this snapshot."
+        )
+
     return {
         "schema": DAILY_STATUS_URL,
         "pageUrl": DAILY_STATUS_PAGE_URL,
@@ -270,6 +297,11 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
             "steps": [
                 {"id": "public-site", **public_site_step},
                 {"id": "registration-api-public", **registration_step},
+                {
+                    "id": "official-pool-market-health",
+                    **market_step,
+                    "blocksSummaryOk": market_step["blocksSummaryOk"],
+                },
                 {
                     "id": "basescan-public-profile-status",
                     **basescan_profile_step,
@@ -302,6 +334,50 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
             "healthEndpoint": f"{str(summary.get('apiBaseUrl') or API_BASE_URL).rstrip('/')}/health",
             "adminReads": "token-protected",
             "writesTestRecords": False,
+        },
+        "marketHealth": {
+            "status": market_status,
+            "available": market.get("available") is True,
+            "identityVerified": market_identity_verified,
+            "checkedAt": str(market.get("checkedAt") or ""),
+            "checkCommand": market_step["command"],
+            "sourceProvider": str(market.get("sourceProvider") or "GeckoTerminal Public API"),
+            "sourceApiUrl": str(market.get("sourceApiUrl") or ""),
+            "publicPoolUrl": str(market.get("publicPoolUrl") or GECKOTERMINAL_POOL_URL),
+            "poolAddress": str(market.get("poolAddress") or OFFICIAL_POOL_ADDRESS),
+            "contractAddress": str(market.get("contractAddress") or MAINNET_ADDRESS),
+            "quoteAssetAddress": str(market.get("quoteAssetAddress") or OFFICIAL_USDT_ADDRESS),
+            "dexId": str(market.get("dexId") or OFFICIAL_DEX_ID),
+            "poolName": str(market.get("poolName") or ""),
+            "poolCreatedAt": str(market.get("poolCreatedAt") or ""),
+            "baseTokenPriceUsd": str(market.get("baseTokenPriceUsd") or ""),
+            "reserveInUsd": str(market.get("reserveInUsd") or ""),
+            "volumeUsd24h": str(market.get("volumeUsd24h") or ""),
+            "priceChangePercentage24h": str(
+                market.get("priceChangePercentage24h") or ""
+            ),
+            "transactions24h": {
+                key: (
+                    value
+                    if isinstance(value, int) and not isinstance(value, bool) and value >= 0
+                    else 0
+                )
+                for key, value in {
+                    "buys": market_transactions.get("buys"),
+                    "sells": market_transactions.get("sells"),
+                    "buyers": market_transactions.get("buyers"),
+                    "sellers": market_transactions.get("sellers"),
+                    "total": market_transactions.get("total"),
+                }.items()
+            },
+            "liquidityDepthStatus": str(
+                market.get("liquidityDepthStatus") or "starter-depth-only"
+            ),
+            "activityStatus": str(market.get("activityStatus") or "not-observed"),
+            "nextAction": str(market.get("nextAction") or ""),
+            "readOnly": True,
+            "aggregateDataOnly": True,
+            "notExecutableQuote": True,
         },
         "baseScanPublicProfile": {
             "status": profile_status,
@@ -345,6 +421,7 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
         "safePublicSummary": [
             "The public GCA website check passed on the latest daily ops snapshot.",
             "The public registration API check passed without secrets and without writing test records.",
+            market_public_summary,
             public_profile_summary,
             basescan_summary,
             f"The Project Profile BaseScan reviewer map is published at {PROJECT_PROFILE_BASESCAN_MAP_URL}.",
@@ -361,11 +438,17 @@ def build_daily_status_payload(summary: dict[str, Any]) -> dict[str, Any]:
             "requiresSignature": False,
             "requiresTransaction": False,
             "touchesWalletsOrContracts": False,
+            "readsPublicMarketApiOnly": True,
+            "buildsExecutableMarketQuote": False,
+            "submitsTrade": False,
+            "claimsOrganicDemandFromAggregateData": False,
             "readsBaseScanPublicPagesOnly": True,
         },
         "links": {
             "dailyStatusPage": DAILY_STATUS_PAGE_URL,
             "apiStatusPage": "https://gcagochina.com/api-status.html",
+            "marketPage": MARKET_PAGE_URL,
+            "geckoTerminalPool": GECKOTERMINAL_POOL_URL,
             "baseScanPreflightPage": "https://gcagochina.com/basescan-preflight.html",
             "baseScanTokenPage": str(basescan_profile.get("tokenUrl") or BASESCAN_TOKEN_URL),
             "baseScanAddressPage": str(basescan_profile.get("addressUrl") or BASESCAN_ADDRESS_URL),
@@ -389,6 +472,7 @@ def update_daily_status_html(template: str, payload: dict[str, Any]) -> str:
     last_updated = str(payload["lastUpdated"])
     basescan_profile = payload["baseScanPublicProfile"]
     basescan = payload["baseScanPreflight"]
+    market = payload["marketHealth"]
     profile_status = str(basescan_profile.get("status") or "not-run")
     profile_checked_at = str(basescan_profile.get("checkedAt") or "not-observed")
     profile_token_rep = str(basescan_profile.get("tokenRep") or "not-observed")
@@ -429,6 +513,35 @@ def update_daily_status_html(template: str, payload: dict[str, Any]) -> str:
         daily_steps.get("basescan-public-profile-status", {}).get("command")
         or "python3 tools/check_basescan_public_profile.py --json --timeout 20"
     )
+    market_command = str(
+        daily_steps.get("official-pool-market-health", {}).get("command")
+        or "python3 tools/check_gca_market_health.py --json --timeout 20"
+    )
+    market_identity_verified = market.get("identityVerified") is True
+    market_fact_class = "good" if market_identity_verified else "pending"
+    market_fact_text = "Identity verified" if market_identity_verified else "Unavailable"
+    transactions = market.get("transactions24h", {})
+    market_section = (
+        '<section class="section panel" id="marketHealth" aria-labelledby="marketHealthTitle">\n'
+        '        <p class="eyebrow">Official Pool / Read-Only Observation</p>\n'
+        '        <h2 id="marketHealthTitle">GCA/USDT Market Health</h2>\n'
+        '        <p class="note">This is a timestamped aggregate snapshot from the GeckoTerminal Public API. '
+        'It is not a wallet quote, executable price, trading signal, proof of organic demand, or guarantee of liquidity.</p>\n'
+        '        <div class="list" style="margin-top:14px">\n'
+        f'          <div class="row"><span>Observation status</span><strong class="{market_fact_class}"><code>{escape(str(market.get("status") or "not-run"))}</code></strong></div>\n'
+        f'          <div class="row"><span>Checked at</span><strong><code>{escape(str(market.get("checkedAt") or "not-observed"))}</code></strong></div>\n'
+        f'          <div class="row"><span>Identity</span><strong>{"Exact Base / GCA / USDT / Uniswap v4 identifiers verified" if market_identity_verified else "Exact official pool identity not verified by this snapshot"}</strong></div>\n'
+        f'          <div class="row"><span>Pool reserve estimate</span><strong>{"$" + escape(str(market.get("reserveInUsd"))) if market_identity_verified else "Not observed"}</strong></div>\n'
+        f'          <div class="row"><span>24h aggregate volume</span><strong>{"$" + escape(str(market.get("volumeUsd24h"))) if market_identity_verified else "Not observed"}</strong></div>\n'
+        f'          <div class="row"><span>24h transactions</span><strong>{escape(str(transactions.get("total", 0))) if market_identity_verified else "Not observed"} '
+        f'{("(" + str(transactions.get("buys", 0)) + " buys / " + str(transactions.get("sells", 0)) + " sells)") if market_identity_verified else ""}</strong></div>\n'
+        f'          <div class="row"><span>24h price change</span><strong>{escape(str(market.get("priceChangePercentage24h"))) + "%" if market_identity_verified else "Not observed"}</strong></div>\n'
+        f'          <div class="row"><span>Published depth boundary</span><strong><code>{escape(str(market.get("liquidityDepthStatus") or "starter-depth-only"))}</code></strong></div>\n'
+        f'          <div class="row"><span>Read-only command</span><strong><code>{escape(market_command)}</code></strong></div>\n'
+        '        </div>\n'
+        f'        <div class="actions"><a class="button" href="markets.html">Official Market Page</a><a class="button" href="{escape(str(market.get("publicPoolUrl") or GECKOTERMINAL_POOL_URL))}" target="_blank" rel="noreferrer">GeckoTerminal Pool</a></div>\n'
+        '      </section>'
+    )
     old_email_count = int(basescan["filesStillUsingOldEmail"])
     forbidden_legacy_email_count = int(basescan["filesPublishingForbiddenLegacyEmail"])
     old_email_queue = format_path_queue(list(basescan.get("oldEmailFilePaths", [])))
@@ -454,6 +567,30 @@ def update_daily_status_html(template: str, payload: dict[str, Any]) -> str:
             f'          <span class="value {profile_fact_class}">{escape(profile_fact_text)}</span>'
         ),
         "BaseScan public profile fact",
+    )
+    text = replace_once(
+        text,
+        r"<span class=\"label\">Official Pool</span>\s*<span class=\"value [^\"]+\">[^<]+</span>",
+        (
+            '<span class="label">Official Pool</span>\n'
+            f'          <span class="value {market_fact_class}">{escape(market_fact_text)}</span>'
+        ),
+        "official pool fact",
+    )
+    text = replace_once(
+        text,
+        r"<div class=\"row\"><span><code>official-pool-market-health</code></span><strong>[\s\S]*?</strong></div>",
+        (
+            '<div class="row"><span><code>official-pool-market-health</code></span>'
+            f'<strong><code>{escape(market_command)}</code> completed as a read-only aggregate market check.</strong></div>'
+        ),
+        "official pool market command",
+    )
+    text = replace_once(
+        text,
+        r"<section class=\"section panel\" id=\"marketHealth\"[\s\S]*?</section>",
+        market_section,
+        "market health section",
     )
     text = replace_once(
         text,
