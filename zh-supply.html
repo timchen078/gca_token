@@ -284,6 +284,39 @@
         text-align: right;
       }
 
+      .reserve-live-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .reserve-live-header .note {
+        max-width: 760px;
+      }
+
+      .reserve-live-summary {
+        margin: 16px 0 0;
+        border: 1px solid #ecd28c;
+        border-radius: 8px;
+        background: #fff8e6;
+        color: var(--gold);
+        padding: 12px 14px;
+        font-weight: 780;
+      }
+
+      .reserve-live-summary.good {
+        border-color: #9fd8c3;
+        background: #eefaf5;
+        color: var(--green);
+      }
+
+      .reserve-live-summary.bad {
+        border-color: #efb6b8;
+        background: #fff2f2;
+        color: #a11217;
+      }
+
       .notice {
         border-color: #ecd28c;
         background: #fff8e6;
@@ -327,10 +360,20 @@
         .row strong {
           text-align: left;
         }
+
+        .reserve-live-header {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .reserve-live-header .button {
+          width: 100%;
+        }
       }
     </style>
       <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <script src="assets/gca-site.js?v=20260711" defer></script>
+    <script src="assets/reserve-balance.js?v=20260811-1" defer></script>
   </head>
   <body>
     <header>
@@ -481,6 +524,27 @@
           <div class="row"><span>储备转账 2</span><strong>0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317</strong></div>
           <div class="row"><span>储备状态</span><strong>公开披露 owner-held reserve；储备多签、锁仓或归属合约尚未完成</strong></div>
         </div>
+      </section>
+
+      <section class="section panel" data-gca-reserve-balance aria-labelledby="liveReserveTitle">
+        <div class="reserve-live-header">
+          <div>
+            <h2 id="liveReserveTitle">实时只读储备余额</h2>
+            <p class="note">这个浏览器检查通过 Base 官方公共 RPC 读取固定储备地址的当前 GCA 余额、观测区块和合约固定总量，并与已发布的 600,000,000 GCA 储备参考值对比。</p>
+          </div>
+          <button class="button" type="button" data-reserve-action>重新检查</button>
+        </div>
+        <p class="reserve-live-summary pending" data-reserve-summary data-state="pending" aria-live="polite">等待 Base Mainnet 实时储备检查……</p>
+        <div class="list">
+          <div class="row"><span>网络响应</span><strong data-reserve-field="network">检查中……</strong></div>
+          <div class="row"><span>观测区块</span><strong data-reserve-field="block">检查中……</strong></div>
+          <div class="row"><span>储备钱包</span><strong data-reserve-field="wallet">检查中……</strong></div>
+          <div class="row"><span>当前 GCA 余额</span><strong data-reserve-field="balance">检查中……</strong></div>
+          <div class="row"><span>地址余额 / 固定总量</span><strong data-reserve-field="share">检查中……</strong></div>
+          <div class="row"><span>合约 totalSupply</span><strong data-reserve-field="supply">检查中……</strong></div>
+          <div class="row"><span>读取来源</span><strong data-reserve-field="source">检查中……</strong></div>
+        </div>
+        <p class="note" style="margin-top: 14px;"><strong>解释边界：</strong>这里显示的只是一个公开地址在观测区块时的 ERC-20 余额，不证明锁仓、归属、多签、地址所有者身份、托管限制或 circulating supply。观测区块之后的转账会改变余额。<a href="https://basescan.org/token/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6?a=0x5e8F84748612B913aAcC937492AC25dc5630E246" target="_blank" rel="noreferrer">在 BaseScan 核对储备地址</a>。</p>
       </section>
 
       <section class="section two" aria-label="推荐入口">
