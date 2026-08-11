@@ -143,6 +143,7 @@ The command requires explicit confirmations that the manual transfer is complete
 - One-command member access ops pipeline: `tools/run_gca_member_access_ops.py`
 - Daily public health, optional member ops check, optional digest build, and `--update-public-status` snapshot refresh: `tools/run_gca_daily_ops.py`
 - Public daily status snapshot builder for `site/daily-status.html` and `site/daily-status.json`: `tools/build_gca_daily_status_snapshot.py`
+- BaseScan reviewer snapshot reference synchronizer: `tools/sync_basescan_daily_status_references.py`
 - Local redacted operator digest builder: `tools/build_gca_operator_digest.py`
 - GitHub Actions public daily ops check: `.github/workflows/check-gca-daily-ops.yml`
 - Read-only live registration API check: `tools/check_gca_registration_api.py`

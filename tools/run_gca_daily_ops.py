@@ -31,6 +31,10 @@ try:
         DigestError,
         build_operator_digest,
     )
+    from tools.sync_basescan_daily_status_references import (
+        DailyStatusReferenceSyncError,
+        synchronize_references,
+    )
 except ImportError:
     from build_gca_daily_status_snapshot import (
         DEFAULT_HTML_OUTPUT as DEFAULT_DAILY_STATUS_HTML_OUTPUT,
@@ -43,6 +47,10 @@ except ImportError:
         DEFAULT_JSON_OUTPUT as DEFAULT_DIGEST_JSON_OUTPUT,
         DigestError,
         build_operator_digest,
+    )
+    from sync_basescan_daily_status_references import (
+        DailyStatusReferenceSyncError,
+        synchronize_references,
     )
 
 
@@ -504,6 +512,16 @@ def run_daily_ops(
             "ok": None,
             "jsonOutput": str(daily_status_json_output),
             "htmlOutput": str(daily_status_html_output),
+            "referenceSync": {
+                "requested": bool(
+                    update_public_status
+                    and daily_status_json_output.resolve() == DEFAULT_DAILY_STATUS_JSON_OUTPUT.resolve()
+                    and daily_status_html_output.resolve() == DEFAULT_DAILY_STATUS_HTML_OUTPUT.resolve()
+                ),
+                "status": "not-run",
+                "ok": None,
+                "filesChanged": 0,
+            },
         },
         "boundaries": {
             "publicOnlyByDefault": True,
@@ -524,6 +542,7 @@ def run_daily_ops(
             "baseScanPreflightBlocksDailyOps": False,
             "submitsBaseScanRequest": False,
             "writesPublicStatusArtifactsOnlyWhenRequested": True,
+            "synchronizesBaseScanSnapshotReferencesOnlyForCanonicalPublicOutputs": True,
         },
     }
     summary_output.parent.mkdir(parents=True, exist_ok=True)
@@ -563,7 +582,33 @@ def run_daily_ops(
                     0,
                 ),
             })
-        except DailyStatusSnapshotError as exc:
+            reference_sync = summary["publicStatusSnapshot"]["referenceSync"]
+            if reference_sync["requested"]:
+                sync_report = synchronize_references(
+                    daily_status_path=daily_status_json_output,
+                    write=True,
+                )
+                reference_sync.update({
+                    "status": sync_report["status"],
+                    "ok": sync_report["ok"],
+                    "filesChanged": sync_report["summary"]["filesChanged"],
+                    "timestampReplacements": sync_report["summary"]["timestampReplacements"],
+                    "profileDateReplacements": sync_report["summary"]["profileDateReplacements"],
+                    "missingFilePaths": sync_report["missingFilePaths"],
+                    "missingCanonicalReferencePaths": sync_report[
+                        "missingCanonicalReferencePaths"
+                    ],
+                })
+                if not sync_report["ok"]:
+                    raise DailyStatusReferenceSyncError(
+                        "BaseScan daily-status reference sync has missing targets or canonical references"
+                    )
+            else:
+                reference_sync.update({
+                    "status": "skipped-noncanonical-output",
+                    "ok": True,
+                })
+        except (DailyStatusSnapshotError, DailyStatusReferenceSyncError) as exc:
             summary["ok"] = False
             summary["publicStatusSnapshot"].update({
                 "built": False,
@@ -595,7 +640,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--build-digest", action="store_true", help="Also build the redacted local operator digest from summary files.")
     parser.add_argument("--digest-output", type=Path, default=DEFAULT_DIGEST_OUTPUT, help="Markdown operator digest output path.")
     parser.add_argument("--digest-json-output", type=Path, default=DEFAULT_DIGEST_JSON_OUTPUT, help="JSON operator digest output path.")
-    parser.add_argument("--update-public-status", action="store_true", help="Also refresh site/daily-status.html and site/daily-status.json from this summary.")
+    parser.add_argument(
+        "--update-public-status",
+        action="store_true",
+        help=(
+            "Also refresh site/daily-status.html and site/daily-status.json from this summary. "
+            "When the canonical output paths are used, BaseScan reviewer snapshot references are synchronized too."
+        ),
+    )
     parser.add_argument("--daily-status-json-output", type=Path, default=DEFAULT_DAILY_STATUS_JSON_OUTPUT, help="Public daily status JSON output path.")
     parser.add_argument("--daily-status-html-output", type=Path, default=DEFAULT_DAILY_STATUS_HTML_OUTPUT, help="Public daily status HTML output path.")
     args = parser.parse_args(argv)

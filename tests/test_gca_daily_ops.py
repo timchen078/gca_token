@@ -4,7 +4,9 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
+from tools import run_gca_daily_ops as daily_ops_module
 from tools.build_gca_daily_status_snapshot import build_snapshot
 from tools.run_gca_daily_ops import run_daily_ops
 
@@ -417,6 +419,12 @@ class GcaDailyOpsTests(unittest.TestCase):
             self.assertTrue(summary["publicStatusSnapshot"]["requested"])
             self.assertTrue(summary["publicStatusSnapshot"]["built"])
             self.assertTrue(summary["publicStatusSnapshot"]["ok"])
+            self.assertFalse(summary["publicStatusSnapshot"]["referenceSync"]["requested"])
+            self.assertTrue(summary["publicStatusSnapshot"]["referenceSync"]["ok"])
+            self.assertEqual(
+                summary["publicStatusSnapshot"]["referenceSync"]["status"],
+                "skipped-noncanonical-output",
+            )
             self.assertEqual(summary["publicStatusSnapshot"]["baseScanPreflightStatus"], "blocked-before-basescan-resubmission")
             self.assertEqual(summary["publicStatusSnapshot"]["filesStillUsingOldEmail"], 3)
             self.assertEqual(summary["publicStatusSnapshot"]["filesPublishingForbiddenLegacyEmail"], 3)
@@ -436,6 +444,70 @@ class GcaDailyOpsTests(unittest.TestCase):
             self.assertNotIn("/Users/", json.dumps(payload))
             self.assertFalse(summary["boundaries"]["adminTokenPrinted"])
             self.assertFalse(summary["boundaries"]["writesProductionData"])
+            self.assertTrue(
+                summary["boundaries"][
+                    "synchronizesBaseScanSnapshotReferencesOnlyForCanonicalPublicOutputs"
+                ]
+            )
+
+    def test_daily_ops_syncs_reviewer_references_for_canonical_outputs(self):
+        def runner(command, cwd, timeout):
+            if any("check_basescan_public_profile.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_PUBLIC_PROFILE_OUTPUT, stderr="")
+            if any("check_basescan_resubmission_readiness.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_BLOCKED_OUTPUT, stderr="")
+            return subprocess.CompletedProcess(command, 0, stdout='{"ok": true}', stderr="")
+
+        sync_report = {
+            "status": "updated",
+            "ok": True,
+            "summary": {
+                "filesChanged": 4,
+                "timestampReplacements": 9,
+                "profileDateReplacements": 3,
+            },
+            "missingFilePaths": [],
+            "missingCanonicalReferencePaths": [],
+        }
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            summary_output = root / "summary.json"
+            json_output = root / "daily-status.json"
+            html_output = root / "daily-status.html"
+            html_output.write_text(
+                (Path(__file__).resolve().parents[1] / "site" / "daily-status.html").read_text(),
+                encoding="utf-8",
+            )
+
+            with (
+                patch.object(daily_ops_module, "DEFAULT_DAILY_STATUS_JSON_OUTPUT", json_output),
+                patch.object(daily_ops_module, "DEFAULT_DAILY_STATUS_HTML_OUTPUT", html_output),
+                patch.object(
+                    daily_ops_module,
+                    "synchronize_references",
+                    return_value=sync_report,
+                ) as sync_references,
+            ):
+                summary = run_daily_ops(
+                    summary_output=summary_output,
+                    update_public_status=True,
+                    daily_status_json_output=json_output,
+                    daily_status_html_output=html_output,
+                    runner=runner,
+                )
+
+        reference_sync = summary["publicStatusSnapshot"]["referenceSync"]
+        self.assertTrue(summary["ok"])
+        self.assertTrue(reference_sync["requested"])
+        self.assertTrue(reference_sync["ok"])
+        self.assertEqual(reference_sync["status"], "updated")
+        self.assertEqual(reference_sync["filesChanged"], 4)
+        self.assertEqual(reference_sync["timestampReplacements"], 9)
+        self.assertEqual(reference_sync["profileDateReplacements"], 3)
+        sync_references.assert_called_once_with(
+            daily_status_path=json_output,
+            write=True,
+        )
 
     def test_daily_status_snapshot_builder_publishes_public_safe_artifacts(self):
         summary = {

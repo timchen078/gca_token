@@ -241,7 +241,13 @@ To refresh the public daily status page after a local daily ops run:
   --update-public-status
 ```
 
-The daily ops command calls `tools/build_gca_daily_status_snapshot.py` when `--update-public-status` is set. The snapshot builder removes local machine paths from published command strings and does not publish admin tokens, user records, wallet signatures, transactions, or private evidence files.
+The daily ops command calls `tools/build_gca_daily_status_snapshot.py` when `--update-public-status` is set. When the canonical `site/daily-status.html` and `site/daily-status.json` outputs are used, it also runs `tools/sync_basescan_daily_status_references.py` so the BaseScan reviewer pages, owner packets, validators, and test snapshots reference the same public status timestamp and public-profile check date. The snapshot flow removes local machine paths from published command strings and does not publish admin tokens, user records, wallet signatures, transactions, or private evidence files.
+
+Check the alignment without editing files:
+
+```bash
+python3 tools/sync_basescan_daily_status_references.py --check --json
+```
 
 To read recent email registrations:
 

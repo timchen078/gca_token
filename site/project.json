@@ -141,7 +141,7 @@
     "url": "https://gcagochina.com/basescan-handoff.json",
     "chineseOwnerFlowUrl": "https://gcagochina.com/zh-basescan-submit.html",
     "finalSubmissionPackageGeneratedAt": "2026-08-10T15:51:53Z",
-    "dailyStatusGeneratedAt": "2026-07-23T16:08:40Z",
+    "dailyStatusGeneratedAt": "2026-08-11T17:22:15Z",
     "useCase": "Direct evidence index and Chinese owner checklist for the next clean BaseScan token profile submission from support@gcagochina.com."
   },
   "platformReplies": {
@@ -347,12 +347,12 @@
     "baseScanSource": "verified",
     "baseScanOwnership": "verified",
     "baseScanTokenProfile": "ready-for-owner-resubmission",
-    "baseScanTokenProfileLastCheckedDate": "2026-07-23",
-    "baseScanTokenProfileLastCheckedResult": "Read-only public BaseScan check on 2026-07-23: Token Rep remains Unknown; official gcagochina.com metadata and a custom preview image are not published; contract source verification remains visible. The prior 2026-05-23 information-insufficient return remains unresolved. Tim Chen official-domain professional profile evidence is published, support@gcagochina.com is active, and the domain email setup plan, public evidence checklist, activation evidence packet, expanded BaseScan reply template, BaseScan Handoff copy blocks, and Chinese owner flow are published. The 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present and readyForBaseScanEmailEvidence is true. The final owner submission package was regenerated on 2026-08-10T15:51:53Z and the daily public status snapshot was refreshed on 2026-07-23T16:08:40Z.",
+    "baseScanTokenProfileLastCheckedDate": "2026-08-11",
+    "baseScanTokenProfileLastCheckedResult": "Read-only public BaseScan check on 2026-08-11: Token Rep remains Unknown; official gcagochina.com metadata and a custom preview image are not published; contract source verification remains visible. The prior 2026-05-23 information-insufficient return remains unresolved. Tim Chen official-domain professional profile evidence is published, support@gcagochina.com is active, and the domain email setup plan, public evidence checklist, activation evidence packet, expanded BaseScan reply template, BaseScan Handoff copy blocks, and Chinese owner flow are published. The 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present and readyForBaseScanEmailEvidence is true. The final owner submission package was regenerated on 2026-08-10T15:51:53Z and the daily public status snapshot was refreshed on 2026-08-11T17:22:15Z.",
     "baseScanFinalSubmissionPackageGeneratedAt": "2026-08-10T15:51:53Z",
     "dailyStatusPage": "https://gcagochina.com/daily-status.html",
     "dailyStatus": "https://gcagochina.com/daily-status.json",
-    "dailyStatusGeneratedAt": "2026-07-23T16:08:40Z",
+    "dailyStatusGeneratedAt": "2026-08-11T17:22:15Z",
     "externalReviewStatusLastUpdated": "2026-08-10",
     "baseScanRemediationPage": "https://gcagochina.com/basescan-remediation.html",
     "baseScanHandoffPage": "https://gcagochina.com/basescan-handoff.html",
@@ -486,8 +486,14 @@
     "pageUrl": "https://gcagochina.com/content-library.html",
     "url": "https://gcagochina.com/content-library.json",
     "draftCount": 10,
-    "languages": ["en", "zh"],
-    "platforms": ["X", "Telegram"],
+    "languages": [
+      "en",
+      "zh"
+    ],
+    "platforms": [
+      "X",
+      "Telegram"
+    ],
     "operatorReviewRequired": true,
     "safeMessagingRulesAvailable": true
   },
@@ -497,7 +503,10 @@
     "url": "https://gcagochina.com/publishing-desk.json",
     "campaignCycleId": "product-operations-002",
     "nextPublishTargetDate": "2026-08-11",
-    "channels": ["X", "Telegram"],
+    "channels": [
+      "X",
+      "Telegram"
+    ],
     "manualPublishOnly": true,
     "operatorReviewRequired": true,
     "postPublishLedgerUpdateRequired": true
@@ -594,15 +603,15 @@
     "url": "https://gcagochina.com/external-reviews.json",
     "lastUpdated": "2026-08-10",
     "baseScanTokenProfile": "ready-for-owner-resubmission",
-    "baseScanTokenProfileLastCheckedDate": "2026-07-23",
-    "baseScanTokenProfileLastCheckedResult": "Read-only public BaseScan check on 2026-07-23 still shows Token Rep Unknown, no official gcagochina.com metadata, and the default preview image; contract source verification remains visible. Final owner submission package regenerated on 2026-08-10T15:51:53Z; daily public status snapshot refreshed on 2026-07-23T16:08:40Z. BaseScan profile publication is still pending and not approved.",
+    "baseScanTokenProfileLastCheckedDate": "2026-08-11",
+    "baseScanTokenProfileLastCheckedResult": "Read-only public BaseScan check on 2026-08-11 still shows Token Rep Unknown, no official gcagochina.com metadata, and the default preview image; contract source verification remains visible. Final owner submission package regenerated on 2026-08-10T15:51:53Z; daily public status snapshot refreshed on 2026-08-11T17:22:15Z. BaseScan profile publication is still pending and not approved.",
     "baseScanRemediationPage": "https://gcagochina.com/basescan-remediation.html",
     "baseScanHandoffPage": "https://gcagochina.com/basescan-handoff.html",
     "baseScanHandoff": "https://gcagochina.com/basescan-handoff.json",
     "dailyStatusPage": "https://gcagochina.com/daily-status.html",
     "dailyStatus": "https://gcagochina.com/daily-status.json",
     "baseScanFinalSubmissionPackageGeneratedAt": "2026-08-10T15:51:53Z",
-    "dailyStatusGeneratedAt": "2026-07-23T16:08:40Z",
+    "dailyStatusGeneratedAt": "2026-08-11T17:22:15Z",
     "baseScanChineseOwnerFlow": "https://gcagochina.com/zh-basescan-submit.html",
     "teamPage": "https://gcagochina.com/team.html",
     "timChenProfessionalProfile": "https://gcagochina.com/tim-chen.html",
