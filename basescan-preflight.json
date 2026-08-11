@@ -33,7 +33,7 @@
     "finalSubmissionPackageGeneratedAt": "2026-08-11T18:56:43Z",
     "finalSubmissionPackageMarkdown": "launch/basescan_final_submission_package.md",
     "finalSubmissionPackageJson": "launch/basescan_final_submission_package.json",
-    "dailyStatusSnapshotRefreshedAt": "2026-08-11T17:22:15Z",
+    "dailyStatusSnapshotRefreshedAt": "2026-08-11T19:25:21Z",
     "reason": "Align the public BaseScan preflight page with the current final owner submission package and BaseScan Handoff.",
     "finalPackageReferenceAlignment": {
       "tool": "tools/sync_basescan_final_package_references.py",
@@ -46,7 +46,7 @@
     "Domain email provider status, DNS lookup proof, inbound mail proof, outbound reply proof, and support-page proof are saved privately.",
     "Public support/about/team/BaseScan values align to support@gcagochina.com.",
     "Domain email snapshot alignment points platform packets to the current ready DNS snapshot.",
-    "BaseScan reviewer artifacts reference the canonical 2026-08-11T17:22:15Z daily-status snapshot with zero pending file changes.",
+    "BaseScan reviewer artifacts reference the canonical 2026-08-11T19:25:21Z daily-status snapshot with zero pending file changes.",
     "BaseScan handoff artifacts reference the canonical final owner package with zero pending file changes.",
     "Reviewer URLs are reachable: team, Tim Chen, whitepaper, brand kit, support, GitHub, platform replies, and official market route."
   ],

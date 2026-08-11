@@ -31,7 +31,32 @@
     "coinGeckoTrackedListing": "defer",
     "coinMarketCapTrackedListing": "defer",
     "thirdPartyAudit": "not-completed",
-    "memberUtilityAccess": "live-account-ledger-and-manual-reviewed-service-delivery"
+    "memberUtilityAccess": "live-account-ledger-and-manual-reviewed-service-delivery",
+    "marketHealthMonitoring": "live-read-only-daily-ops"
+  },
+  "marketObservation": {
+    "status": "live-read-only",
+    "provider": "GeckoTerminal Public API",
+    "dailyStatusPage": "https://gcagochina.com/daily-status.html#marketHealth",
+    "checkCommand": "python3 tools/check_gca_market_health.py --json --timeout 20",
+    "identityChecks": [
+      "Base network",
+      "official GCA/USDT pool address",
+      "GCA contract",
+      "Base USDT contract",
+      "Uniswap v4 DEX identifier"
+    ],
+    "aggregateFields": [
+      "pool reserve estimate",
+      "24-hour volume",
+      "24-hour buy and sell transaction counts",
+      "24-hour price change"
+    ],
+    "boundaries": [
+      "The snapshot is read-only and never connects a wallet or submits a trade.",
+      "The snapshot is not an executable quote, trading signal, proof of organic demand, or liquidity guarantee.",
+      "A temporary third-party API failure is reported as unavailable rather than as verified market data."
+    ]
   },
   "legitimateActions": [
     {
@@ -96,6 +121,7 @@
   ],
   "watchMetrics": [
     "official GCA/USDT pool depth",
+    "timestamped official-pool identity and aggregate market snapshot",
     "unique holder growth",
     "verified member access and eligible ledger activity",
     "Telegram activity quality",
@@ -105,6 +131,7 @@
   ],
   "nextActions": [
     "Keep current public metadata synchronized.",
+    "Keep the read-only official-pool market check in daily operations and publish only identity-verified aggregate observations.",
     "Publish any future liquidity changes with exact pool and transaction references.",
     "Operate the controlled HTTPS member and credit account path and keep reviewed service delivery boundaries current.",
     "Wait for stronger legitimate activity before CoinGecko or CoinMarketCap submission.",

@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GCA Daily Status Snapshot | Operations Snapshot</title>
-    <meta name="description" content="Public GCA daily operations snapshot for website health, registration API status, BaseScan preflight blockers, and safe operational boundaries.">
+    <meta name="description" content="Public GCA daily operations snapshot for website health, registration API status, official GCA/USDT market identity, BaseScan readiness, and safe operational boundaries.">
     <link rel="canonical" href="https://gcagochina.com/daily-status.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
     <meta property="og:title" content="GCA Daily Status Snapshot | Operations Snapshot">
-    <meta property="og:description" content="Public GCA daily operations snapshot for website health, registration API status, BaseScan preflight blockers, and safe operational boundaries.">
+    <meta property="og:description" content="Public GCA daily operations snapshot for website health, registration API status, official GCA/USDT market identity, BaseScan readiness, and safe operational boundaries.">
     <meta property="og:url" content="https://gcagochina.com/daily-status.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GCA Daily Status Snapshot | Operations Snapshot">
-    <meta name="twitter:description" content="Public GCA daily operations snapshot for website health, registration API status, BaseScan preflight blockers, and safe operational boundaries.">
+    <meta name="twitter:description" content="Public GCA daily operations snapshot for website health, registration API status, official GCA/USDT market identity, BaseScan readiness, and safe operational boundaries.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -257,6 +257,7 @@
         <div class="nav-links">
           <a href="status.html">Status</a>
           <a href="api-status.html">API Status</a>
+          <a href="markets.html">Markets</a>
           <a href="basescan-preflight.html">BaseScan Preflight</a>
           <a href="domain-email.html">Domain Email</a>
           <a href="site-map.html">Site Map</a>
@@ -268,11 +269,12 @@
       <section aria-labelledby="title">
         <p class="eyebrow">Daily Ops Snapshot / 2026-08-11</p>
         <h1 id="title">GCA Daily Status Snapshot</h1>
-        <p class="lead">This page publishes the safe public result of the latest GCA daily operations snapshot. It summarizes public website health, live registration API status, the read-only BaseScan public profile observation, and owner-side preflight readiness without exposing admin tokens, user records, private mailbox evidence, wallet actions, or production write data.</p>
-        <p class="lead">Latest snapshot source: <code>tools/run_gca_daily_ops.py</code>, generated at <code>2026-08-11T17:22:15Z</code>.</p>
+        <p class="lead">This page publishes the safe public result of the latest GCA daily operations snapshot. It summarizes public website health, live registration API status, the read-only official GCA/USDT pool observation, the BaseScan public profile observation, and owner-side preflight readiness without exposing admin tokens, user records, private mailbox evidence, wallet actions, or production write data.</p>
+        <p class="lead">Latest snapshot source: <code>tools/run_gca_daily_ops.py</code>, generated at <code>2026-08-11T19:25:21Z</code>.</p>
         <div class="actions">
           <a class="button primary" href="status.html">Project Status</a>
           <a class="button" href="api-status.html">API Status</a>
+          <a class="button" href="markets.html">Official Market</a>
           <a class="button" href="basescan-preflight.html">BaseScan Preflight</a>
           <a class="button" href="domain-email.html">Domain Email Plan</a>
           <a class="button" href="site-map.html">Site Map</a>
@@ -291,6 +293,10 @@
         <div class="fact">
           <span class="label">Registration API</span>
           <span class="value good">Passed</span>
+        </div>
+        <div class="fact">
+          <span class="label">Official Pool</span>
+          <span class="value good">Identity verified</span>
         </div>
         <div class="fact">
           <span class="label">BaseScan Preflight</span>
@@ -316,6 +322,7 @@
           <div class="list">
             <div class="row"><span><code>public-site</code></span><strong><code>tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20</code> passed for the latest snapshot.</strong></div>
             <div class="row"><span><code>registration-api-public</code></span><strong><code>tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 20</code> passed without secrets and without writing test records.</strong></div>
+            <div class="row"><span><code>official-pool-market-health</code></span><strong><code>python3 tools/check_gca_market_health.py --json --timeout 20</code> completed as a read-only aggregate market check.</strong></div>
             <div class="row"><span><code>basescan-public-profile-status</code></span><strong><code>python3 tools/check_basescan_public_profile.py --json --timeout 20</code> completed as a read-only public-page check.</strong></div>
             <div class="row"><span>API base</span><strong><code>https://gca-registration-api.gcagochina.workers.dev</code></strong></div>
             <div class="row"><span>Admin reads</span><strong>Token-protected; unauthenticated public reads are rejected.</strong></div>
@@ -326,7 +333,7 @@
           <h2>BaseScan Ready For Owner Submission</h2>
           <p class="note">BaseScan source and deployer-wallet ownership verification are complete, and the owner-side public/domain-email preflight is ready for one clean submission from <code>support@gcagochina.com</code>. Public token-profile publication is still pending BaseScan review.</p>
           <div class="list">
-            <div class="row"><span>Public profile observation</span><strong><code>token-profile-not-published</code> observed at <code>2026-08-11T17:22:15Z</code>.</strong></div>
+            <div class="row"><span>Public profile observation</span><strong><code>token-profile-not-published</code> observed at <code>2026-08-11T19:25:21Z</code>.</strong></div>
             <div class="row"><span>Public Token Rep</span><strong><code>Unknown</code></strong></div>
             <div class="row"><span>Official website metadata</span><strong>Not observed on the public BaseScan token page.</strong></div>
             <div class="row"><span>Custom preview image</span><strong>Not observed on the public BaseScan token page.</strong></div>
@@ -341,6 +348,24 @@
             <div class="row"><span>Missing target-email queue</span><strong>No public relative files reported by the latest preflight.</strong></div>
           </div>
         </div>
+      </section>
+
+      <section class="section panel" id="marketHealth" aria-labelledby="marketHealthTitle">
+        <p class="eyebrow">Official Pool / Read-Only Observation</p>
+        <h2 id="marketHealthTitle">GCA/USDT Market Health</h2>
+        <p class="note">This is a timestamped aggregate snapshot from the GeckoTerminal Public API. It is not a wallet quote, executable price, trading signal, proof of organic demand, or guarantee of liquidity.</p>
+        <div class="list" style="margin-top:14px">
+          <div class="row"><span>Observation status</span><strong class="good"><code>official-pool-observed</code></strong></div>
+          <div class="row"><span>Checked at</span><strong><code>2026-08-11T19:25:18Z</code></strong></div>
+          <div class="row"><span>Identity</span><strong>Exact Base / GCA / USDT / Uniswap v4 identifiers verified</strong></div>
+          <div class="row"><span>Pool reserve estimate</span><strong>$41.8349</strong></div>
+          <div class="row"><span>24h aggregate volume</span><strong>$0</strong></div>
+          <div class="row"><span>24h transactions</span><strong>0 (0 buys / 0 sells)</strong></div>
+          <div class="row"><span>24h price change</span><strong>0%</strong></div>
+          <div class="row"><span>Published depth boundary</span><strong><code>starter-depth-only</code></strong></div>
+          <div class="row"><span>Read-only command</span><strong><code>python3 tools/check_gca_market_health.py --json --timeout 20</code></strong></div>
+        </div>
+        <div class="actions"><a class="button" href="markets.html">Official Market Page</a><a class="button" href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal Pool</a></div>
       </section>
 
       <section class="section panel" aria-labelledby="blockersTitle">
@@ -386,7 +411,7 @@
           <li>It does not print admin tokens, user emails, wallet records, or private evidence files.</li>
           <li>It does not write production data, send email, write DNS records, sign messages, submit BaseScan forms, or touch wallets/contracts.</li>
           <li>It does not claim BaseScan token profile approval, external audit completion, tracked listing approval, deep liquidity, or price support.</li>
-          <li>It only records a public health snapshot, a read-only BaseScan profile observation, and the current non-blocking BaseScan preflight status.</li>
+          <li>It only records public health, aggregate market observation, read-only BaseScan profile observation, and the current non-blocking BaseScan preflight status.</li>
         </ul>
       </section>
     </main>

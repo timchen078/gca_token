@@ -16,7 +16,7 @@
     "baseScanTokenProfile": "ready-for-owner-resubmission",
     "baseScanTokenProfileLastCheckedDate": "2026-08-11",
     "baseScanFinalSubmissionPackageGeneratedAt": "2026-08-11T18:56:43Z",
-    "dailyStatusGeneratedAt": "2026-08-11T17:22:15Z",
+    "dailyStatusGeneratedAt": "2026-08-11T19:25:21Z",
     "baseScanResubmissionReady": true,
     "thirdPartyAudit": "not-completed",
     "liquidityDepth": "starter-depth-only",
@@ -325,7 +325,7 @@
       "requiredBefore": "BaseScan token profile publication claim",
       "publicReference": "https://gcagochina.com/basescan-handoff.html",
       "finalSubmissionPackageGeneratedAt": "2026-08-11T18:56:43Z",
-      "dailyStatusGeneratedAt": "2026-08-11T17:22:15Z",
+      "dailyStatusGeneratedAt": "2026-08-11T19:25:21Z",
       "blocks": [
         "BaseScan token profile approval claim",
         "explorer profile publication claim"
@@ -376,7 +376,7 @@
       "Before any manual review, the matching device-key account can permanently cancel its own queued service request; retries are idempotent and do not change credits or wallet state.",
       "The local operator support-review ledger uses a SHA-256 continuity chain and blocks new review writes when continuity verification fails.",
       "The local operator can export an unsigned chain-head checkpoint for separate retention and later ledger-lineage comparison.",
-      "The latest BaseScan owner submission package was generated on 2026-08-11T18:56:43Z, and the daily public status snapshot was refreshed on 2026-08-11T17:22:15Z."
+      "The latest BaseScan owner submission package was generated on 2026-08-11T18:56:43Z, and the daily public status snapshot was refreshed on 2026-08-11T19:25:21Z."
     ],
     "doNotClaim": [
       "credits are cash, income, reimbursement, trading permission, or transferable value",

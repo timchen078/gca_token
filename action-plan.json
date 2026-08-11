@@ -61,9 +61,10 @@
       "status": "ongoing",
       "ownerActionRequired": false,
       "publicEvidenceReady": true,
-      "summary": "Keep official market links consistent, educate users, publish organic project updates, and consider deeper transparent liquidity only through owner-approved on-chain actions.",
+      "summary": "Keep official market links consistent, publish timestamped read-only market evidence, educate users, publish organic project updates, and consider deeper transparent liquidity only through owner-approved on-chain actions.",
       "links": [
         "https://gcagochina.com/markets.html",
+        "https://gcagochina.com/daily-status.html#marketHealth",
         "https://gcagochina.com/liquidity.html",
         "https://gcagochina.com/market-quality.html",
         "https://gcagochina.com/listing-readiness.html"
