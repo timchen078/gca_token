@@ -9,6 +9,7 @@ Allow: /register.html
 Allow: /unsubscribe.html
 Allow: /zh-cn.html
 Allow: /zh-buy.html
+Allow: /zh-markets.html
 Allow: /zh-apply.html
 Allow: /zh-status.html
 Allow: /zh-domain-email.html

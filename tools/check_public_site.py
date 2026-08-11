@@ -53,6 +53,7 @@ BASESCAN_FOLLOWUP_URL = "https://gcagochina.com/basescan-followup.json"
 GITHUB_REPO_URL = "https://github.com/timchen078/gca_token"
 ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
 ZH_BUY_PAGE_URL = "https://gcagochina.com/zh-buy.html"
+ZH_MARKET_PAGE_URL = "https://gcagochina.com/zh-markets.html"
 ZH_APPLY_PAGE_URL = "https://gcagochina.com/zh-apply.html"
 ZH_STATUS_PAGE_URL = "https://gcagochina.com/zh-status.html"
 ZH_DOMAIN_EMAIL_PAGE_URL = "https://gcagochina.com/zh-domain-email.html"
@@ -706,6 +707,44 @@ def validate_markets(text: str) -> None:
     assert_contains(text, 'assets/market-snapshot.js?v=20260811-1', label)
     assert_contains(text, "not a wallet quote, executable price, trading signal, or guarantee", label)
     assert_current_pool_text(text, label)
+
+
+def validate_zh_markets(text: str) -> None:
+    label = "/zh-markets.html"
+    assert_social_preview_meta(text, label, ZH_MARKET_PAGE_URL)
+    for expected in (
+        "GCA 官方市场",
+        "Base Mainnet / chainId 8453",
+        "GCA/USDT",
+        MAINNET_ADDRESS,
+        BASE_USDT_ADDRESS,
+        OFFICIAL_POOL_ADDRESS,
+        OFFICIAL_GECKOTERMINAL_URL,
+        OFFICIAL_DEXSCREENER_URL,
+        "实时只读池快照",
+        "页面只有在池地址、GCA、USDT 和 Uniswap v4 标识全部匹配时才显示数值",
+        'data-gca-market-snapshot',
+        'data-market-field="price"',
+        'data-market-field="reserve"',
+        'data-market-field="volume"',
+        'data-market-field="trades"',
+        'data-market-field="change"',
+        'data-market-field="source"',
+        'assets/market-snapshot.js?v=20260811-1',
+        "不是钱包报价、可执行价格、交易信号或保证",
+        "早期流动性",
+        "不得制造虚假成交、安排关联账户互相成交或伪造市场活动",
+        "BaseScan 代币资料",
+        "等待复审",
+        "第三方审计",
+        "尚无独立审计报告",
+        'href="markets.html"',
+        'href="zh-buy.html"',
+        'href="zh-liquidity.html"',
+    ):
+        assert_contains(text, expected, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
 
 
 def validate_buy_page(text: str) -> None:
@@ -11663,6 +11702,12 @@ def validate_market_snapshot_script(text: str) -> None:
         "data-market-summary",
         "textContent",
         "not a finite number",
+        "正在核验官方池",
+        "官方池身份核验通过",
+        "笔买入",
+        "笔卖出",
+        'locale: "zh-CN"',
+        "Intl.DateTimeFormat(COPY.locale",
     ):
         assert_contains(text, expected, label)
     for forbidden in (
@@ -17199,6 +17244,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/unsubscribe.html",
         "https://gcagochina.com/zh-cn.html",
         "https://gcagochina.com/zh-buy.html",
+        "https://gcagochina.com/zh-markets.html",
         "https://gcagochina.com/zh-apply.html",
         "https://gcagochina.com/zh-status.html",
         "https://gcagochina.com/zh-domain-email.html",
@@ -17355,6 +17401,11 @@ def validate_sitemap(text: str) -> None:
     assert_not_contains(text, "https://gcagochina.com/data.html", label)
     assert_not_contains(text, "https://gcagochina.com/operator.html", label)
     for path in (
+        "markets.html",
+        "zh-markets.html",
+    ):
+        assert_sitemap_lastmod(path, "2026-08-11")
+    for path in (
         "roadmap.html",
         "roadmap.json",
     ):
@@ -17497,6 +17548,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /unsubscribe.html", label)
     assert_contains(text, "Allow: /zh-cn.html", label)
     assert_contains(text, "Allow: /zh-buy.html", label)
+    assert_contains(text, "Allow: /zh-markets.html", label)
     assert_contains(text, "Allow: /zh-apply.html", label)
     assert_contains(text, "Allow: /zh-status.html", label)
     assert_contains(text, "Allow: /zh-domain-email.html", label)
@@ -17680,6 +17732,7 @@ CHECKS: list[EndpointCheck] = [
     ("/action-plan.json", validate_action_plan_json),
     ("/zh-cn.html", validate_zh_cn_page),
     ("/zh-buy.html", validate_zh_buy_page),
+    ("/zh-markets.html", validate_zh_markets),
     ("/zh-apply.html", validate_zh_apply_page),
     ("/zh-status.html", validate_zh_status_page),
     ("/zh-domain-email.html", validate_zh_domain_email_page),

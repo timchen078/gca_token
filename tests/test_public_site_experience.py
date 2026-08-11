@@ -61,11 +61,13 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "index.html",
             "verify.html",
             "buy.html",
+            "markets.html",
             "tools.html",
             "product.html",
             "gca/member-access/",
             "trust.html",
             "zh-cn.html",
+            "zh-markets.html",
         ):
             self.assertIn(f'"{path}"', script)
 

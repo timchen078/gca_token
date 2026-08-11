@@ -28,6 +28,7 @@ OFFICIAL_SWAP_URL = (
 )
 OFFICIAL_SWAP_URL_HTML = OFFICIAL_SWAP_URL.replace("&", "&amp;")
 MARKET_PAGE_URL = "https://gcagochina.com/markets.html"
+ZH_MARKET_PAGE_URL = "https://gcagochina.com/zh-markets.html"
 VERIFY_PAGE_URL = "https://gcagochina.com/verify.html"
 START_PAGE_URL = "https://gcagochina.com/start.html"
 REGISTER_PAGE_URL = "https://gcagochina.com/register.html"
@@ -618,6 +619,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_action_plan_page((ROOT / "site" / "action-plan.html").read_text())
         module.validate_zh_cn_page((ROOT / "site" / "zh-cn.html").read_text())
         module.validate_zh_buy_page((ROOT / "site" / "zh-buy.html").read_text())
+        module.validate_zh_markets((ROOT / "site" / "zh-markets.html").read_text())
         module.validate_zh_apply_page((ROOT / "site" / "zh-apply.html").read_text())
         module.validate_zh_status_page((ROOT / "site" / "zh-status.html").read_text())
         module.validate_zh_domain_email_page((ROOT / "site" / "zh-domain-email.html").read_text())
@@ -1054,6 +1056,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Allow: /action-plan.html", robots)
         self.assertIn("Allow: /zh-cn.html", robots)
         self.assertIn("Allow: /zh-buy.html", robots)
+        self.assertIn("Allow: /zh-markets.html", robots)
         self.assertIn("Allow: /zh-apply.html", robots)
         self.assertIn("Allow: /zh-status.html", robots)
         self.assertIn("Allow: /zh-domain-email.html", robots)
@@ -1281,6 +1284,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/tokenlist.json", sitemap)
         self.assertIn("https://gcagochina.com/buy.html", sitemap)
         self.assertIn("https://gcagochina.com/markets.html", sitemap)
+        self.assertIn(ZH_MARKET_PAGE_URL, sitemap)
         self.assertIn("https://gcagochina.com/supply.html", sitemap)
         self.assertIn(SUPPLY_DISCLOSURE_URL, sitemap)
         self.assertIn("https://gcagochina.com/security.html", sitemap)
@@ -7387,11 +7391,42 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("relationships?.base_token?.data?.id", script)
         self.assertIn("relationships?.quote_token?.data?.id", script)
         self.assertIn("relationships?.dex?.data?.id", script)
+        self.assertIn("正在核验官方池", script)
+        self.assertIn("官方池身份核验通过", script)
+        self.assertIn("笔买入", script)
+        self.assertIn("笔卖出", script)
+        self.assertIn('locale: "zh-CN"', script)
         self.assertNotIn('method: "POST"', script)
         self.assertNotIn("authorization:", script)
         self.assertNotIn("innerHTML", script)
         self.assertNotIn("ethereum.request", script)
         self.assertNotIn("eth_sendTransaction", script)
+
+    def test_chinese_markets_page_reuses_pinned_read_only_snapshot(self):
+        markets = (ROOT / "site" / "zh-markets.html").read_text()
+
+        self.assertIn("GCA 官方市场", markets)
+        self.assertIn('rel="canonical" href="https://gcagochina.com/zh-markets.html"', markets)
+        self.assertIn('hreflang="en" href="https://gcagochina.com/markets.html"', markets)
+        self.assertIn('hreflang="zh-CN" href="https://gcagochina.com/zh-markets.html"', markets)
+        self.assertIn("Base Mainnet / chainId 8453", markets)
+        self.assertIn(MAINNET_ADDRESS, markets)
+        self.assertIn(BASE_USDT_ADDRESS, markets)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, markets)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, markets)
+        self.assertIn(OFFICIAL_DEXSCREENER_URL, markets)
+        self.assertIn("实时只读池快照", markets)
+        self.assertIn('data-gca-market-snapshot', markets)
+        self.assertIn('assets/market-snapshot.js?v=20260811-1', markets)
+        self.assertIn("不是钱包报价、可执行价格、交易信号或保证", markets)
+        self.assertIn("等待复审", markets)
+        self.assertIn("尚无独立审计报告", markets)
+        self.assertIn("不得制造虚假成交、安排关联账户互相成交或伪造市场活动", markets)
+        self.assertIn("@media (max-width: 860px)", markets)
+        self.assertIn("font-size: 38px;", markets)
+        self.assertIn("grid-template-columns: 1fr;", markets)
+        self.assertIn("overflow-wrap: anywhere;", markets)
+        self.assertNotIn(OLD_WETH_POOL_ADDRESS, markets)
 
     def test_supply_page_explains_total_supply_and_reserve(self):
         supply = (ROOT / "site" / "supply.html").read_text()
@@ -10207,6 +10242,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "verify.html",
             ROOT / "site" / "buy.html",
             ROOT / "site" / "markets.html",
+            ROOT / "site" / "zh-markets.html",
             ROOT / "site" / "supply.html",
             ROOT / "site" / "supply.json",
             ROOT / "site" / "security.html",
@@ -10642,6 +10678,7 @@ class LaunchPackageTests(unittest.TestCase):
             ROOT / "site" / "verify.html",
             ROOT / "site" / "buy.html",
             ROOT / "site" / "markets.html",
+            ROOT / "site" / "zh-markets.html",
             ROOT / "site" / "supply.html",
             ROOT / "site" / "supply.json",
             ROOT / "site" / "security.html",
