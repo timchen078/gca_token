@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCA 中文市场 | 官方 GCA/USDT 池</title>
+    <meta name="description" content="GCA 中文官方市场页：核对 Base Mainnet GCA/USDT 池、实时只读市场快照、Uniswap 路线、代币导入信息和风险边界。">
+    <link rel="canonical" href="https://gcagochina.com/zh-markets.html">
+    <link rel="alternate" hreflang="en" href="https://gcagochina.com/markets.html">
+    <link rel="alternate" hreflang="zh-CN" href="https://gcagochina.com/zh-markets.html">
+    <link rel="alternate" hreflang="x-default" href="https://gcagochina.com/markets.html">
+    <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
+    <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GCA | Go China Access">
+    <meta property="og:title" content="GCA 中文市场 | 官方 GCA/USDT 池">
+    <meta property="og:description" content="核对 Base Mainnet 官方 GCA/USDT 池、浏览实时只读市场快照，并查看钱包导入与流动性边界。">
+    <meta property="og:url" content="https://gcagochina.com/zh-markets.html">
+    <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GCA 中文市场 | 官方 GCA/USDT 池">
+    <meta name="twitter:description" content="核对 Base Mainnet 官方 GCA/USDT 池、浏览实时只读市场快照，并查看钱包导入与流动性边界。">
+    <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8f5;
+        --ink: #151817;
+        --muted: #5e6763;
+        --line: #dfe4dd;
+        --panel: #ffffff;
+        --soft: #eef3ef;
+        --red: #d71920;
+        --blue: #1557d7;
+        --green: #087f5b;
+        --gold: #8a650d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--bg);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        line-height: 1.58;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        border-bottom: 1px solid var(--line);
+        background: rgba(247, 248, 245, 0.95);
+        backdrop-filter: blur(16px);
+      }
+
+      nav {
+        min-height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .brand img {
+        width: 34px;
+        height: 34px;
+      }
+
+      .nav-links,
+      .actions {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .nav-links {
+        gap: 16px;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 42px 0 64px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 900px;
+        margin-bottom: 0;
+        font-size: 56px;
+        line-height: 1.08;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin-bottom: 12px;
+        font-size: 24px;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        margin-bottom: 8px;
+        font-size: 18px;
+        letter-spacing: 0;
+      }
+
+      .eyebrow {
+        margin-bottom: 10px;
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .lead {
+        max-width: 840px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        margin-top: 24px;
+      }
+
+      .button {
+        min-height: 42px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 750;
+        cursor: pointer;
+      }
+
+      .button.primary {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+      }
+
+      .section {
+        margin-top: 28px;
+      }
+
+      .facts,
+      .two,
+      .three,
+      .market-snapshot-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 24px;
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .three,
+      .market-snapshot-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .panel,
+      .fact {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .fact {
+        min-height: 96px;
+        padding: 15px;
+      }
+
+      .metric {
+        min-height: 92px;
+        border-left: 3px solid var(--line);
+        background: var(--soft);
+        padding: 14px;
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .value {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      .good {
+        color: var(--green);
+      }
+
+      .pending {
+        color: var(--gold);
+      }
+
+      .bad {
+        color: var(--red);
+      }
+
+      .note {
+        margin-bottom: 0;
+        color: var(--muted);
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: minmax(120px, 0.75fr) minmax(0, 1.35fr);
+        gap: 12px;
+        align-items: start;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .row strong {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        text-align: right;
+      }
+
+      .market-snapshot-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .market-snapshot-header .button {
+        flex: 0 0 auto;
+        min-width: 140px;
+        white-space: nowrap;
+      }
+
+      .market-snapshot-summary {
+        min-height: 24px;
+        margin: 14px 0 0;
+        font-weight: 750;
+      }
+
+      .market-snapshot-grid {
+        margin-top: 18px;
+      }
+
+      .warning {
+        border-color: #ecd28c;
+        background: #fff9e8;
+      }
+
+      .copy-status {
+        min-height: 24px;
+        margin-top: 10px;
+        color: var(--green);
+        font-weight: 750;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        h1 {
+          font-size: 38px;
+        }
+
+        .facts,
+        .two,
+        .three,
+        .market-snapshot-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .market-snapshot-header {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .row strong {
+          text-align: left;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
+    <script src="assets/gca-site.js?v=20260711" defer></script>
+    <script src="assets/market-snapshot.js?v=20260811-1" defer></script>
+  </head>
+  <body>
+    <header>
+      <nav class="shell" aria-label="主导航">
+        <a class="brand" href="zh-cn.html" aria-label="GCA 中文首页">
+          <img src="assets/gca-logo.svg" alt="GCA 标志">
+          <span>GCA</span>
+        </a>
+        <div class="nav-links">
+          <a href="zh-cn.html">首页</a>
+          <a href="verify.html">验证</a>
+          <a href="zh-buy.html">购买</a>
+          <a href="zh-markets.html">市场</a>
+          <a href="zh-liquidity.html">流动性</a>
+          <a href="zh-status.html">进度</a>
+          <a href="zh-support.html">支持</a>
+          <a href="markets.html">EN</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section aria-labelledby="title">
+        <p class="eyebrow">Base Mainnet / chainId 8453</p>
+        <h1 id="title">GCA 官方市场</h1>
+        <p class="lead">这是 GCA 的中文官方市场页。当前统一公开路线是 Base Mainnet 上的 Uniswap v4 GCA/USDT 池。分享或交互前，请在这里核对池地址、报价资产、代币合约和当前风险边界。</p>
+        <div class="actions">
+          <a class="button" href="verify.html">验证 GCA</a>
+          <a class="button" href="markets.html">English Markets</a>
+          <a class="button primary" href="https://app.uniswap.org/swap?chain=base&amp;inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&amp;outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">打开官方兑换</a>
+          <a class="button" href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal</a>
+          <a class="button" href="zh-liquidity.html">流动性说明</a>
+          <a class="button" href="zh-supply.html">总量说明</a>
+          <button class="button" type="button" data-copy-value="0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" data-copy-success="已复制官方池地址">复制池地址</button>
+          <button class="button" type="button" data-copy-value="0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" data-copy-success="已复制 GCA 合约">复制合约</button>
+        </div>
+        <p class="copy-status" role="status" aria-live="polite" data-copy-status></p>
+      </section>
+
+      <section class="facts" aria-label="市场基本信息">
+        <div class="fact"><span class="label">网络</span><span class="value">Base Mainnet / 8453</span></div>
+        <div class="fact"><span class="label">官方交易对</span><span class="value">GCA/USDT</span></div>
+        <div class="fact"><span class="label">DEX</span><span class="value">Uniswap v4 / 0.01%</span></div>
+        <div class="fact"><span class="label">GeckoTerminal</span><span class="value good">资料已通过 2026-05-11</span></div>
+      </section>
+
+      <section class="section panel" aria-labelledby="snapshotTitle" data-gca-market-snapshot>
+        <div class="market-snapshot-header">
+          <div>
+            <h2 id="snapshotTitle">实时只读池快照</h2>
+            <p class="note">浏览器从 GeckoTerminal Public API 读取官方 Base Mainnet GCA/USDT 池数据。页面只有在池地址、GCA、USDT 和 Uniswap v4 标识全部匹配时才显示数值。</p>
+          </div>
+          <button class="button" type="button" data-market-action>刷新快照</button>
+        </div>
+        <p class="market-snapshot-summary pending" role="status" aria-live="polite" data-market-summary>等待实时快照</p>
+        <div class="market-snapshot-grid" aria-label="官方池实时快照">
+          <div class="metric"><span class="label">GCA 美元价格</span><span class="value" data-market-field="price">等待中</span></div>
+          <div class="metric"><span class="label">池储备估值</span><span class="value" data-market-field="reserve">等待中</span></div>
+          <div class="metric"><span class="label">24 小时成交量</span><span class="value" data-market-field="volume">等待中</span></div>
+          <div class="metric"><span class="label">24 小时交易笔数</span><span class="value" data-market-field="trades">等待中</span></div>
+          <div class="metric"><span class="label">24 小时价格变化</span><span class="value" data-market-field="change">等待中</span></div>
+          <div class="metric"><span class="label">观察时间</span><span class="value" data-market-field="source">等待中</span></div>
+        </div>
+        <p class="note" style="margin-top:14px">聚合快照可能延迟或暂时不可用，不是钱包报价、可执行价格、交易信号或保证。交互前请在<a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">官方 GeckoTerminal 池页面</a>核对当前数值和价格影响。</p>
+      </section>
+
+      <section class="section two" aria-label="官方路线">
+        <div class="panel">
+          <h2>官方池身份</h2>
+          <div class="list">
+            <div class="row"><span>池地址</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
+            <div class="row"><span>基础代币</span><strong>GCA</strong></div>
+            <div class="row"><span>GCA 合约</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+            <div class="row"><span>报价资产</span><strong>Base USDT</strong></div>
+            <div class="row"><span>USDT 合约</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>公开核对链接</h2>
+          <div class="list">
+            <div class="row"><span><a href="zh-buy.html">中文购买说明</a></span><strong>购买前核对</strong></div>
+            <div class="row"><span><a href="https://app.uniswap.org/swap?chain=base&amp;inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&amp;outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">官方兑换路线</a></span><strong>USDT 换 GCA</strong></div>
+            <div class="row"><span><a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal 池</a></span><strong>GCA/USDT</strong></div>
+            <div class="row"><span><a href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener</a></span><strong>市场聚合</strong></div>
+            <div class="row"><span><a href="https://basescan.org/token/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan 代币页</a></span><strong>ERC-20 链上记录</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section three" aria-label="市场边界">
+        <div class="panel">
+          <h3>统一公开路线</h3>
+          <p class="note">当前对外统一分享上面的 GCA/USDT 池和官方兑换路线。历史试验池可能仍留在链上，但不作为主要市场入口推广。</p>
+        </div>
+        <div class="panel">
+          <h3>早期流动性</h3>
+          <p class="note">当前池深度仍小，小额交易也可能影响价格，成交结果和滑点可能明显变化。请查看<a href="zh-liquidity.html">中文流动性说明</a>。</p>
+        </div>
+        <div class="panel">
+          <h3>只接受真实活动</h3>
+          <p class="note">功能性买卖测试不能证明自然需求。不得制造虚假成交、安排关联账户互相成交或伪造市场活动。</p>
+        </div>
+      </section>
+
+      <section class="section two" aria-label="钱包和审核状态">
+        <div class="panel">
+          <h2>钱包手动导入</h2>
+          <p class="note">如果钱包没有自动显示 GCA，请在 Base Mainnet 手动导入代币。</p>
+          <div class="list">
+            <div class="row"><span>代币合约</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+            <div class="row"><span>符号</span><strong>GCA</strong></div>
+            <div class="row"><span>小数位</span><strong>18</strong></div>
+            <div class="row"><span>Logo</span><strong>https://gcagochina.com/assets/gca-logo.png</strong></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>外部资料状态</h2>
+          <div class="list">
+            <div class="row"><span>BaseScan 合约源码</span><strong class="good">已验证</strong></div>
+            <div class="row"><span>BaseScan 代币资料</span><strong class="pending">等待复审</strong></div>
+            <div class="row"><span>GeckoTerminal 资料</span><strong class="good">已通过</strong></div>
+            <div class="row"><span>钱包风险提示</span><strong class="good">项目方最近观察未显示警告</strong></div>
+            <div class="row"><span>第三方审计</span><strong class="pending">尚无独立审计报告</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel warning" aria-labelledby="riskTitle">
+        <h2 id="riskTitle">市场风险边界</h2>
+        <p class="note">GCA 仍处于早期阶段，官方 GCA/USDT 池目前只有早期深度。本页用于核对合约和市场路线，不提供个性化投资建议。GCA 不代表价格支持、收益、赎回权、保证流动性或平台收入权利，目前也没有独立第三方审计报告。</p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">GCA 中文官方市场页。交互前请核对 Base Mainnet chainId 8453、GCA 合约、USDT 合约和官方池地址。</div>
+    </footer>
+
+    <script>
+      (() => {
+        const status = document.querySelector("[data-copy-status]");
+        document.querySelectorAll("[data-copy-value]").forEach((button) => {
+          button.addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(button.dataset.copyValue);
+              status.textContent = button.dataset.copySuccess;
+            } catch (_error) {
+              status.textContent = "复制失败，请从页面信息中手动复制。";
+            }
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

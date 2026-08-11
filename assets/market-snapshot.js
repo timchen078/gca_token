@@ -11,14 +11,30 @@
   const REQUEST_TIMEOUT_MS = 8000;
   const MAX_RESPONSE_BYTES = 65536;
 
-  const COPY = {
-    checking: "Checking the official pool...",
-    ready: "Official pool identity verified. Values below are a browser-time GeckoTerminal snapshot.",
-    failed: "Live snapshot unavailable or pool identity did not match. Use the official GeckoTerminal link to verify current data.",
-    waiting: "Waiting for live snapshot",
-    unavailable: "Unavailable",
-    refresh: "Refresh snapshot",
-  };
+  const isChinese = (document.documentElement.lang || "").toLowerCase().startsWith("zh");
+  const COPY = isChinese
+    ? {
+        checking: "正在核验官方池……",
+        ready: "官方池身份核验通过。以下为浏览器当前读取的 GeckoTerminal 快照。",
+        failed: "实时快照暂不可用或池身份不匹配，请通过官方 GeckoTerminal 链接核对当前数据。",
+        unavailable: "暂不可用",
+        refresh: "刷新快照",
+        buys: "笔买入",
+        sells: "笔卖出",
+        source: "GeckoTerminal",
+        locale: "zh-CN",
+      }
+    : {
+        checking: "Checking the official pool...",
+        ready: "Official pool identity verified. Values below are a browser-time GeckoTerminal snapshot.",
+        failed: "Live snapshot unavailable or pool identity did not match. Use the official GeckoTerminal link to verify current data.",
+        unavailable: "Unavailable",
+        refresh: "Refresh snapshot",
+        buys: "buys",
+        sells: "sells",
+        source: "GeckoTerminal",
+        locale: "en",
+      };
 
   function setText(container, field, value) {
     const element = container.querySelector(`[data-market-field="${field}"]`);
@@ -120,7 +136,7 @@
     const priceChange = finiteNumber(attributes.price_change_percentage?.h24, "24h price change");
     const buys = finiteNumber(attributes.transactions?.h24?.buys, "24h buys");
     const sells = finiteNumber(attributes.transactions?.h24?.sells, "24h sells");
-    const checkedAt = new Intl.DateTimeFormat("en", {
+    const checkedAt = new Intl.DateTimeFormat(COPY.locale, {
       dateStyle: "medium",
       timeStyle: "medium",
     }).format(new Date());
@@ -128,9 +144,9 @@
     setText(container, "price", formatUsd(price));
     setText(container, "reserve", formatUsd(reserve));
     setText(container, "volume", formatUsd(volume));
-    setText(container, "trades", `${buys + sells} (${buys} buys / ${sells} sells)`);
+    setText(container, "trades", `${buys + sells} (${buys} ${COPY.buys} / ${sells} ${COPY.sells})`);
     setText(container, "change", formatChange(priceChange));
-    setText(container, "source", `GeckoTerminal / ${checkedAt}`);
+    setText(container, "source", `${COPY.source} / ${checkedAt}`);
 
     const changeElement = container.querySelector('[data-market-field="change"]');
     if (changeElement) {
