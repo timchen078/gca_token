@@ -482,16 +482,16 @@
 
       <section class="section panel" aria-labelledby="memberOpsTitle">
         <h2 id="memberOpsTitle">Member Access Ops Pipeline</h2>
-        <p class="note">Use this local operator pipeline after live account, wallet verification, credit ledger, member ledger, or member-benefit review records exist. It requires the ignored local <code>cloudflare/gca-registration-worker/.env.admin.local</code> file with <code>ADMIN_READ_TOKEN</code>. The output stays in <code>.gca_access_data/</code> and is not committed.</p>
+        <p class="note">Use this local operator pipeline after live account, wallet verification, credit ledger, member ledger, service request, service review, service follow-up, credit usage, or member-benefit review records exist. It requires the ignored local <code>cloudflare/gca-registration-worker/.env.admin.local</code> file with <code>ADMIN_READ_TOKEN</code>. The output stays in <code>.gca_access_data/</code> and is not committed.</p>
         <p class="note">Account follow-up and cancellation plus token-protected service-request, service-review, service-follow-up, credit-usage, member-review, and holding-verification Worker routes are production-live. <code>0014_service_request_cancellations.sql</code> and <code>0015_service_request_followups.sql</code>, the Worker deploy, and public/admin read-only smoke checks passed on 2026-08-10 UTC. Anonymous operator reads return HTTP 401.</p>
         <div class="grid">
           <div>
             <h3>1. Token-Protected Export</h3>
-            <p class="note">Run <code>.venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --summary-output .gca_access_data/gca_member_access_ops_summary.json</code>.</p>
+            <p class="note">Run <code>.venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --include-service-routes --summary-output .gca_access_data/gca_member_access_ops_summary.json</code>.</p>
           </div>
           <div>
             <h3>2. Local Reports</h3>
-            <p class="note">Expected outputs include <code>.gca_access_data/cloudflare_member_access_export.json</code>, account/wallet/credit/service-request/credit-usage/member CSVs, and <code>.gca_access_data/member_access_report/gca_member_access_summary.json</code>.</p>
+            <p class="note">Expected outputs include <code>.gca_access_data/cloudflare_member_access_export.json</code>, account/wallet/credit/service-request/service-review/service-follow-up/credit-usage/member CSVs, and <code>.gca_access_data/member_access_report/gca_member_access_summary.json</code>. Service review and follow-up reports are read-only local operator outputs.</p>
           </div>
           <div>
             <h3>3. Support Queue</h3>
