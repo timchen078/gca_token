@@ -2,10 +2,11 @@
   "schema": "https://gcagochina.com/announcements.json",
   "pageUrl": "https://gcagochina.com/announcements.html",
   "status": "public-announcement-hub-published",
-  "lastUpdated": "2026-08-10",
+  "lastUpdated": "2026-08-11",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
-  "currentStage": "early-public-operations",
+  "currentStage": "live-product-operations",
+  "campaignCycleId": "product-operations-002",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialX": "https://x.com/GCAAIGoChina",
@@ -23,9 +24,10 @@
     "status": "public-campaign-calendar-published",
     "pageUrl": "https://gcagochina.com/campaign.html",
     "url": "https://gcagochina.com/campaign.json",
-    "window": "2026-05-20 to 2026-06-16",
+    "campaignCycleId": "product-operations-002",
+    "window": "2026-08-11 to 2026-09-07",
     "draftCount": 10,
-    "nextDraftTargetDate": "2026-06-07"
+    "nextDraftTargetDate": "2026-08-11"
   },
   "contentLibrary": {
     "status": "public-bilingual-content-library-published",
@@ -38,7 +40,8 @@
     "status": "public-publishing-desk-published",
     "pageUrl": "https://gcagochina.com/publishing-desk.html",
     "url": "https://gcagochina.com/publishing-desk.json",
-    "nextPublishTargetDate": "2026-06-07",
+    "campaignCycleId": "product-operations-002",
+    "nextPublishTargetDate": "2026-08-11",
     "manualPublishOnly": true
   },
   "publishedPosts": [
@@ -92,28 +95,28 @@
   ],
   "nextContentQueue": [
     {
-      "targetDate": "2026-06-07",
-      "topic": "Product Utility Intro",
-      "angle": "Introduce GCA AI Quant Access, planned modules, live account/wallet/ledger foundation, and release gates.",
+      "targetDate": "2026-08-11",
+      "topic": "Live Product Operations",
+      "angle": "Show the working account, read-only wallet, ledger, reviewed-service, delivery-receipt, and browser-tool surface with explicit manual boundaries.",
       "recommendedLink": "https://gcagochina.com/product.html"
     },
     {
-      "targetDate": "2026-06-10",
-      "topic": "Security Boundary",
-      "angle": "Explain the public contract-control facts and the current boundary that no third-party audit has been completed yet.",
-      "recommendedLink": "https://gcagochina.com/security.html"
+      "targetDate": "2026-08-14",
+      "topic": "Member Account Journey",
+      "angle": "Explain controlled account access, read-only verification, eligible ledger records, and the protected 30-day manual member review.",
+      "recommendedLink": "https://gcagochina.com/gca/member-access/"
     },
     {
-      "targetDate": "2026-06-13",
-      "topic": "Community Verification",
-      "angle": "Point users to official X, Telegram, website, contract, and verification pages before using any link.",
-      "recommendedLink": "https://gcagochina.com/community.html"
+      "targetDate": "2026-08-17",
+      "topic": "Ten Browser Risk Tools",
+      "angle": "Introduce the live browser-only risk and research workspace without suggesting exchange connectivity or automatic execution.",
+      "recommendedLink": "https://gcagochina.com/tools.html"
     }
   ],
   "safeMessagingRules": [
     "Use the official website, X, Telegram, contract address, and GCA/USDT route only.",
-    "Frame GCA as a fixed-supply Base token and concept-stage access layer for future China-facing Web3 tools.",
-    "State that account intake, read-only wallet verification, and eligible credit/member ledger records are live, while the 10,000 GCA member benefit remains manual review only.",
+    "Frame GCA as a fixed-supply Base token with live controlled account, read-only verification, eligible ledger, reviewed-service, and browser-tool operations.",
+    "State that account intake, read-only wallet verification, eligible credit/member ledger records, reviewed service requests, and delivery receipts are live, while member approval and the 10,000 GCA member benefit remain manual review only.",
     "State that no third-party audit has been completed unless an independent report is publicly available.",
     "State that starter-depth liquidity can create high slippage and price impact."
   ],
@@ -139,10 +142,11 @@
     "latestXPost": "https://x.com/GCAAIGoChina/status/2058090599535030302",
     "officialTelegram": "https://t.me/gcagochinaofficial",
     "verify": "https://gcagochina.com/verify.html",
-    "radarIssue004Page": "https://gcagochina.com/radar-issue-004.html",
-    "radarIssue004": "https://gcagochina.com/radar-issue-004.json",
-    "memberAccessBrief001Page": "https://gcagochina.com/member-access-brief-001.html",
-    "memberAccessBrief001": "https://gcagochina.com/member-access-brief-001.json",
+    "radarIssue006Page": "https://gcagochina.com/radar-issue-006.html",
+    "radarIssue006": "https://gcagochina.com/radar-issue-006.json",
+    "memberAccessPage": "https://gcagochina.com/gca/member-access/",
+    "toolsPage": "https://gcagochina.com/tools.html",
+    "serviceDeliveryPlaybookPage": "https://gcagochina.com/service-delivery-playbook.html",
     "radar": "https://gcagochina.com/radar.html",
     "roadmap": "https://gcagochina.com/roadmap.html",
     "risk": "https://gcagochina.com/risk.html"

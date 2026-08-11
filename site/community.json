@@ -2,10 +2,11 @@
   "schema": "https://gcagochina.com/community.json",
   "pageUrl": "https://gcagochina.com/community.html",
   "status": "public-community-kit-published",
-  "lastUpdated": "2026-06-02",
+  "lastUpdated": "2026-08-11",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
-  "currentStage": "early-public-operations",
+  "currentStage": "live-product-operations",
+  "campaignCycleId": "product-operations-002",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialTelegram": "https://t.me/gcagochinaofficial",
@@ -33,11 +34,12 @@
     "Announcement hub: https://gcagochina.com/announcements.html",
     "Campaign calendar: https://gcagochina.com/campaign.html",
     "Bilingual content library: https://gcagochina.com/content-library.html",
-    "Issue 004 ready brief: https://gcagochina.com/radar-issue-004.html",
-    "Member Access Brief 001: https://gcagochina.com/member-access-brief-001.html",
+    "Current Radar archive: Issue 006, Live Access and Verifiable Market Context: https://gcagochina.com/radar-issue-006.html",
+    "Live Member Access: https://gcagochina.com/gca/member-access/",
+    "Live browser risk tools: https://gcagochina.com/tools.html",
     "Publishing desk: https://gcagochina.com/publishing-desk.html",
     "Security boundary: https://gcagochina.com/security.html",
-    "Current status: concept-stage utility buildout with public account intake, read-only wallet verification, and eligible 100 credits / GCA Member ledger records live; BaseScan token profile was returned again as information-insufficient on 2026-05-23, the BaseScan Handoff, Chinese owner flow, Tim Chen profile, domain email evidence, and support@gcagochina.com mailbox are ready for one clean owner resubmission, the owner observed no wallet risk warning visible on 2026-05-14, and no third-party audit has been completed."
+    "Current status: live product operations include controlled account intake, read-only wallet verification, eligible 100 credits / GCA Member ledger records, reviewed service requests, delivery receipts, and ten browser-only risk and research tools; GCA Member approval and the 10,000 GCA member benefit remain manual, BaseScan has not published the token profile, and no third-party audit has been completed."
   ],
   "announcementHub": {
     "status": "public-announcement-hub-published",
@@ -51,7 +53,8 @@
     "status": "public-campaign-calendar-published",
     "pageUrl": "https://gcagochina.com/campaign.html",
     "url": "https://gcagochina.com/campaign.json",
-    "campaignWindow": "2026-05-20 to 2026-06-16",
+    "campaignCycleId": "product-operations-002",
+    "campaignWindow": "2026-08-11 to 2026-09-07",
     "contentCadence": "every-3-days",
     "operatorReviewRequired": true
   },
@@ -67,7 +70,8 @@
     "status": "public-publishing-desk-published",
     "pageUrl": "https://gcagochina.com/publishing-desk.html",
     "url": "https://gcagochina.com/publishing-desk.json",
-    "nextPublishTargetDate": "2026-06-07",
+    "campaignCycleId": "product-operations-002",
+    "nextPublishTargetDate": "2026-08-11",
     "manualPublishOnly": true
   },
   "xLaunchPack": {

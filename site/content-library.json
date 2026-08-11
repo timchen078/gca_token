@@ -2,18 +2,19 @@
   "schema": "https://gcagochina.com/content-library.json",
   "pageUrl": "https://gcagochina.com/content-library.html",
   "status": "public-bilingual-content-library-published",
-  "lastUpdated": "2026-06-07",
+  "lastUpdated": "2026-08-11",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
-  "currentStage": "early-public-operations",
+  "currentStage": "live-product-operations",
+  "campaignCycleId": "product-operations-002",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "officialX": "https://x.com/GCAAIGoChina",
   "officialTelegram": "https://t.me/gcagochinaofficial",
   "officialWebsite": "https://gcagochina.com/",
   "campaignWindow": {
-    "startDate": "2026-05-20",
-    "endDate": "2026-06-16",
+    "startDate": "2026-08-11",
+    "endDate": "2026-09-07",
     "intervalDays": 3,
     "draftCount": 10,
     "operatorReviewRequired": true
@@ -30,7 +31,269 @@
     "BaseScan or security-vendor approval claim unless the platform confirms it",
     "LP lock, reserve lock, buyback, or price-support claim before evidence exists"
   ],
+  "previousCampaignWindow": {
+    "startDate": "2026-05-20",
+    "endDate": "2026-06-16",
+    "status": "archived-in-this-file",
+    "draftCount": 10
+  },
   "drafts": [
+    {
+      "id": "gca-draft-2026-08-11-live-product-operations",
+      "targetDate": "2026-08-11",
+      "topic": "Live Product Operations",
+      "recommendedLink": "https://gcagochina.com/product.html",
+      "hashtags": ["#GCA", "#GoChina", "#Base", "#Web3Tools", "#RiskFirst"],
+      "visualTheme": "GCA product operations map showing account access, read-only wallet verification, ledgers, reviewed services, and browser tools.",
+      "xEnglish": [
+        "GCA / Go China Access is moving from concept pages to working product operations on Base.",
+        "Live today: controlled account access, read-only GCA wallet verification, eligible 100-credit and member ledger records, reviewed service requests, delivery receipts, and ten browser-only risk and research tools.",
+        "Manual boundaries remain: 30-day GCA Member approval, the 10,000 GCA member-benefit review, BaseScan profile publication, and any future trading integration.",
+        "https://gcagochina.com/product.html",
+        "Base Mainnet. Fixed supply. Verify the official contract and current feature status first.",
+        "#GCA #GoChina #Base #Web3Tools #RiskFirst"
+      ],
+      "xChinese": [
+        "GCA / Go China Access 正在从概念页面推进到 Base 上可使用的产品运营流程。",
+        "目前已上线：受控账户入口、GCA 钱包只读验证、符合条件的 100 credits 和会员账本记录、人工审核服务申请、交付回执，以及 10 个浏览器端风险与研究工具。",
+        "仍需人工或外部处理：连续持有 30 天的 GCA Member 审核、10,000 GCA 会员权益审核、BaseScan 资料发布，以及未来任何交易集成。",
+        "https://gcagochina.com/product.html",
+        "Base Mainnet，固定供应。请先核对官方合约和当前功能状态。",
+        "#GCA #GoChina #Base #Web3Tools #RiskFirst"
+      ],
+      "telegram": [
+        "GCA product operations are live across controlled account access, read-only wallet verification, eligible ledgers, reviewed services, delivery receipts, and browser-only risk tools.",
+        "Manual review and release boundaries remain visible on the official product page: https://gcagochina.com/product.html"
+      ],
+      "claimBoundary": "Live product-operations update only; no price, return, listing, audit-completion, automatic token-benefit, custody, or self-service trading claim."
+    },
+    {
+      "id": "gca-draft-2026-08-14-member-account-journey",
+      "targetDate": "2026-08-14",
+      "topic": "Member Account Journey",
+      "recommendedLink": "https://gcagochina.com/gca/member-access/",
+      "hashtags": ["#GCA", "#GoChina", "#Base", "#MemberAccess"],
+      "visualTheme": "Five-step member journey from controlled account creation to read-only wallet and manual eligibility review.",
+      "xEnglish": [
+        "The GCA member path is now a working controlled flow: create device access, submit account details, run a read-only Base balance check, receive eligible ledger records, and follow redacted status updates.",
+        "GCA Member approval still requires verified 1,000,000 GCA holding history for 30 consecutive days and manual review. No wallet signature or token approval is requested.",
+        "https://gcagochina.com/gca/member-access/",
+        "#GCA #GoChina #Base #MemberAccess"
+      ],
+      "xChinese": [
+        "GCA 会员路径已经形成可运行的受控流程：创建设备访问、提交账户资料、执行 Base 钱包余额只读检查、生成符合条件的账本记录，并查看脱敏状态。",
+        "GCA Member 仍需验证连续 30 天持有 1,000,000 GCA 并经过人工审核。流程不会要求钱包签名或代币授权。",
+        "https://gcagochina.com/gca/member-access/",
+        "#GCA #GoChina #Base #MemberAccess"
+      ],
+      "telegram": [
+        "GCA Member Access now provides controlled account intake, read-only balance verification, eligible ledger creation, and redacted status refresh.",
+        "The 30-day GCA Member decision remains manual: https://gcagochina.com/gca/member-access/"
+      ],
+      "claimBoundary": "Account-access explanation only; no automatic member approval, token claim, wallet-signature, custody, or trading-permission claim."
+    },
+    {
+      "id": "gca-draft-2026-08-17-browser-risk-tools",
+      "targetDate": "2026-08-17",
+      "topic": "Ten Browser Risk Tools",
+      "recommendedLink": "https://gcagochina.com/tools.html",
+      "hashtags": ["#GCA", "#GoChina", "#RiskFirst", "#Web3Tools"],
+      "visualTheme": "Compact tool workspace showing replay, backtest, planning, journal, research, training, and portfolio risk modules.",
+      "xEnglish": [
+        "GCA now publishes ten browser-only risk and research tools for replay, backtesting, readiness review, position sizing, planning, journaling, research, training, and portfolio risk.",
+        "They use user-entered data locally. They do not connect an exchange, fetch private account data, or place orders.",
+        "https://gcagochina.com/tools.html",
+        "#GCA #GoChina #RiskFirst #Web3Tools"
+      ],
+      "xChinese": [
+        "GCA 已公开 10 个浏览器端风险与研究工具，覆盖复盘、回测、入场准备复核、仓位计算、计划、日志、研究、训练和组合风险。",
+        "这些工具在本地处理用户输入，不连接交易所、不读取私人账户数据，也不执行下单。",
+        "https://gcagochina.com/tools.html",
+        "#GCA #GoChina #RiskFirst #Web3Tools"
+      ],
+      "telegram": [
+        "Ten GCA browser-only risk and research tools are live. They process user-entered data locally and do not connect exchanges or place orders.",
+        "Tool workspace: https://gcagochina.com/tools.html"
+      ],
+      "claimBoundary": "Browser-tool status only; no live-data, exchange-connectivity, signal, execution, or performance claim."
+    },
+    {
+      "id": "gca-draft-2026-08-20-verifiable-market-context",
+      "targetDate": "2026-08-20",
+      "topic": "Verifiable Market Context",
+      "recommendedLink": "https://gcagochina.com/radar-issue-006.html",
+      "hashtags": ["#GCA", "#GoChina", "#Base", "#Onchain"],
+      "visualTheme": "Issue 006 status strip with Base identity, official GCA/USDT pool, and read-only snapshot marker.",
+      "xEnglish": [
+        "Weekly Go China Radar Issue 006 records GCA's live access layer and verifiable official-pool context.",
+        "The market snapshot identity-pins Base Mainnet, GCA, Base USDT, and the official pool before showing a read-only third-party aggregate.",
+        "https://gcagochina.com/radar-issue-006.html",
+        "#GCA #GoChina #Base #Onchain"
+      ],
+      "xChinese": [
+        "Weekly Go China Radar Issue 006 记录了 GCA 已上线的访问流程和可验证官方池信息。",
+        "市场快照先校验 Base Mainnet、GCA、Base USDT 和官方池身份，再显示第三方只读汇总。",
+        "https://gcagochina.com/radar-issue-006.html",
+        "#GCA #GoChina #Base #Onchain"
+      ],
+      "telegram": [
+        "Issue 006 documents live access and identity-pinned read-only context for the official GCA/USDT pool.",
+        "Read the archive: https://gcagochina.com/radar-issue-006.html"
+      ],
+      "claimBoundary": "Read-only market context only; not a wallet quote, executable price, signal, forecast, or liquidity guarantee."
+    },
+    {
+      "id": "gca-draft-2026-08-23-supply-reserve",
+      "targetDate": "2026-08-23",
+      "topic": "Fixed Supply And Reserve",
+      "recommendedLink": "https://gcagochina.com/supply.html",
+      "hashtags": ["#GCA", "#Base", "#ERC20", "#Transparency"],
+      "visualTheme": "Fixed one-billion supply ledger with verified contract and disclosed owner-reserve address.",
+      "xEnglish": [
+        "GCA supply facts remain simple: 1,000,000,000 fixed-supply tokens, no post-deployment minting, no transfer tax, no blacklist, and a publicly disclosed owner reserve.",
+        "The reserve is not described as burned, locked, vested, multisig-controlled, or automatically circulating.",
+        "https://gcagochina.com/supply.html",
+        "#GCA #Base #ERC20 #Transparency"
+      ],
+      "xChinese": [
+        "GCA 供应规则保持清晰：固定总量 1,000,000,000 枚，部署后不可增发，无转账税、无黑名单，并公开披露持有人储备地址。",
+        "该储备不被描述为销毁、锁仓、归属、多签控制或自动流通。",
+        "https://gcagochina.com/supply.html",
+        "#GCA #Base #ERC20 #Transparency"
+      ],
+      "telegram": [
+        "GCA has a fixed one-billion supply and no post-deployment mint path. The owner reserve is publicly disclosed with its custody boundaries.",
+        "Supply evidence: https://gcagochina.com/supply.html"
+      ],
+      "claimBoundary": "Supply disclosure only; do not overstate circulation, reserve restrictions, decentralization, or liquidity backing."
+    },
+    {
+      "id": "gca-draft-2026-08-26-reviewed-service-workflow",
+      "targetDate": "2026-08-26",
+      "topic": "Reviewed Service Workflow",
+      "recommendedLink": "https://gcagochina.com/service-delivery-playbook.html",
+      "hashtags": ["#GCA", "#GoChina", "#ProductOps", "#RiskFirst"],
+      "visualTheme": "Service workflow from request through manual review, follow-up, delivery, receipt, and credit settlement.",
+      "xEnglish": [
+        "GCA reviewed services now follow a visible workflow: account request, manual review, bounded follow-up, approved delivery, delivery receipt, and at-most-once credit settlement.",
+        "Submitting a request does not reserve credits, connect a wallet, or create trading permission.",
+        "https://gcagochina.com/service-delivery-playbook.html",
+        "#GCA #GoChina #ProductOps #RiskFirst"
+      ],
+      "xChinese": [
+        "GCA 人工服务已经形成可见流程：账户申请、人工审核、受限补充信息、批准后交付、收件确认，以及最多一次的 credits 结算。",
+        "提交申请不会预占积分、连接钱包或创建交易权限。",
+        "https://gcagochina.com/service-delivery-playbook.html",
+        "#GCA #GoChina #ProductOps #RiskFirst"
+      ],
+      "telegram": [
+        "Reviewed GCA services use a request-to-delivery audit trail with manual approval and at-most-once credit settlement.",
+        "Service workflow: https://gcagochina.com/service-delivery-playbook.html"
+      ],
+      "claimBoundary": "Reviewed-service workflow only; no automatic delivery, guaranteed outcome, credit pre-authorization, wallet action, or trading permission."
+    },
+    {
+      "id": "gca-draft-2026-08-29-privacy-non-custody",
+      "targetDate": "2026-08-29",
+      "topic": "Privacy And Non-Custody",
+      "recommendedLink": "https://gcagochina.com/privacy.html",
+      "hashtags": ["#GCA", "#GoChina", "#Privacy", "#NonCustodial"],
+      "visualTheme": "Privacy boundary showing device-key hashes, redacted status, local tool data, and prohibited wallet secrets.",
+      "xEnglish": [
+        "GCA public workflows are designed around minimal data and non-custody.",
+        "They do not request seed phrases, private keys, token approvals, exchange API secrets, withdrawal rights, or wallet signatures for balance verification.",
+        "https://gcagochina.com/privacy.html",
+        "#GCA #GoChina #Privacy #NonCustodial"
+      ],
+      "xChinese": [
+        "GCA 公开流程遵循最少数据和非托管原则。",
+        "余额验证不会索取助记词、私钥、代币授权、交易所 API Secret、提现权限或钱包签名。",
+        "https://gcagochina.com/privacy.html",
+        "#GCA #GoChina #Privacy #NonCustodial"
+      ],
+      "telegram": [
+        "GCA account and tool workflows publish explicit privacy and non-custody boundaries. Wallet balance checks are read-only.",
+        "Privacy notice: https://gcagochina.com/privacy.html"
+      ],
+      "claimBoundary": "Privacy and non-custody description only; no absolute security, anonymity, deletion, or regulatory-compliance guarantee."
+    },
+    {
+      "id": "gca-draft-2026-09-01-official-market-identity",
+      "targetDate": "2026-09-01",
+      "topic": "Official Market Identity",
+      "recommendedLink": "https://gcagochina.com/markets.html",
+      "hashtags": ["#GCA", "#Base", "#USDT", "#Onchain"],
+      "visualTheme": "Base Mainnet identity card with exact GCA contract, Base USDT, and official GCA/USDT pool.",
+      "xEnglish": [
+        "Before using any GCA market interface, verify four items: Base Mainnet / 8453, the GCA contract, Base USDT, and the official GCA/USDT pool.",
+        "The pool remains starter-depth, so users should inspect price impact and slippage in the interface before any action.",
+        "https://gcagochina.com/markets.html",
+        "#GCA #Base #USDT #Onchain"
+      ],
+      "xChinese": [
+        "使用任何 GCA 市场界面前，请核对四项信息：Base Mainnet / 8453、GCA 合约、Base USDT 和官方 GCA/USDT 池。",
+        "池子仍属于早期深度，操作前应在界面中检查价格影响和滑点。",
+        "https://gcagochina.com/markets.html",
+        "#GCA #Base #USDT #Onchain"
+      ],
+      "telegram": [
+        "Official market identity: Base Mainnet, exact GCA contract, Base USDT, and the official GCA/USDT pool. Liquidity remains starter-depth.",
+        "Verify here: https://gcagochina.com/markets.html"
+      ],
+      "claimBoundary": "Market identity and current liquidity boundary only; no price, volume, depth, execution, or listing guarantee."
+    },
+    {
+      "id": "gca-draft-2026-09-04-public-evidence-center",
+      "targetDate": "2026-09-04",
+      "topic": "Public Evidence Center",
+      "recommendedLink": "https://gcagochina.com/trust.html",
+      "hashtags": ["#GCA", "#GoChina", "#Transparency", "#BuildInPublic"],
+      "visualTheme": "Evidence index linking contract source, project identity, founder profile, domain email, supply, and review status.",
+      "xEnglish": [
+        "GCA keeps its public evidence in one place: verified contract source, exact chain identity, project profile, Tim Chen professional profile, official-domain email, supply records, market route, and external-review status.",
+        "https://gcagochina.com/trust.html",
+        "Check published evidence before relying on screenshots or copied links.",
+        "#GCA #GoChina #Transparency #BuildInPublic"
+      ],
+      "xChinese": [
+        "GCA 将公开证据集中在一个入口：已验证合约源码、准确链上身份、项目资料、Tim Chen 职业资料、官方域名邮箱、供应记录、市场路线和外部审核状态。",
+        "https://gcagochina.com/trust.html",
+        "请先核对已发布证据，不要只依赖截图或复制链接。",
+        "#GCA #GoChina #Transparency #BuildInPublic"
+      ],
+      "telegram": [
+        "The GCA Trust Center indexes verified contract, identity, team, domain email, supply, market, and external-review evidence.",
+        "Trust Center: https://gcagochina.com/trust.html"
+      ],
+      "claimBoundary": "Evidence index only; do not convert source verification into token-profile approval, independent audit, or vendor endorsement."
+    },
+    {
+      "id": "gca-draft-2026-09-07-product-operations-recap",
+      "targetDate": "2026-09-07",
+      "topic": "Product Operations Recap",
+      "recommendedLink": "https://gcagochina.com/announcements.html",
+      "hashtags": ["#GCA", "#GoChina", "#ProductOps", "#BuildInPublic"],
+      "visualTheme": "Product operations ledger summarizing access, tools, reviewed services, market identity, and remaining manual gates.",
+      "xEnglish": [
+        "GCA product-operations cycle recap: controlled account access, read-only wallet verification, eligible ledgers, browser risk tools, reviewed services, delivery receipts, and verifiable official-pool context are published.",
+        "Manual and external gates remain visible for membership approval, member-benefit review, BaseScan publication, external audit, and any future trading integration.",
+        "https://gcagochina.com/announcements.html",
+        "#GCA #GoChina #ProductOps #BuildInPublic"
+      ],
+      "xChinese": [
+        "GCA 产品运营周期回顾：受控账户入口、钱包只读验证、符合条件的账本记录、浏览器风控工具、人工服务、交付回执和可验证官方池信息均已发布。",
+        "会员批准、会员权益审核、BaseScan 发布、外部审计和未来任何交易集成仍保留人工或外部门槛。",
+        "https://gcagochina.com/announcements.html",
+        "#GCA #GoChina #ProductOps #BuildInPublic"
+      ],
+      "telegram": [
+        "GCA product-operations recap: live access, read-only verification, eligible ledgers, browser tools, reviewed services, delivery receipts, and official-pool context are public.",
+        "Announcement hub: https://gcagochina.com/announcements.html"
+      ],
+      "claimBoundary": "Build recap only; no external approval, audit, listing, liquidity, price, return, automatic benefit, or execution claim."
+    }
+  ],
+  "archivedDrafts": [
     {
       "id": "gca-draft-2026-05-20-radar",
       "targetDate": "2026-05-20",
@@ -314,10 +577,11 @@
     "publishingDesk": "https://gcagochina.com/publishing-desk.json",
     "campaignPage": "https://gcagochina.com/campaign.html",
     "campaign": "https://gcagochina.com/campaign.json",
-    "radarIssue004Page": "https://gcagochina.com/radar-issue-004.html",
-    "radarIssue004": "https://gcagochina.com/radar-issue-004.json",
-    "memberAccessBrief001Page": "https://gcagochina.com/member-access-brief-001.html",
-    "memberAccessBrief001": "https://gcagochina.com/member-access-brief-001.json",
+    "radarIssue006Page": "https://gcagochina.com/radar-issue-006.html",
+    "radarIssue006": "https://gcagochina.com/radar-issue-006.json",
+    "memberAccessPage": "https://gcagochina.com/gca/member-access/",
+    "toolsPage": "https://gcagochina.com/tools.html",
+    "serviceDeliveryPlaybookPage": "https://gcagochina.com/service-delivery-playbook.html",
     "announcementsPage": "https://gcagochina.com/announcements.html",
     "announcements": "https://gcagochina.com/announcements.json",
     "communityPage": "https://gcagochina.com/community.html",

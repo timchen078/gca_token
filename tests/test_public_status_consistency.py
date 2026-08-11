@@ -15,6 +15,7 @@ SUPPORT_STATUS = "live-structured-account-service-intake-and-manual-email-suppor
 SERVICE_REQUEST_ENDPOINT = "/gca/account-service-requests"
 LAST_UPDATED = "2026-08-10"
 MEMBER_PAGE_LAST_UPDATED = "2026-08-11"
+CONTENT_CYCLE_LAST_UPDATED = "2026-08-11"
 
 
 class PublicStatusConsistencyTests(unittest.TestCase):
@@ -272,7 +273,6 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             "terms.json",
             "liquidation-replay-001.json",
             "market-quality.json",
-            "project.json",
             "product.json",
             "roadmap.json",
             "credits.json",
@@ -283,6 +283,11 @@ class PublicStatusConsistencyTests(unittest.TestCase):
         for path in json_paths:
             payload = json.loads((SITE / path).read_text())
             self.assertEqual(payload["lastUpdated"], LAST_UPDATED, path)
+
+        self.assertEqual(
+            self.load_json("site/project.json")["lastUpdated"],
+            CONTENT_CYCLE_LAST_UPDATED,
+        )
 
         namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
         root = ET.fromstring((SITE / "sitemap.xml").read_text())
@@ -306,7 +311,6 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             "privacy.json",
             "product.html",
             "product.json",
-            "project.json",
             "roadmap.html",
             "roadmap.json",
             "credits.html",
@@ -329,10 +333,57 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             url = f"https://gcagochina.com/{path}"
             self.assertEqual(sitemap.get(url), LAST_UPDATED, url)
 
+        self.assertEqual(
+            sitemap.get("https://gcagochina.com/project.json"),
+            CONTENT_CYCLE_LAST_UPDATED,
+        )
+
         for path in ("members.html", "zh-members.html"):
             url = f"https://gcagochina.com/{path}"
             self.assertEqual(sitemap.get(url), MEMBER_PAGE_LAST_UPDATED, url)
 
+    def test_product_operations_content_cycle_is_current_and_aligned(self):
+        campaign = self.load_json("site/campaign.json")
+        library = self.load_json("site/content-library.json")
+        desk = self.load_json("site/publishing-desk.json")
+        announcements = self.load_json("site/announcements.json")
+        community = self.load_json("site/community.json")
+        project = self.load_json("site/project.json")
+
+        self.assertEqual(campaign["campaignCycleId"], "product-operations-002")
+        self.assertEqual(library["campaignCycleId"], campaign["campaignCycleId"])
+        self.assertEqual(desk["campaignCycleId"], campaign["campaignCycleId"])
+        self.assertEqual(announcements["campaignCycleId"], campaign["campaignCycleId"])
+        self.assertEqual(community["campaignCycleId"], campaign["campaignCycleId"])
+        self.assertEqual(project["contentCampaign"]["campaignCycleId"], campaign["campaignCycleId"])
+
+        self.assertEqual(campaign["campaignWindow"]["startDate"], "2026-08-11")
+        self.assertEqual(campaign["campaignWindow"]["endDate"], "2026-09-07")
+        self.assertEqual(len(campaign["contentQueue"]), 10)
+        self.assertEqual(len(library["drafts"]), 10)
+        self.assertEqual(len(library["archivedDrafts"]), 10)
+        self.assertEqual(library["previousCampaignWindow"]["status"], "archived-in-this-file")
+        self.assertEqual(desk["nextPublishAction"]["sourceDraftId"], library["drafts"][0]["id"])
+        self.assertEqual(desk["nextPublishAction"]["targetDate"], "2026-08-11")
+        self.assertTrue(desk["nextPublishAction"]["requiresManualPosting"])
+
+        current_pages = (
+            "campaign.html",
+            "content-library.html",
+            "publishing-desk.html",
+            "announcements.html",
+            "community.html",
+        )
+        stale_markers = (
+            "2026-05-20 to 2026-06-16",
+            "Product Utility Intro",
+            "Planned modules:",
+            "计划中的 GCA Member",
+        )
+        for path in current_pages:
+            text = (SITE / path).read_text()
+            for marker in stale_markers:
+                self.assertNotIn(marker, text, f"{path} contains stale campaign marker: {marker}")
 
 if __name__ == "__main__":
     unittest.main()
