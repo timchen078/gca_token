@@ -98,6 +98,53 @@ def member_access_export_payload():
                     "createsTradingPermission": False,
                 }],
             },
+            "service-request-reviews": {
+                "records": [{
+                    "serviceRequestReviewId": "gca_service_review_1",
+                    "serviceRequestId": "gca_service_req_1",
+                    "packetVersion": "gca_service_request_review_v1",
+                    "decision": "needs_more_information",
+                    "reasonCode": "scope_incomplete",
+                    "reviewerId": "gca-operator",
+                    "operatorNote": "Internal review note.",
+                    "memberPrompt": "Please add the intended timeframe.",
+                    "deliveryReference": "",
+                    "creditUsageId": "",
+                    "creditAmountUsed": 0,
+                    "remainingCreditsBefore": 100,
+                    "remainingCreditsAfter": 100,
+                    "reviewedAt": "2026-05-20T15:06:00Z",
+                    "source": "gca-service-request-review-operator-cli",
+                    "manualReviewCompleted": True,
+                    "deliveryCompleted": False,
+                    "creditsDeducted": False,
+                    "requiresSignature": False,
+                    "requiresTransaction": False,
+                    "automaticTokenTransfer": False,
+                    "writesWallet": False,
+                    "createsTradingPermission": False,
+                }],
+            },
+            "service-request-followups": {
+                "records": [{
+                    "serviceRequestFollowupId": "gca_service_followup_1",
+                    "serviceRequestId": "gca_service_req_1",
+                    "accountId": "gca_account_1",
+                    "clientFollowupId": "gca_client_followup_example",
+                    "packetVersion": "gca_account_service_request_followup_v1",
+                    "responseText": "The intended timeframe is four hours.",
+                    "submittedAt": "2026-05-20T15:07:00Z",
+                    "source": "gca-member-access-service-request-followup",
+                    "noSecretsNoCustody": True,
+                    "manualReviewOnly": True,
+                    "changesCredits": False,
+                    "requiresSignature": False,
+                    "requiresTransaction": False,
+                    "automaticTokenTransfer": False,
+                    "writesWallet": False,
+                    "createsTradingPermission": False,
+                }],
+            },
             "credit-usage": {
                 "records": [{
                     "creditUsageId": "gca_credit_use_1",
@@ -179,6 +226,9 @@ class GcaMemberAccessReportTests(unittest.TestCase):
             self.assertEqual(summary["counts"]["serviceRequestRecords"], 1)
             self.assertEqual(summary["counts"]["queuedServiceRequests"], 1)
             self.assertEqual(summary["counts"]["requestedCreditHoldQueued"], 10)
+            self.assertEqual(summary["counts"]["serviceRequestReviewRecords"], 1)
+            self.assertEqual(summary["counts"]["serviceRequestReviewsNeedMoreInformation"], 1)
+            self.assertEqual(summary["counts"]["serviceRequestFollowupRecords"], 1)
             self.assertEqual(summary["counts"]["creditUsageRecords"], 1)
             self.assertEqual(summary["counts"]["creditUsageRecorded"], 1)
             self.assertEqual(summary["counts"]["creditsConsumed"], 10)
@@ -191,6 +241,8 @@ class GcaMemberAccessReportTests(unittest.TestCase):
             self.assertFalse(summary["boundaries"]["automaticTokenTransfer"])
             self.assertTrue(summary_output.exists())
             self.assertTrue(Path(summary["outputs"]["serviceRequestsCsv"]).exists())
+            self.assertTrue(Path(summary["outputs"]["serviceRequestReviewsCsv"]).exists())
+            self.assertTrue(Path(summary["outputs"]["serviceRequestFollowupsCsv"]).exists())
             self.assertTrue(Path(summary["outputs"]["creditUsageCsv"]).exists())
 
             with Path(summary["outputs"]["memberBenefitReviewQueueCsv"]).open(newline="", encoding="utf-8") as handle:

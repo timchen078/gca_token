@@ -3848,7 +3848,7 @@ def validate_zh_operations_page(text: str) -> None:
         "处理退订",
         "保留本地账本",
         "邮箱注册、账户入口、只读钱包验证、设备密钥脱敏账户状态、100 credits、会员人工审核、30 天持有证据和已完成会员权益转账的生产证据验证已经上线",
-        "服务请求队列、Credit 使用记录和 GCA Member 人工审核的 Cloudflare Worker 路由已经正式上线",
+        "服务请求、服务审核、用户补充资料、Credit 使用记录和 GCA Member 人工审核的 Cloudflare Worker 路由已经正式上线",
         "权限、D1 migration、部署和公开/管理员只读 smoke 检查均已通过",
         "Cloudflare Workers + D1 已上线",
         "gca-registration-api.gcagochina.workers.dev",
@@ -3865,8 +3865,11 @@ def validate_zh_operations_page(text: str) -> None:
         "python3 tools/run_gca_registration_ops.py --limit 100 --data-dir .gca_access_data",
         "会员后台运营流程",
         "tools/run_gca_member_access_ops.py",
+        "--include-service-routes",
         "cloudflare/gca-registration-worker/.env.admin.local",
         "/gca/service-requests",
+        "/gca/service-request-reviews",
+        "/gca/service-request-followups",
         "/gca/credit-usage",
         "/gca/member-reviews",
         "/gca/holding-verifications",
@@ -3886,7 +3889,8 @@ def validate_zh_operations_page(text: str) -> None:
         "服务请求队列",
         "service_requests",
         "服务请求不会扣减 credits",
-        "Credit 使用记录只在人工审核交付后写入",
+        "只有人工审核交付后才写入 Credit 使用记录",
+        "服务审核和补充资料报告只是本地只读运营输出",
         "--include-holding-report --holding-no-live-read",
         "tools/run_gca_daily_ops.py --build-digest --update-public-status",
         "不会发起、签名或广播转账",
@@ -5896,16 +5900,19 @@ def validate_operator_page(text: str) -> None:
     assert_contains(text, "Email Registration Intake", label)
     assert_contains(text, "Member Access Ops Pipeline", label)
     assert_contains(text, "tools/run_gca_member_access_ops.py", label)
+    assert_contains(text, "--include-service-routes", label)
     assert_contains(text, "tools/review_cloudflare_member.py", label)
     assert_contains(text, "/gca/member-reviews", label)
-    assert_contains(text, "tools/review_cloudflare_member.py", label)
-    assert_contains(text, "/gca/member-reviews", label)
+    assert_contains(text, "tools/review_cloudflare_service_request.py", label)
+    assert_contains(text, "/gca/service-request-reviews", label)
     assert_contains(text, "cloudflare/gca-registration-worker/.env.admin.local", label)
     assert_contains(text, "ADMIN_READ_TOKEN", label)
     assert_contains(text, ".gca_access_data/cloudflare_member_access_export.json", label)
     assert_contains(text, ".gca_access_data/member_access_report/gca_member_support_queue.csv", label)
+    assert_contains(text, ".gca_access_data/member_access_report/gca_service_request_reviews.csv", label)
+    assert_contains(text, ".gca_access_data/member_access_report/gca_service_request_followups.csv", label)
     assert_contains(text, ".gca_access_data/member_access_report/gca_holding_period_summary.json", label)
-    assert_contains(text, "No automatic member-benefit transfer", label)
+    assert_contains(text, "Read-only reports; no automatic member-benefit transfer", label)
     assert_contains(text, "Latest Email Registration Records", label)
     assert_contains(text, "Read-only API check command", label)
     assert_contains(text, "tools/check_gca_registration_api.py", label)
@@ -9581,10 +9588,13 @@ def validate_operations_page(text: str) -> None:
     assert_contains(text, ".gca_access_data/gca_registration_ops_summary.json", label)
     assert_contains(text, "Member Access Ops Pipeline", label)
     assert_contains(text, "tools/run_gca_member_access_ops.py", label)
+    assert_contains(text, "--include-service-routes", label)
     assert_contains(text, ".gca_access_data/cloudflare_member_access_export.json", label)
     assert_contains(text, ".gca_access_data/member_access_report/gca_member_access_summary.json", label)
     assert_contains(text, ".gca_access_data/member_access_report/gca_member_support_queue.csv", label)
     assert_contains(text, ".gca_access_data/member_access_report/gca_holding_period_summary.json", label)
+    assert_contains(text, "service-review/service-follow-up/credit-usage", label)
+    assert_contains(text, "read-only local operator outputs", label)
     assert_contains(text, "Service Request Queue", label)
     assert_contains(text, "service_requests", label)
     assert_contains(text, "stores request scope without deduction", label)
@@ -9818,8 +9828,18 @@ def validate_operations_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong member ops token variable")
     if "tools/run_gca_member_access_ops.py" not in member_ops.get("pipelineCommand", ""):
         raise SiteCheckError(f"{label}: missing member ops pipeline command")
+    if "--include-service-routes" not in member_ops.get("pipelineCommand", ""):
+        raise SiteCheckError(f"{label}: member ops command must include service routes")
     if "--include-holding-report --holding-no-live-read" not in member_ops.get("offlineHoldingReportCommand", ""):
         raise SiteCheckError(f"{label}: missing offline holding command")
+    if "--include-service-routes" not in member_ops.get("offlineHoldingReportCommand", ""):
+        raise SiteCheckError(f"{label}: offline holding command must include service routes")
+    if member_ops.get("serviceRequestReviewCsv") != ".gca_access_data/member_access_report/gca_service_request_reviews.csv":
+        raise SiteCheckError(f"{label}: wrong service review CSV path")
+    if member_ops.get("serviceRequestFollowupCsv") != ".gca_access_data/member_access_report/gca_service_request_followups.csv":
+        raise SiteCheckError(f"{label}: wrong service follow-up CSV path")
+    if member_ops.get("boundaries", {}).get("serviceRouteReportsReadOnly") is not True:
+        raise SiteCheckError(f"{label}: missing read-only service report boundary")
     if "tools/run_gca_daily_ops.py --build-digest --update-public-status" not in member_ops.get("digestRefreshCommand", ""):
         raise SiteCheckError(f"{label}: missing digest refresh command")
     if member_ops.get("workerDeployReadinessAuthSessionCheck") != "cloudflare-auth-session":

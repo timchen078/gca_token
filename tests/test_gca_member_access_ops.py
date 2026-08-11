@@ -93,6 +93,50 @@ class GcaMemberAccessOpsTests(unittest.TestCase):
             self.assertFalse(summary["holdingReportIncluded"])
             self.assertFalse(summary["boundaries"]["walletCalls"])
 
+    def test_pipeline_can_include_complete_service_route_reports(self):
+        seen = []
+
+        def opener(request, timeout):
+            seen.append(urlparse(request.full_url).path)
+            return FakeResponse({"ok": True, "count": 0, "records": []})
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            summary = run_member_access_ops(
+                base_url="https://worker.example",
+                token="secret-token",
+                limit=1,
+                include_service_routes=True,
+                export_output=root / "export.json",
+                report_dir=root / "report",
+                report_summary_output=root / "report-summary.json",
+                support_queue_output=root / "support.csv",
+                support_queue_summary_output=root / "support-summary.json",
+                pipeline_summary_output=root / "ops-summary.json",
+                opener=opener,
+            )
+
+            self.assertTrue(summary["ok"])
+            self.assertTrue(summary["serviceRoutesIncluded"])
+            self.assertEqual(summary["export"]["datasetCount"], 8)
+            self.assertEqual(
+                set(seen),
+                {
+                    "/gca/member-access",
+                    "/gca/wallet-verifications",
+                    "/gca/credit-ledger",
+                    "/gca/member-ledger",
+                    "/gca/service-requests",
+                    "/gca/service-request-reviews",
+                    "/gca/service-request-followups",
+                    "/gca/credit-usage",
+                },
+            )
+            self.assertTrue((root / "report" / "gca_service_request_reviews.csv").exists())
+            self.assertTrue((root / "report" / "gca_service_request_followups.csv").exists())
+            self.assertFalse(summary["boundaries"]["writesProductionData"])
+            self.assertFalse(summary["boundaries"]["automaticTokenTransfer"])
+
     def test_pipeline_can_use_existing_export_file_without_network(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -129,6 +173,9 @@ class GcaMemberAccessOpsTests(unittest.TestCase):
             self.assertTrue(result["ok"])
             self.assertEqual(result["source"], f"input-file:{input_path}")
             self.assertEqual(result["report"]["memberBenefitReviewQueueRows"], 2)
+            self.assertTrue(result["serviceRoutesIncluded"])
+            self.assertEqual(result["report"]["serviceRequestReviewRecords"], 1)
+            self.assertEqual(result["report"]["serviceRequestFollowupRecords"], 1)
             self.assertEqual(result["supportQueue"]["rows"], 1)
             self.assertTrue((root / "export-copy.json").exists())
             self.assertTrue((root / "report" / "gca_member_benefit_review_queue.csv").exists())

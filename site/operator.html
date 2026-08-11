@@ -646,20 +646,24 @@
 
       <section class="section panel" aria-labelledby="memberOpsTitle">
         <h2 id="memberOpsTitle">Member Access Ops Pipeline</h2>
-        <p class="note">Use this after account, wallet verification, credit ledger, member ledger, or member-benefit review records exist in the live Worker. It requires the ignored local <code>cloudflare/gca-registration-worker/.env.admin.local</code> file with <code>ADMIN_READ_TOKEN</code>. The pipeline reads token-protected records, writes ignored local reports, and never prints the token, writes production data, requests signatures, sends transactions, or transfers GCA automatically.</p>
+        <p class="note">Use this after account, wallet verification, credit ledger, member ledger, service request, service review, service follow-up, credit usage, or member-benefit review records exist in the live Worker. It requires the ignored local <code>cloudflare/gca-registration-worker/.env.admin.local</code> file with <code>ADMIN_READ_TOKEN</code>. The pipeline reads token-protected records, writes ignored local reports, and never prints the token, writes production data, requests signatures, sends transactions, or transfers GCA automatically. The <code>--include-service-routes</code> option explicitly adds the complete read-only service operations report set.</p>
         <div class="handoff-grid section">
           <div>
             <div class="field">
               <label for="memberOpsCommandText">Member ops command</label>
-              <textarea id="memberOpsCommandText" class="copy" readonly>.venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --summary-output .gca_access_data/gca_member_access_ops_summary.json</textarea>
+              <textarea id="memberOpsCommandText" class="copy" readonly>.venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --include-service-routes --summary-output .gca_access_data/gca_member_access_ops_summary.json</textarea>
             </div>
             <div class="field">
               <label for="memberHoldingCommandText">Optional 30-day holding report</label>
-              <textarea id="memberHoldingCommandText" class="copy" readonly>.venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --include-holding-report --holding-no-live-read --summary-output .gca_access_data/gca_member_access_ops_summary.json</textarea>
+              <textarea id="memberHoldingCommandText" class="copy" readonly>.venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --include-service-routes --include-holding-report --holding-no-live-read --summary-output .gca_access_data/gca_member_access_ops_summary.json</textarea>
             </div>
             <div class="field">
               <label for="memberReviewCommandText">Manual member review command</label>
               <textarea id="memberReviewCommandText" class="copy" readonly>.venv/bin/python tools/review_cloudflare_member.py --member-ledger-id gca_member_REPLACE_WITH_20_HEX --decision needs_more_information --reason-code evidence_incomplete --reviewer-id gca-operator --confirm-production-write</textarea>
+            </div>
+            <div class="field">
+              <label for="serviceReviewCommandText">Manual service request review command</label>
+              <textarea id="serviceReviewCommandText" class="copy" readonly>.venv/bin/python tools/review_cloudflare_service_request.py --service-request-id gca_service_req_REPLACE_WITH_20_HEX --decision needs_more_information --reason-code scope_incomplete --reviewer-id gca-operator --member-prompt "Please provide the missing non-sensitive scope details." --confirm-manual-review --confirm-no-secrets-no-custody --confirm-no-trading-permission --confirm-production-write</textarea>
             </div>
           </div>
           <div>
@@ -668,9 +672,12 @@
               <div class="row"><span>Export JSON</span><strong><code>.gca_access_data/cloudflare_member_access_export.json</code></strong></div>
               <div class="row"><span>Report summary</span><strong><code>.gca_access_data/member_access_report/gca_member_access_summary.json</code></strong></div>
               <div class="row"><span>Support queue</span><strong><code>.gca_access_data/member_access_report/gca_member_support_queue.csv</code></strong></div>
+              <div class="row"><span>Service reviews</span><strong><code>.gca_access_data/member_access_report/gca_service_request_reviews.csv</code></strong></div>
+              <div class="row"><span>Service follow-ups</span><strong><code>.gca_access_data/member_access_report/gca_service_request_followups.csv</code></strong></div>
               <div class="row"><span>Holding summary</span><strong><code>.gca_access_data/member_access_report/gca_holding_period_summary.json</code></strong></div>
               <div class="row"><span>Member review API</span><strong><code>/gca/member-reviews</code></strong></div>
-              <div class="row"><span>Boundary</span><strong>No automatic member-benefit transfer</strong></div>
+              <div class="row"><span>Service review API</span><strong><code>/gca/service-request-reviews</code></strong></div>
+              <div class="row"><span>Boundary</span><strong>Read-only reports; no automatic member-benefit transfer</strong></div>
             </div>
           </div>
         </div>

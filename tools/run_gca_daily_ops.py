@@ -295,6 +295,7 @@ def build_steps(
     timeout: float,
     include_member_ops: bool,
     member_ops_redact: str,
+    include_service_routes: bool,
     include_holding_report: bool,
     holding_no_live_read: bool,
     holding_force_same_day: bool,
@@ -303,6 +304,8 @@ def build_steps(
 ) -> list[tuple[str, list[str], float, bool]]:
     if include_holding_report and not include_member_ops:
         raise ValueError("--include-holding-report requires --include-member-ops")
+    if include_service_routes and not include_member_ops:
+        raise ValueError("--include-service-routes requires --include-member-ops")
     python = sys.executable
     steps: list[tuple[str, list[str], float, bool]] = [
         (
@@ -373,6 +376,8 @@ def build_steps(
             "--timeout",
             str(timeout),
         ]
+        if include_service_routes:
+            member_command.append("--include-service-routes")
         if include_holding_report:
             member_command.append("--include-holding-report")
             if holding_no_live_read:
@@ -397,6 +402,7 @@ def run_daily_ops(
     timeout: float = 20,
     include_member_ops: bool = False,
     member_ops_redact: str = "none",
+    include_service_routes: bool = False,
     include_holding_report: bool = False,
     holding_no_live_read: bool = False,
     holding_force_same_day: bool = False,
@@ -426,6 +432,7 @@ def run_daily_ops(
             timeout=timeout,
             include_member_ops=include_member_ops,
             member_ops_redact=member_ops_redact,
+            include_service_routes=include_service_routes,
             include_holding_report=include_holding_report,
             holding_no_live_read=holding_no_live_read,
             holding_force_same_day=holding_force_same_day,
@@ -473,6 +480,7 @@ def run_daily_ops(
         "siteBaseUrl": site_base_url,
         "apiBaseUrl": api_base_url.rstrip("/"),
         "includeMemberOps": include_member_ops,
+        "includeServiceRoutes": include_service_routes,
         "includeHoldingReport": include_holding_report,
         "holdingNoLiveRead": holding_no_live_read,
         "holdingForceSameDay": holding_force_same_day,
@@ -500,6 +508,7 @@ def run_daily_ops(
         "boundaries": {
             "publicOnlyByDefault": True,
             "readsTokenProtectedUserRecordsOnlyWhenIncludeMemberOpsIsTrue": True,
+            "serviceRouteReportsReadOnly": True,
             "holdingReportRequiresMemberOps": True,
             "writesProductionData": False,
             "adminTokenPrinted": False,
@@ -572,6 +581,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--timeout", type=float, default=20, help="Per-request timeout forwarded to check tools. Default: 20.")
     parser.add_argument("--include-member-ops", action="store_true", help="Also refresh token-protected local member reports.")
     parser.add_argument("--member-ops-redact", choices=("none", "public"), default="none", help="Redaction mode for member ops export.")
+    parser.add_argument(
+        "--include-service-routes",
+        action="store_true",
+        help="With --include-member-ops, also refresh service request, review, follow-up, and credit usage reports.",
+    )
     parser.add_argument("--include-holding-report", action="store_true", help="Also refresh the local GCA Member 30-day holding report.")
     parser.add_argument("--holding-no-live-read", action="store_true", help="Build holding report from existing snapshots without RPC reads.")
     parser.add_argument("--holding-force-same-day", action="store_true", help="Append a fresh holding snapshot even if today already exists.")
@@ -587,6 +601,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     args = parser.parse_args(argv)
     if args.include_holding_report and not args.include_member_ops:
         parser.error("--include-holding-report requires --include-member-ops")
+    if args.include_service_routes and not args.include_member_ops:
+        parser.error("--include-service-routes requires --include-member-ops")
     return args
 
 
@@ -598,6 +614,7 @@ def main(argv: list[str] | None = None) -> int:
         timeout=args.timeout,
         include_member_ops=args.include_member_ops,
         member_ops_redact=args.member_ops_redact,
+        include_service_routes=args.include_service_routes,
         include_holding_report=args.include_holding_report,
         holding_no_live_read=args.holding_no_live_read,
         holding_force_same_day=args.holding_force_same_day,

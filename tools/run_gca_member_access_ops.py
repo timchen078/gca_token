@@ -6,7 +6,8 @@ This helper combines the live admin export and offline report builder:
 1. Read token-protected Cloudflare Worker member-access datasets, or load an
    existing export file with ``--input``.
 2. Save the export JSON into the ignored local data directory.
-3. Build account, wallet, credit, credit usage, member, and manual member-benefit review CSVs.
+3. Build account, wallet, credit, optional service request/review/follow-up,
+   credit usage, member, and manual member-benefit review CSVs.
 
 It does not write production data, connect to wallets, request signatures,
 send transactions, or automatically transfer GCA.
@@ -53,6 +54,7 @@ from tools.export_cloudflare_email_registrations import (  # noqa: E402
 )
 from tools.export_cloudflare_member_access import (  # noqa: E402
     DEFAULT_OUTPUT as DEFAULT_EXPORT_OUTPUT,
+    SERVICE_DATASET_NAMES,
     export_datasets,
     write_json,
 )
@@ -71,6 +73,7 @@ def run_member_access_ops(
     email: str = "",
     wallet_address: str = "",
     redacted: bool = False,
+    include_service_routes: bool = False,
     timeout: float = 20,
     cafile: str = "",
     export_output: Path = DEFAULT_EXPORT_OUTPUT,
@@ -98,6 +101,7 @@ def run_member_access_ops(
             email=email,
             wallet_address=wallet_address,
             redacted=redacted,
+            include_pending_routes=include_service_routes,
             timeout=timeout,
             cafile=cafile,
             opener=opener,
@@ -105,6 +109,12 @@ def run_member_access_ops(
         source = source or f"cloudflare-admin-api:{base_url.rstrip('/')}"
     else:
         source = source or "input-export"
+
+    exported_datasets = export_payload.get("datasets", {})
+    service_routes_included = bool(export_payload.get("serviceRoutesIncluded")) or (
+        isinstance(exported_datasets, dict)
+        and all(name in exported_datasets for name in SERVICE_DATASET_NAMES)
+    )
 
     write_json(export_output, export_payload)
     report_summary = build_report(export_payload, report_dir, report_summary_output)
@@ -135,6 +145,7 @@ def run_member_access_ops(
         "supportQueueOutput": str(support_queue_output),
         "supportQueueSummaryOutput": str(support_queue_summary_output),
         "holdingReportIncluded": include_holding_report,
+        "serviceRoutesIncluded": service_routes_included,
         "holdingSummaryOutput": str(holding_summary_output) if include_holding_report else "",
         "pipelineSummaryOutput": str(pipeline_summary_output),
         "redactedForExternalSharing": bool(export_payload.get("redactedForExternalSharing")),
@@ -155,6 +166,7 @@ def run_member_access_ops(
         "boundaries": {
             "localOperatorPipelineOnly": True,
             "operatorReviewRequiredBeforeSendingSupportReplies": True,
+            "serviceRouteReportsReadOnly": True,
             "writesProductionData": False,
             "adminTokenPrinted": False,
             "walletCalls": bool(include_holding_report and holding_live_read),
@@ -181,6 +193,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--email", default="", help="Optional email filter for member-access dataset.")
     parser.add_argument("--wallet-address", default="", help="Optional Base wallet filter across member datasets.")
     parser.add_argument("--redact", choices=("none", "public"), default="none", help="Use public before external sharing.")
+    parser.add_argument(
+        "--include-service-routes",
+        "--include-pending-routes",
+        dest="include_service_routes",
+        action="store_true",
+        help="Also export service requests, service reviews, account follow-ups, and credit usage.",
+    )
     parser.add_argument("--timeout", type=float, default=20, help="HTTP timeout in seconds. Default: 20.")
     parser.add_argument("--cafile", default="", help="Optional CA bundle path for live fetches.")
     parser.add_argument("--export-output", type=Path, default=DEFAULT_EXPORT_OUTPUT, help="Local export JSON output.")
@@ -216,6 +235,7 @@ def main(argv: list[str] | None = None) -> int:
             email=args.email,
             wallet_address=args.wallet_address,
             redacted=args.redact == "public",
+            include_service_routes=args.include_service_routes,
             timeout=args.timeout,
             cafile=args.cafile,
             export_output=args.export_output,

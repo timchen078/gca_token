@@ -415,13 +415,16 @@ It also builds the operator-reviewed support reply queue.
 ```bash
 .venv/bin/python tools/run_gca_member_access_ops.py \
   --limit 100 \
+  --include-service-routes \
   --export-output .gca_access_data/cloudflare_member_access_export.json \
   --report-dir .gca_access_data/member_access_report \
   --support-queue-output .gca_access_data/member_access_report/gca_member_support_queue.csv \
   --summary-output .gca_access_data/gca_member_access_ops_summary.json
 ```
 
-To rebuild reports from an existing export without reading Cloudflare:
+The service route option includes service requests, append-only operator reviews, account follow-ups, and linked credit usage. Public-redacted exports clear user service text, internal notes, member prompts, delivery references, reviewer identifiers, email, and display name while retaining public wallet evidence for on-chain review.
+
+To rebuild reports from an existing complete export without reading Cloudflare:
 
 ```bash
 .venv/bin/python tools/run_gca_member_access_ops.py \
@@ -461,6 +464,7 @@ To include token-protected member report refresh in the same daily run, add `--i
 ```bash
 .venv/bin/python tools/run_gca_daily_ops.py \
   --include-member-ops \
+  --include-service-routes \
   --summary-output .gca_access_data/gca_daily_ops_summary.json
 ```
 
@@ -469,6 +473,7 @@ To also record the daily 30-day GCA Member holding snapshot during that member-o
 ```bash
 .venv/bin/python tools/run_gca_daily_ops.py \
   --include-member-ops \
+  --include-service-routes \
   --include-holding-report \
   --summary-output .gca_access_data/gca_daily_ops_summary.json
 ```

@@ -42,6 +42,8 @@ DATASET_PATHS = {
     "wallet-verifications": "/gca/wallet-verifications",
     "credit-ledger": "/gca/credit-ledger",
     "service-requests": "/gca/service-requests",
+    "service-request-reviews": "/gca/service-request-reviews",
+    "service-request-followups": "/gca/service-request-followups",
     "credit-usage": "/gca/credit-usage",
     "member-ledger": "/gca/member-ledger",
 }
@@ -51,14 +53,34 @@ LIVE_DATASET_NAMES = (
     "credit-ledger",
     "member-ledger",
 )
+SERVICE_DATASET_NAMES = (
+    "service-requests",
+    "service-request-reviews",
+    "service-request-followups",
+    "credit-usage",
+)
 DATASET_FILTERS = {
     "member-access": {"email", "walletAddress"},
     "wallet-verifications": {"walletAddress"},
     "credit-ledger": {"walletAddress"},
     "service-requests": {"walletAddress"},
+    "service-request-reviews": set(),
+    "service-request-followups": set(),
     "credit-usage": {"walletAddress"},
     "member-ledger": {"walletAddress"},
 }
+PUBLIC_REDACTED_FIELDS = (
+    "email",
+    "displayName",
+    "requestTitle",
+    "requestSummary",
+    "marketContext",
+    "operatorNote",
+    "memberPrompt",
+    "deliveryReference",
+    "responseText",
+    "reviewerId",
+)
 
 
 def utc_now() -> str:
@@ -153,10 +175,9 @@ def redact_record(record: dict[str, Any]) -> dict[str, Any]:
     email = str(record.get("email", ""))
     if email and not redacted.get("emailSha256"):
         redacted["emailSha256"] = email_digest(email)
-    if "email" in redacted:
-        redacted["email"] = ""
-    if "displayName" in redacted:
-        redacted["displayName"] = ""
+    for field in PUBLIC_REDACTED_FIELDS:
+        if field in redacted:
+            redacted[field] = ""
     redacted["redactedForExternalSharing"] = True
     redacted["walletAddressRetainedForOnchainReview"] = bool(redacted.get("walletAddress"))
     return redacted
@@ -228,25 +249,32 @@ def export_datasets(
     opener: Callable[..., Any] = urlopen,
 ) -> dict[str, Any]:
     if dataset == "all":
-        dataset_names = tuple(DATASET_PATHS) if include_pending_routes else LIVE_DATASET_NAMES
+        dataset_names = (
+            (*LIVE_DATASET_NAMES, *SERVICE_DATASET_NAMES)
+            if include_pending_routes
+            else LIVE_DATASET_NAMES
+        )
     else:
         dataset_names = (dataset,)
     datasets: dict[str, dict[str, Any]] = {}
     for dataset_name in dataset_names:
+        allowed_filters = DATASET_FILTERS[dataset_name]
+        dataset_email = email if "email" in allowed_filters else ""
+        dataset_wallet = wallet_address if "walletAddress" in allowed_filters else ""
         source_url = build_admin_url(
             base_url,
             dataset_name,
             limit,
-            email=email if dataset_name == "member-access" else "",
-            wallet_address=wallet_address,
+            email=dataset_email,
+            wallet_address=dataset_wallet,
         )
         response_payload = fetch_admin_records(
             base_url=base_url,
             dataset=dataset_name,
             token=token,
             limit=limit,
-            email=email if dataset_name == "member-access" else "",
-            wallet_address=wallet_address,
+            email=dataset_email,
+            wallet_address=dataset_wallet,
             timeout=timeout,
             cafile=cafile,
             opener=opener,

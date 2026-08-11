@@ -3285,6 +3285,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Contact export commands copied", page)
         self.assertIn("Full local review package exported", page)
         self.assertIn("Public redacted review package exported", page)
+        self.assertIn("--include-service-routes", page)
+        self.assertIn("tools/review_cloudflare_service_request.py", page)
+        self.assertIn("--confirm-manual-review", page)
+        self.assertIn("--confirm-no-secrets-no-custody", page)
+        self.assertIn("--confirm-no-trading-permission", page)
+        self.assertIn("gca_service_request_reviews.csv", page)
+        self.assertIn("gca_service_request_followups.csv", page)
+        self.assertIn("Read-only reports; no automatic member-benefit transfer", page)
         self.assertIn("Review Package Handoff", page)
         self.assertIn("Last package mode", page)
         self.assertIn("Local verify command", page)
@@ -6776,6 +6784,17 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(email_ops["summaryOutput"], ".gca_access_data/gca_registration_ops_summary.json")
         self.assertTrue(email_ops["boundaries"]["publicRedactedCsvRequiredBeforeExternalSharing"])
         member_ops = ops["memberAccessOpsPipeline"]
+        self.assertIn("--include-service-routes", member_ops["pipelineCommand"])
+        self.assertIn("--include-service-routes", member_ops["offlineHoldingReportCommand"])
+        self.assertEqual(
+            member_ops["serviceRequestReviewCsv"],
+            ".gca_access_data/member_access_report/gca_service_request_reviews.csv",
+        )
+        self.assertEqual(
+            member_ops["serviceRequestFollowupCsv"],
+            ".gca_access_data/member_access_report/gca_service_request_followups.csv",
+        )
+        self.assertTrue(member_ops["boundaries"]["serviceRouteReportsReadOnly"])
         self.assertEqual(
             member_ops["serviceRequestReviewEndpoint"],
             "https://gca-registration-api.gcagochina.workers.dev/gca/service-request-reviews",

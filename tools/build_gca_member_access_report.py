@@ -3,9 +3,10 @@
 
 This is an offline operator helper. It reads the JSON produced by
 ``tools/export_cloudflare_member_access.py`` and writes local CSV/summary
-files for account review, wallet verification review, credit review, GCA
-credit usage review, Member review, and manual member-benefit follow-up. It
-never calls Cloudflare, wallets, or RPC endpoints.
+files for account review, wallet verification review, credit review, service
+request/review/follow-up operations, GCA credit usage review, Member review,
+and manual member-benefit follow-up. It never calls Cloudflare, wallets, or
+RPC endpoints.
 """
 
 from __future__ import annotations
@@ -113,6 +114,51 @@ SERVICE_REQUEST_FIELDS = [
     "source",
     "operatorReviewRequired",
     "doesNotDeductCredits",
+    "requiresSignature",
+    "requiresTransaction",
+    "automaticTokenTransfer",
+    "writesWallet",
+    "createsTradingPermission",
+]
+
+SERVICE_REQUEST_REVIEW_FIELDS = [
+    "serviceRequestReviewId",
+    "serviceRequestId",
+    "packetVersion",
+    "decision",
+    "reasonCode",
+    "reviewerId",
+    "operatorNote",
+    "memberPrompt",
+    "deliveryReference",
+    "creditUsageId",
+    "creditAmountUsed",
+    "remainingCreditsBefore",
+    "remainingCreditsAfter",
+    "reviewedAt",
+    "source",
+    "manualReviewCompleted",
+    "deliveryCompleted",
+    "creditsDeducted",
+    "requiresSignature",
+    "requiresTransaction",
+    "automaticTokenTransfer",
+    "writesWallet",
+    "createsTradingPermission",
+]
+
+SERVICE_REQUEST_FOLLOWUP_FIELDS = [
+    "serviceRequestFollowupId",
+    "serviceRequestId",
+    "accountId",
+    "clientFollowupId",
+    "packetVersion",
+    "responseText",
+    "submittedAt",
+    "source",
+    "noSecretsNoCustody",
+    "manualReviewOnly",
+    "changesCredits",
     "requiresSignature",
     "requiresTransaction",
     "automaticTokenTransfer",
@@ -253,6 +299,8 @@ def build_report(payload: dict[str, Any], output_dir: Path, summary_output: Path
     wallet_verifications = dataset_records(payload, "wallet-verifications")
     credits = dataset_records(payload, "credit-ledger")
     service_requests = dataset_records(payload, "service-requests")
+    service_request_reviews = dataset_records(payload, "service-request-reviews")
+    service_request_followups = dataset_records(payload, "service-request-followups")
     credit_usage = dataset_records(payload, "credit-usage")
     members = dataset_records(payload, "member-ledger")
 
@@ -260,6 +308,14 @@ def build_report(payload: dict[str, Any], output_dir: Path, summary_output: Path
     wallet_rows = [select_row(record, WALLET_FIELDS) for record in wallet_verifications]
     credit_rows = [select_row(record, CREDIT_FIELDS) for record in credits]
     service_request_rows = [select_row(record, SERVICE_REQUEST_FIELDS) for record in service_requests]
+    service_request_review_rows = [
+        select_row(record, SERVICE_REQUEST_REVIEW_FIELDS)
+        for record in service_request_reviews
+    ]
+    service_request_followup_rows = [
+        select_row(record, SERVICE_REQUEST_FOLLOWUP_FIELDS)
+        for record in service_request_followups
+    ]
     credit_usage_rows = [select_row(record, CREDIT_USAGE_FIELDS) for record in credit_usage]
     member_rows = [select_row(record, MEMBER_FIELDS) for record in members]
     benefit_queue_rows = build_benefit_queue(members)
@@ -269,6 +325,8 @@ def build_report(payload: dict[str, Any], output_dir: Path, summary_output: Path
         "walletVerificationsCsv": output_dir / "gca_wallet_verifications.csv",
         "creditLedgerCsv": output_dir / "gca_credit_ledger.csv",
         "serviceRequestsCsv": output_dir / "gca_service_requests.csv",
+        "serviceRequestReviewsCsv": output_dir / "gca_service_request_reviews.csv",
+        "serviceRequestFollowupsCsv": output_dir / "gca_service_request_followups.csv",
         "creditUsageCsv": output_dir / "gca_credit_usage.csv",
         "memberLedgerCsv": output_dir / "gca_member_ledger.csv",
         "memberBenefitReviewQueueCsv": output_dir / "gca_member_benefit_review_queue.csv",
@@ -278,6 +336,16 @@ def build_report(payload: dict[str, Any], output_dir: Path, summary_output: Path
     write_csv(outputs["walletVerificationsCsv"], wallet_rows, WALLET_FIELDS)
     write_csv(outputs["creditLedgerCsv"], credit_rows, CREDIT_FIELDS)
     write_csv(outputs["serviceRequestsCsv"], service_request_rows, SERVICE_REQUEST_FIELDS)
+    write_csv(
+        outputs["serviceRequestReviewsCsv"],
+        service_request_review_rows,
+        SERVICE_REQUEST_REVIEW_FIELDS,
+    )
+    write_csv(
+        outputs["serviceRequestFollowupsCsv"],
+        service_request_followup_rows,
+        SERVICE_REQUEST_FOLLOWUP_FIELDS,
+    )
     write_csv(outputs["creditUsageCsv"], credit_usage_rows, CREDIT_USAGE_FIELDS)
     write_csv(outputs["memberLedgerCsv"], member_rows, MEMBER_FIELDS)
     write_csv(outputs["memberBenefitReviewQueueCsv"], benefit_queue_rows, BENEFIT_QUEUE_FIELDS)
@@ -299,6 +367,16 @@ def build_report(payload: dict[str, Any], output_dir: Path, summary_output: Path
             "queuedServiceRequests": count_records(service_requests, "status", "queued_operator_review"),
             "serviceRequestsMissingCreditLedger": count_records(service_requests, "status", "queued_missing_credit_ledger"),
             "serviceRequestsInsufficientCredits": count_records(service_requests, "status", "queued_insufficient_credits"),
+            "serviceRequestReviewRecords": len(service_request_reviews),
+            "serviceRequestReviewsApproved": count_records(service_request_reviews, "decision", "approved"),
+            "serviceRequestReviewsRejected": count_records(service_request_reviews, "decision", "rejected"),
+            "serviceRequestReviewsNeedMoreInformation": count_records(
+                service_request_reviews,
+                "decision",
+                "needs_more_information",
+            ),
+            "serviceRequestReviewsDelivered": count_records(service_request_reviews, "decision", "delivered"),
+            "serviceRequestFollowupRecords": len(service_request_followups),
             "requestedCreditHoldQueued": sum(
                 int(record.get("requestedCreditHold") or 0)
                 for record in service_requests
@@ -318,6 +396,7 @@ def build_report(payload: dict[str, Any], output_dir: Path, summary_output: Path
         "summaryOutput": str(summary_output),
         "boundaries": {
             "offlineReportOnly": True,
+            "serviceRouteReportsReadOnly": True,
             "writesProductionData": False,
             "adminTokenPrinted": False,
             "walletCalls": False,

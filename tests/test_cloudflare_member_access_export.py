@@ -111,7 +111,8 @@ class CloudflareMemberAccessExportTests(unittest.TestCase):
         seen = []
 
         def opener(request, timeout):
-            seen.append({"path": urlparse(request.full_url).path})
+            parsed = urlparse(request.full_url)
+            seen.append({"path": parsed.path, "query": parse_qs(parsed.query)})
             return FakeResponse({"ok": True, "count": 0, "records": []})
 
         payload = export_datasets(
@@ -119,13 +120,20 @@ class CloudflareMemberAccessExportTests(unittest.TestCase):
             token="secret-token",
             dataset="all",
             limit=1,
+            wallet_address="0x18d0007bc6be029f8ccd7cb13e324aa21891092d",
             include_pending_routes=True,
             opener=opener,
         )
 
-        self.assertEqual(payload["datasetCount"], 6)
+        self.assertEqual(payload["datasetCount"], 8)
         self.assertIn("/gca/service-requests", {item["path"] for item in seen})
+        self.assertIn("/gca/service-request-reviews", {item["path"] for item in seen})
+        self.assertIn("/gca/service-request-followups", {item["path"] for item in seen})
         self.assertIn("/gca/credit-usage", {item["path"] for item in seen})
+        review_query = next(item["query"] for item in seen if item["path"] == "/gca/service-request-reviews")
+        followup_query = next(item["query"] for item in seen if item["path"] == "/gca/service-request-followups")
+        self.assertNotIn("walletAddress", review_query)
+        self.assertNotIn("walletAddress", followup_query)
         self.assertTrue(payload["serviceRoutesIncluded"])
         self.assertTrue(payload["pendingWorkerRoutesIncluded"])
 
@@ -134,10 +142,29 @@ class CloudflareMemberAccessExportTests(unittest.TestCase):
             "email": "User@Example.com",
             "displayName": "User Name",
             "walletAddress": "0x18d0007bc6be029f8ccd7cb13e324aa21891092d",
+            "requestTitle": "Private title",
+            "requestSummary": "Private service details",
+            "marketContext": "Private market context",
+            "operatorNote": "Internal note",
+            "memberPrompt": "Member prompt",
+            "deliveryReference": "Private delivery reference",
+            "responseText": "User follow-up",
+            "reviewerId": "internal-reviewer",
         }
         redacted = redact_record(record)
         self.assertEqual(redacted["email"], "")
         self.assertEqual(redacted["displayName"], "")
+        for field in (
+            "requestTitle",
+            "requestSummary",
+            "marketContext",
+            "operatorNote",
+            "memberPrompt",
+            "deliveryReference",
+            "responseText",
+            "reviewerId",
+        ):
+            self.assertEqual(redacted[field], "")
         self.assertEqual(len(redacted["emailSha256"]), 64)
         self.assertEqual(redacted["walletAddress"], record["walletAddress"])
         self.assertTrue(redacted["walletAddressRetainedForOnchainReview"])

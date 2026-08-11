@@ -238,11 +238,41 @@ class GcaDailyOpsTests(unittest.TestCase):
 
         self.assertTrue(summary["ok"])
         self.assertTrue(summary["includeMemberOps"])
+        self.assertFalse(summary["includeServiceRoutes"])
         self.assertEqual(summary["steps"][-1]["id"], "member-access-ops")
         self.assertIn("tools/run_gca_member_access_ops.py", summary["steps"][-1]["command"])
         self.assertIn("--redact public", summary["steps"][-1]["command"])
         self.assertFalse(summary["includeHoldingReport"])
         self.assertFalse(summary["boundaries"]["walletCalls"])
+
+    def test_daily_ops_can_include_service_routes_explicitly(self):
+        def runner(command, cwd, timeout):
+            if any("check_basescan_resubmission_readiness.py" in part for part in command):
+                return subprocess.CompletedProcess(command, 0, stdout=BASESCAN_BLOCKED_OUTPUT, stderr="")
+            return subprocess.CompletedProcess(command, 0, stdout="ok", stderr="")
+
+        with tempfile.TemporaryDirectory() as temp:
+            summary = run_daily_ops(
+                include_member_ops=True,
+                include_service_routes=True,
+                member_ops_redact="public",
+                summary_output=Path(temp) / "summary.json",
+                runner=runner,
+            )
+
+        self.assertTrue(summary["ok"])
+        self.assertTrue(summary["includeServiceRoutes"])
+        self.assertIn("--include-service-routes", summary["steps"][-1]["command"])
+        self.assertTrue(summary["boundaries"]["serviceRouteReportsReadOnly"])
+
+    def test_daily_ops_service_routes_require_member_ops(self):
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaises(ValueError):
+                run_daily_ops(
+                    include_service_routes=True,
+                    summary_output=Path(temp) / "summary.json",
+                    runner=lambda command, cwd, timeout: subprocess.CompletedProcess(command, 0, stdout="", stderr=""),
+                )
 
     def test_daily_ops_can_include_holding_report_explicitly(self):
         def runner(command, cwd, timeout):

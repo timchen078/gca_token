@@ -316,7 +316,7 @@
         <p class="lead">这一页说明用户在官网提交邮箱和会员账户资料以后，GCA 运营者应该怎样同步 Cloudflare D1 记录、导出联系名单、处理退订、保留本地账本，并把会员权益审核接到支持流程里。</p>
         <p class="lead">邮箱注册、账户入口、只读钱包验证、设备密钥脱敏账户状态、100 credits、会员人工审核、30 天持有证据和已完成会员权益转账的生产证据验证已经上线。10,000 GCA 转账本身仍由储备钱包人工确认。</p>
         <p class="lead">运营人员不能通过邮箱或工单索要用户的设备状态密钥。密钥丢失、过期或撤销后，必须先由注册邮箱联系官方支持并经过人工核验。</p>
-        <p class="lead">服务请求队列、Credit 使用记录和 GCA Member 人工审核的 Cloudflare Worker 路由已经正式上线并受管理员 token 保护；权限、D1 migration、部署和公开/管理员只读 smoke 检查均已通过。</p>
+        <p class="lead">服务请求、服务审核、用户补充资料、Credit 使用记录和 GCA Member 人工审核的 Cloudflare Worker 路由已经正式上线并受管理员 token 保护；权限、D1 migration、部署和公开/管理员只读 smoke 检查均已通过。</p>
         <div class="actions">
           <a class="button primary" href="register.html">邮箱注册</a>
           <a class="button primary" href="zh-api-status.html">中文 API 状态</a>
@@ -398,16 +398,16 @@
       <section class="section panel" aria-labelledby="memberOpsTitle">
         <p class="eyebrow">Member Access Ops</p>
         <h2 id="memberOpsTitle">会员后台运营流程</h2>
-        <p class="note">当 live Worker 已经有账户、钱包验证、100 credits、GCA Member 或会员权益审核记录后，运营者在本地运行这个流程。它需要 ignored 的 <code>cloudflare/gca-registration-worker/.env.admin.local</code> 文件和 <code>ADMIN_READ_TOKEN</code>。输出只写到 <code>.gca_access_data/</code>，不提交到公开仓库。</p>
-        <p class="note"><code>/gca/service-requests</code>、<code>/gca/credit-usage</code>、<code>/gca/member-reviews</code>、<code>/gca/holding-verifications</code> 和 <code>/gca/member-benefit-transfers</code> 已正式上线并受管理员 token 保护。每次发布仍需先运行 <code>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</code>，再通过权限、迁移、部署和 public/admin 只读 smoke。</p>
+        <p class="note">当 live Worker 已经有账户、钱包验证、100 credits、GCA Member、服务申请、服务审核、用户补充资料、credit 使用或会员权益审核记录后，运营者在本地运行这个流程。它需要 ignored 的 <code>cloudflare/gca-registration-worker/.env.admin.local</code> 文件和 <code>ADMIN_READ_TOKEN</code>。输出只写到 <code>.gca_access_data/</code>，不提交到公开仓库。</p>
+        <p class="note"><code>/gca/service-requests</code>、<code>/gca/service-request-reviews</code>、<code>/gca/service-request-followups</code>、<code>/gca/credit-usage</code>、<code>/gca/member-reviews</code>、<code>/gca/holding-verifications</code> 和 <code>/gca/member-benefit-transfers</code> 已正式上线并受管理员 token 保护。每次发布仍需先运行 <code>python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</code>，再通过权限、迁移、部署和 public/admin 只读 smoke。</p>
         <div class="grid">
           <article class="card">
             <h3>1. 受保护导出</h3>
-            <p class="note">运行 <code>.venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --summary-output .gca_access_data/gca_member_access_ops_summary.json</code>，只在本机读取 token 保护的会员后台数据。</p>
+            <p class="note">运行 <code>.venv/bin/python tools/run_gca_member_access_ops.py --base-url https://gca-registration-api.gcagochina.workers.dev --limit 100 --redact none --include-service-routes --summary-output .gca_access_data/gca_member_access_ops_summary.json</code>，只在本机读取 token 保护的会员与服务运营数据。</p>
           </article>
           <article class="card">
             <h3>2. 本地报告</h3>
-            <p class="note">输出包含 <code>.gca_access_data/cloudflare_member_access_export.json</code>、账户/钱包/credits/member CSV，以及 <code>.gca_access_data/member_access_report/gca_member_access_summary.json</code>。</p>
+            <p class="note">输出包含 <code>.gca_access_data/cloudflare_member_access_export.json</code>、账户/钱包/credits/member CSV、服务申请/审核/补充资料/credit 使用 CSV，以及 <code>.gca_access_data/member_access_report/gca_member_access_summary.json</code>。服务审核和补充资料报告只是本地只读运营输出。</p>
           </article>
           <article class="card">
             <h3>3. 支持审核队列</h3>
@@ -423,11 +423,11 @@
           </article>
           <article class="card">
             <h3>6. Credit 使用记录</h3>
-            <p class="note">完成一次人工审核交付后，才通过受管理员 token 保护的 <code>credit_usage</code> 生产路由记录 <code>creditUsageId</code>、<code>serviceId</code>、使用数量和扣减前后余额。该路由不是用户自助扣减入口。</p>
+            <p class="note">完成一次人工审核交付后，才通过 <code>/gca/service-request-reviews</code> 标记已交付；Worker 会按服务端目录原子写入关联的 <code>creditUsageId</code>、<code>serviceId</code>、使用数量和扣减前后余额，同一申请不能重复扣减。该流程不是用户自助扣减入口。</p>
           </article>
           <article class="card">
             <h3>7. 服务请求队列</h3>
-            <p class="note">服务请求先进入本地 <code>service_requests</code> 队列，记录用户请求的服务范围、可选 credit 账本引用、请求占用数量和处理状态。服务请求不会扣减 credits；Credit 使用记录只在人工审核交付后写入。</p>
+            <p class="note">服务请求先进入受保护的 <code>service_requests</code> 队列，记录用户请求范围、credit 账本引用、请求占用数量和处理状态。需要补资料时通过公开的非敏感提示引导用户提交 follow-up；服务请求不会扣减 credits，只有人工审核交付后才写入 Credit 使用记录。</p>
           </article>
           <article class="card">
             <h3>8. GCA Member 人工决定</h3>
