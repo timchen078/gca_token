@@ -1653,6 +1653,8 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing public email switch preflight gate")
     if "domain email snapshot alignment passes" not in preflight.get("requires", []):
         raise SiteCheckError(f"{label}: missing domain email snapshot alignment preflight gate")
+    if "daily status reviewer reference alignment passes" not in preflight.get("requires", []):
+        raise SiteCheckError(f"{label}: missing daily-status reference alignment preflight gate")
     if "does not submit BaseScan request" not in preflight.get("boundaries", []):
         raise SiteCheckError(f"{label}: missing preflight BaseScan boundary")
     checklist_builder = gate.get("reviewerChecklistBuilder", {})
@@ -1699,6 +1701,8 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing final submission public switch gate")
     if "domain email snapshot alignment passes" not in submission_builder.get("readyRequires", []):
         raise SiteCheckError(f"{label}: missing final submission snapshot alignment gate")
+    if "daily status reviewer reference alignment passes" not in submission_builder.get("readyRequires", []):
+        raise SiteCheckError(f"{label}: missing final submission daily-status alignment gate")
     if "baseScanReviewerComment" not in submission_builder.get("copyPasteBlocks", []):
         raise SiteCheckError(f"{label}: missing final submission reviewer comment copy block")
     if submission_builder.get("blockedDraftMarker") != "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.":
@@ -1756,6 +1760,7 @@ def validate_basescan_preflight_page(text: str) -> None:
         "tools/build_domain_email_evidence_packet.py",
         "tools/check_domain_email_public_switch.py",
         "tools/check_domain_email_snapshot_alignment.py",
+        "tools/sync_basescan_daily_status_references.py --check --json",
         "tools/check_basescan_resubmission_readiness.py",
         "tools/build_basescan_submission_package.py",
         "Final Package Is Ready Locally",
@@ -1794,7 +1799,7 @@ def validate_basescan_preflight_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != BASESCAN_PREFLIGHT_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-08-10":
+    if payload.get("lastUpdated") != "2026-08-12":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") not in {
         "blocked-domain-email-before-basescan-resubmission",
@@ -1826,9 +1831,21 @@ def validate_basescan_preflight_json(text: str) -> None:
         raise SiteCheckError(f"{label}: invalid DNS ready flag")
     if set(snapshot.get("missingOrBlockedChecks", [])) not in ({"mx", "spf", "dmarc", "dkim"}, set()):
         raise SiteCheckError(f"{label}: wrong missing DNS checks")
-    for key in ("dnsCheck", "evidencePacket", "publicSwitchCheck", "snapshotAlignment", "baseScanPreflight", "finalDraft"):
+    for key in (
+        "dnsCheck",
+        "evidencePacket",
+        "publicSwitchCheck",
+        "snapshotAlignment",
+        "dailyStatusReferenceAlignment",
+        "baseScanPreflight",
+        "finalDraft",
+    ):
         if key not in commands:
             raise SiteCheckError(f"{label}: missing command {key}")
+    if "tools/sync_basescan_daily_status_references.py --check --json" not in commands.get(
+        "dailyStatusReferenceAlignment", ""
+    ):
+        raise SiteCheckError(f"{label}: wrong daily-status reference alignment command")
     if "tools/check_basescan_resubmission_readiness.py --json --require-ready" not in commands.get("baseScanPreflight", ""):
         raise SiteCheckError(f"{label}: wrong BaseScan preflight command")
     if links.get("timChenProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
@@ -1841,6 +1858,10 @@ def validate_basescan_preflight_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong GitHub link")
     if "readyForBaseScanResubmission is true" not in payload.get("doNotSubmitUntil", []):
         raise SiteCheckError(f"{label}: missing do-not-submit readiness gate")
+    if "daily status reviewer reference alignment reports aligned with zero changed files" not in payload.get(
+        "doNotSubmitUntil", []
+    ):
+        raise SiteCheckError(f"{label}: missing daily-status reference alignment gate")
     if "public token profile publication is not complete" not in payload.get("publicClaimBoundary", ""):
         raise SiteCheckError(f"{label}: missing public claim boundary")
     for key in (
@@ -2985,6 +3006,7 @@ def validate_zh_basescan_preflight_page(text: str) -> None:
         "tools/build_domain_email_evidence_packet.py",
         "tools/check_domain_email_public_switch.py",
         "tools/check_domain_email_snapshot_alignment.py",
+        "tools/sync_basescan_daily_status_references.py --check --json",
         "tools/check_basescan_resubmission_readiness.py",
         "tools/build_basescan_submission_package.py",
         "不会提交 BaseScan",

@@ -57,6 +57,7 @@
       "launch/domain_email_evidence_packet.json has readyForBaseScanResubmission true",
       "tools/check_domain_email_public_switch.py reports readyForBaseScanPublicEmailAlignment true",
       "tools/check_domain_email_snapshot_alignment.py reports alignedForPublicPlatformPackets true",
+      "tools/sync_basescan_daily_status_references.py --check reports aligned with zero changed files",
       "reviewer URLs are reachable"
     ],
     "boundaries": [
@@ -76,7 +77,8 @@
       "officialEmail is support@gcagochina.com",
       "domain email evidence packet is complete",
       "public email switch alignment passes",
-      "domain email snapshot alignment passes"
+      "domain email snapshot alignment passes",
+      "daily status reviewer reference alignment passes"
     ],
     "outputs": [
       "launch/basescan_final_submission_package.json",

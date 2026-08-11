@@ -31,6 +31,10 @@ try:
         SnapshotAlignmentError,
         build_report as build_snapshot_alignment_report,
     )
+    from tools.sync_basescan_daily_status_references import (
+        DailyStatusReferenceSyncError,
+        synchronize_references as synchronize_daily_status_references,
+    )
 except ModuleNotFoundError:  # pragma: no cover - used when running from tools/
     from check_basescan_resubmission_readiness import (
         BaseScanReadinessError,
@@ -47,6 +51,10 @@ except ModuleNotFoundError:  # pragma: no cover - used when running from tools/
     from check_domain_email_snapshot_alignment import (
         SnapshotAlignmentError,
         build_report as build_snapshot_alignment_report,
+    )
+    from sync_basescan_daily_status_references import (
+        DailyStatusReferenceSyncError,
+        synchronize_references as synchronize_daily_status_references,
     )
 
 
@@ -328,13 +336,60 @@ def build_public_email_guard(readiness_report: dict[str, Any]) -> dict[str, Any]
     }
 
 
+def build_daily_status_reference_guard(readiness_report: dict[str, Any]) -> dict[str, Any]:
+    raw_report = readiness_report.get("dailyStatusReferenceAlignmentSummary", {})
+    report = raw_report if isinstance(raw_report, dict) else {}
+    summary = report.get("summary", {})
+    canonical = report.get("canonicalReference", {})
+    canonical_fields = (
+        "dailyStatusGeneratedAt",
+        "dailyStatusDate",
+        "baseScanProfileCheckedAt",
+        "baseScanProfileCheckedDate",
+    )
+    aligned = (
+        report.get("schema") == "gca-basescan-daily-status-reference-sync-v1"
+        and report.get("ok") is True
+        and report.get("status") == "aligned"
+        and all(str(canonical.get(field) or "").strip() for field in canonical_fields)
+        and summary.get("filesChanged") == 0
+        and summary.get("missingFiles") == 0
+        and summary.get("filesMissingCanonicalReference") == 0
+    )
+    return {
+        "status": report.get("status"),
+        "aligned": aligned,
+        "canonicalReference": canonical,
+        "filesChecked": summary.get("filesChecked"),
+        "filesChanged": summary.get("filesChanged"),
+        "missingFiles": summary.get("missingFiles"),
+        "filesMissingCanonicalReference": summary.get(
+            "filesMissingCanonicalReference"
+        ),
+        "boundary": (
+            "This is a read-only repository consistency guard. It does not submit BaseScan requests, "
+            "send email, sign messages, or touch wallets/contracts."
+        ),
+    }
+
+
 def build_submission_package(
     *,
     values: dict[str, Any],
     readiness_report: dict[str, Any],
     generated_at: str | None = None,
 ) -> dict[str, Any]:
-    ready = bool(readiness_report.get("readyForBaseScanResubmission"))
+    daily_status_reference_guard = build_daily_status_reference_guard(readiness_report)
+    missing = list(readiness_report.get("missingOrBlockedRequirements", []))
+    if not daily_status_reference_guard["aligned"]:
+        if "daily-status-reference-alignment" not in missing:
+            missing.append("daily-status-reference-alignment")
+    ready = bool(readiness_report.get("readyForBaseScanResubmission")) and not missing
+    effective_readiness_report = {
+        **readiness_report,
+        "readyForBaseScanResubmission": ready,
+        "missingOrBlockedRequirements": missing,
+    }
     form_fields = build_form_fields(values)
     public_email_guard = build_public_email_guard(readiness_report)
     return {
@@ -343,7 +398,7 @@ def build_submission_package(
         "project": "GCA",
         "status": "ready-for-owner-submission" if ready else "blocked-before-basescan-submission",
         "readyForOwnerSubmission": ready,
-        "missingOrBlockedRequirements": readiness_report.get("missingOrBlockedRequirements", []),
+        "missingOrBlockedRequirements": missing,
         "nextAction": (
             "Owner may copy this package into one clean BaseScan token profile update."
             if ready
@@ -355,13 +410,16 @@ def build_submission_package(
             "generatedAt": readiness_report.get("generatedAt"),
             "filesStillUsingOldEmail": public_email_guard["filesStillUsingOldEmail"],
             "filesPublishingForbiddenLegacyEmail": public_email_guard["filesPublishingForbiddenLegacyEmail"],
+            "dailyStatusReferenceStatus": daily_status_reference_guard["status"],
+            "dailyStatusReferenceFilesChanged": daily_status_reference_guard["filesChanged"],
         },
         "publicEmailGuard": public_email_guard,
+        "dailyStatusReferenceGuard": daily_status_reference_guard,
         "reviewerRemediationSummary": build_reviewer_remediation_summary(form_fields),
         "formFields": form_fields,
         "copyPasteBlocks": build_copy_paste_blocks(
             values=values,
-            readiness_report=readiness_report,
+            readiness_report=effective_readiness_report,
             form_fields=form_fields,
         ),
         "safeSubmissionNote": (
@@ -392,6 +450,7 @@ def render_markdown(package: dict[str, Any]) -> str:
     copy_blocks = package["copyPasteBlocks"]
     remediation_summary = package.get("reviewerRemediationSummary", [])
     public_email_guard = package.get("publicEmailGuard", {})
+    daily_status_reference_guard = package.get("dailyStatusReferenceGuard", {})
 
     lines = [
         "# GCA BaseScan Submission Package",
@@ -431,6 +490,20 @@ def render_markdown(package: dict[str, Any]) -> str:
         f"- Files publishing forbidden legacy email: `{public_email_guard.get('filesPublishingForbiddenLegacyEmail')}`",
         f"- Forbidden legacy email labels scanned: `{', '.join(public_email_guard.get('forbiddenLegacyEmailLabels') or [])}`",
         f"- Boundary: {public_email_guard.get('boundary')}",
+        "",
+    ])
+
+    lines.extend([
+        "## Daily Status Reference Guard",
+        "",
+        f"- Status: `{daily_status_reference_guard.get('status')}`",
+        f"- Aligned: `{str(bool(daily_status_reference_guard.get('aligned'))).lower()}`",
+        f"- Files checked: `{daily_status_reference_guard.get('filesChecked')}`",
+        f"- Files requiring updates: `{daily_status_reference_guard.get('filesChanged')}`",
+        f"- Missing target files: `{daily_status_reference_guard.get('missingFiles')}`",
+        f"- Files missing canonical reference: `{daily_status_reference_guard.get('filesMissingCanonicalReference')}`",
+        f"- Canonical reference: `{json.dumps(daily_status_reference_guard.get('canonicalReference', {}), sort_keys=True)}`",
+        f"- Boundary: {daily_status_reference_guard.get('boundary')}",
         "",
     ])
 
@@ -541,6 +614,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--evidence-packet", default=str(DEFAULT_EVIDENCE_PACKET_PATH), help="Path to domain email evidence packet JSON.")
     parser.add_argument("--public-switch-report", default="", help="Optional saved domain email public switch check JSON. If omitted, the checker scans current files.")
     parser.add_argument("--snapshot-alignment-report", default="", help="Optional saved domain email snapshot alignment JSON. If omitted, the checker scans current files.")
+    parser.add_argument(
+        "--daily-status-reference-alignment-report",
+        default="",
+        help=(
+            "Optional saved BaseScan daily-status reference alignment JSON. "
+            "If omitted, the builder scans current files without writing them."
+        ),
+    )
     parser.add_argument("--timeout", type=float, default=15.0, help="Public URL request timeout in seconds.")
     parser.add_argument("--skip-url-checks", action="store_true", help="Skip public URL reachability checks.")
     parser.add_argument("--output-json", default="", help="Write submission package JSON to this path.")
@@ -567,6 +648,11 @@ def main(argv: list[str] | None = None) -> int:
             if args.snapshot_alignment_report
             else build_snapshot_alignment_report()
         )
+        daily_status_reference_alignment_report = (
+            load_json_file(Path(args.daily_status_reference_alignment_report))
+            if args.daily_status_reference_alignment_report
+            else synchronize_daily_status_references(write=False)
+        )
         public_url_checks = check_public_urls(values, skip=args.skip_url_checks, timeout=args.timeout)
         readiness_report = build_readiness_report(
             values=values,
@@ -574,6 +660,7 @@ def main(argv: list[str] | None = None) -> int:
             public_switch_report=public_switch_report,
             snapshot_alignment_report=snapshot_alignment_report,
             public_url_checks=public_url_checks,
+            daily_status_reference_alignment_report=daily_status_reference_alignment_report,
             generated_at=args.generated_at or None,
         )
         package = build_submission_package(
@@ -581,7 +668,12 @@ def main(argv: list[str] | None = None) -> int:
             readiness_report=readiness_report,
             generated_at=args.generated_at or None,
         )
-    except (BaseScanReadinessError, PublicSwitchCheckError, SnapshotAlignmentError) as exc:
+    except (
+        BaseScanReadinessError,
+        PublicSwitchCheckError,
+        SnapshotAlignmentError,
+        DailyStatusReferenceSyncError,
+    ) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 

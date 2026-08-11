@@ -80,6 +80,30 @@ def ready_snapshot_alignment_report():
     }
 
 
+def ready_daily_status_reference_alignment_report():
+    return {
+        "schema": "gca-basescan-daily-status-reference-sync-v1",
+        "status": "aligned",
+        "ok": True,
+        "writeMode": False,
+        "canonicalReference": {
+            "dailyStatusGeneratedAt": "2026-08-11T17:22:15Z",
+            "dailyStatusDate": "2026-08-11",
+            "baseScanProfileCheckedAt": "2026-08-11T17:22:15Z",
+            "baseScanProfileCheckedDate": "2026-08-11",
+        },
+        "summary": {
+            "filesChecked": 35,
+            "filesChanged": 0,
+            "missingFiles": 0,
+            "filesMissingCanonicalReference": 0,
+        },
+        "changedFiles": [],
+        "missingFilePaths": [],
+        "missingCanonicalReferencePaths": [],
+    }
+
+
 class BaseScanResubmissionReadinessTests(unittest.TestCase):
     def test_report_blocks_when_values_and_evidence_are_not_ready(self):
         values = ready_values()
@@ -102,6 +126,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
         self.assertIn("domain-email-evidence-packet", report["missingOrBlockedRequirements"])
         self.assertIn("domain-email-public-switch-check", report["missingOrBlockedRequirements"])
         self.assertIn("domain-email-snapshot-alignment", report["missingOrBlockedRequirements"])
+        self.assertIn("daily-status-reference-alignment", report["missingOrBlockedRequirements"])
         self.assertFalse(report["boundaries"]["submitsBaseScanRequest"])
         self.assertFalse(report["boundaries"]["touchesWalletOrContract"])
 
@@ -113,6 +138,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
             public_switch_report=ready_public_switch_report(),
             snapshot_alignment_report=ready_snapshot_alignment_report(),
             public_url_checks=check_public_urls(values, skip=True),
+            daily_status_reference_alignment_report=ready_daily_status_reference_alignment_report(),
             generated_at="2026-05-24T00:00:00Z",
         )
 
@@ -131,6 +157,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
             public_switch_report=ready_public_switch_report(),
             snapshot_alignment_report=ready_snapshot_alignment_report(),
             public_url_checks=url_checks,
+            daily_status_reference_alignment_report=ready_daily_status_reference_alignment_report(),
             generated_at="2026-05-24T00:00:00Z",
         )
 
@@ -152,6 +179,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
             public_switch_report=public_switch,
             snapshot_alignment_report=ready_snapshot_alignment_report(),
             public_url_checks=check_public_urls(values, skip=True),
+            daily_status_reference_alignment_report=ready_daily_status_reference_alignment_report(),
             generated_at="2026-05-24T00:00:00Z",
         )
 
@@ -178,6 +206,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
             public_switch_report=public_switch,
             snapshot_alignment_report=ready_snapshot_alignment_report(),
             public_url_checks=check_public_urls(values, skip=True),
+            daily_status_reference_alignment_report=ready_daily_status_reference_alignment_report(),
             generated_at="2026-05-24T00:00:00Z",
         )
 
@@ -199,6 +228,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
             public_switch_report=ready_public_switch_report(),
             snapshot_alignment_report=snapshot_alignment,
             public_url_checks=check_public_urls(values, skip=True),
+            daily_status_reference_alignment_report=ready_daily_status_reference_alignment_report(),
             generated_at="2026-05-24T00:00:00Z",
         )
 
@@ -207,6 +237,33 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
         self.assertIn("domain-email-snapshot-stale-markers", report["missingOrBlockedRequirements"])
         self.assertEqual(report["domainEmailSnapshotAlignmentSummary"]["status"], "stale-dns-snapshot-markers")
 
+    def test_daily_status_reference_drift_blocks_readiness(self):
+        values = ready_values()
+        daily_status_alignment = ready_daily_status_reference_alignment_report()
+        daily_status_alignment["status"] = "updated"
+        daily_status_alignment["summary"]["filesChanged"] = 2
+        daily_status_alignment["changedFiles"] = [
+            "site/basescan-preflight.html",
+            "launch/basescan_resubmission_values.json",
+        ]
+
+        report = build_readiness_report(
+            values=values,
+            evidence_packet=ready_evidence_packet(),
+            public_switch_report=ready_public_switch_report(),
+            snapshot_alignment_report=ready_snapshot_alignment_report(),
+            public_url_checks=check_public_urls(values, skip=True),
+            daily_status_reference_alignment_report=daily_status_alignment,
+            generated_at="2026-08-12T00:00:00Z",
+        )
+
+        self.assertFalse(report["readyForBaseScanResubmission"])
+        self.assertIn("daily-status-reference-drift", report["missingOrBlockedRequirements"])
+        self.assertEqual(
+            report["dailyStatusReferenceAlignmentSummary"]["changedFiles"],
+            ["site/basescan-preflight.html", "launch/basescan_resubmission_values.json"],
+        )
+
     def test_cli_blocks_current_unready_package_without_network(self):
         with tempfile.TemporaryDirectory() as temp:
             temp_path = Path(temp)
@@ -214,6 +271,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
             evidence_path = temp_path / "packet.json"
             switch_path = temp_path / "switch.json"
             snapshot_path = temp_path / "snapshot.json"
+            daily_status_reference_path = temp_path / "daily-status-reference.json"
             values = ready_values()
             values["nextSubmissionReady"] = False
             values["officialEmail"] = "GCAgochina@outlook.com"
@@ -221,6 +279,10 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
             evidence_path.write_text(json.dumps({"readyForBaseScanResubmission": False}), encoding="utf-8")
             switch_path.write_text(json.dumps({"readyForBaseScanPublicEmailAlignment": False}), encoding="utf-8")
             snapshot_path.write_text(json.dumps(ready_snapshot_alignment_report()), encoding="utf-8")
+            daily_status_reference_path.write_text(
+                json.dumps(ready_daily_status_reference_alignment_report()),
+                encoding="utf-8",
+            )
 
             output = StringIO()
             with redirect_stdout(output):
@@ -233,6 +295,8 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
                     str(switch_path),
                     "--snapshot-alignment-report",
                     str(snapshot_path),
+                    "--daily-status-reference-alignment-report",
+                    str(daily_status_reference_path),
                     "--skip-url-checks",
                     "--json",
                     "--require-ready",

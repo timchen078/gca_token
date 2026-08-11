@@ -81,6 +81,23 @@ READY_PREFLIGHT = {
             "forbiddenLegacyEmailOccurrences": 0,
         },
     },
+    "dailyStatusReferenceAlignmentSummary": {
+        "schema": "gca-basescan-daily-status-reference-sync-v1",
+        "status": "aligned",
+        "ok": True,
+        "canonicalReference": {
+            "dailyStatusGeneratedAt": "2026-08-11T17:22:15Z",
+            "dailyStatusDate": "2026-08-11",
+            "baseScanProfileCheckedAt": "2026-08-11T17:22:15Z",
+            "baseScanProfileCheckedDate": "2026-08-11",
+        },
+        "summary": {
+            "filesChecked": 35,
+            "filesChanged": 0,
+            "missingFiles": 0,
+            "filesMissingCanonicalReference": 0,
+        },
+    },
 }
 
 BLOCKED_PREFLIGHT = {
@@ -148,6 +165,10 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertIn("manual reserve-wallet processing", package["copyPasteBlocks"]["accessAndClaimBoundaryPlainText"])
         self.assertEqual(package["preflightSummary"]["filesStillUsingOldEmail"], 0)
         self.assertEqual(package["preflightSummary"]["filesPublishingForbiddenLegacyEmail"], 0)
+        self.assertEqual(package["preflightSummary"]["dailyStatusReferenceStatus"], "aligned")
+        self.assertEqual(package["preflightSummary"]["dailyStatusReferenceFilesChanged"], 0)
+        self.assertTrue(package["dailyStatusReferenceGuard"]["aligned"])
+        self.assertEqual(package["dailyStatusReferenceGuard"]["filesChecked"], 35)
         self.assertEqual(package["publicEmailGuard"]["targetDomainEmail"], "support@gcagochina.com")
         self.assertEqual(package["publicEmailGuard"]["filesStillUsingOldEmail"], 0)
         self.assertEqual(package["publicEmailGuard"]["filesPublishingForbiddenLegacyEmail"], 0)
@@ -171,6 +192,8 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertIn("Ready for owner submission: `true`", markdown)
         self.assertIn("Reviewer Remediation Summary", markdown)
         self.assertIn("Public Email Guard", markdown)
+        self.assertIn("Daily Status Reference Guard", markdown)
+        self.assertIn("Files requiring updates: `0`", markdown)
         self.assertIn("Project profile and BaseScan reviewer map", markdown)
         self.assertIn("https://gcagochina.com/project-profile.html#basescanMapTitle", markdown)
         self.assertIn("Files publishing forbidden legacy email: `0`", markdown)
@@ -184,6 +207,25 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertIn("No automatic token claim", markdown)
         self.assertIn("Project Email Address: `support@gcagochina.com`", markdown)
         self.assertIn("This package does not submit a BaseScan request.", markdown)
+
+    def test_package_blocks_forged_ready_preflight_when_daily_status_references_drift(self):
+        preflight = json.loads(json.dumps(READY_PREFLIGHT))
+        daily_status_guard = preflight["dailyStatusReferenceAlignmentSummary"]
+        daily_status_guard["status"] = "updated"
+        daily_status_guard["summary"]["filesChanged"] = 1
+
+        package = build_submission_package(
+            values=READY_VALUES,
+            readiness_report=preflight,
+            generated_at="2026-08-12T00:00:00Z",
+        )
+
+        self.assertFalse(package["readyForOwnerSubmission"])
+        self.assertIn("daily-status-reference-alignment", package["missingOrBlockedRequirements"])
+        self.assertIn(
+            "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.",
+            package["copyPasteBlocks"]["baseScanReviewerComment"],
+        )
 
     def test_cli_blocks_current_unready_values_without_network(self):
         with tempfile.TemporaryDirectory() as temp:

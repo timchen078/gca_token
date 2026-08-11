@@ -2,9 +2,9 @@
 """Check whether GCA is ready for a clean BaseScan token-profile resubmission.
 
 The preflight is read-only. It validates the local BaseScan values packet, the
-domain-email evidence packet, public email switch alignment, and public
-reviewer URLs. It does not submit BaseScan forms, send email, write DNS
-records, or touch wallets/contracts.
+domain-email evidence packet, public email switch alignment, daily-status
+reference alignment, and public reviewer URLs. It does not submit BaseScan
+forms, send email, write DNS records, or touch wallets/contracts.
 """
 
 from __future__ import annotations
@@ -28,6 +28,10 @@ try:
         SnapshotAlignmentError,
         build_report as build_snapshot_alignment_report,
     )
+    from tools.sync_basescan_daily_status_references import (
+        DailyStatusReferenceSyncError,
+        synchronize_references as synchronize_daily_status_references,
+    )
 except ModuleNotFoundError:  # pragma: no cover - used when running from tools/
     from check_domain_email_dns import utc_now
     from check_domain_email_public_switch import (
@@ -37,6 +41,10 @@ except ModuleNotFoundError:  # pragma: no cover - used when running from tools/
     from check_domain_email_snapshot_alignment import (
         SnapshotAlignmentError,
         build_report as build_snapshot_alignment_report,
+    )
+    from sync_basescan_daily_status_references import (
+        DailyStatusReferenceSyncError,
+        synchronize_references as synchronize_daily_status_references,
     )
 
 
@@ -321,6 +329,67 @@ def validate_snapshot_alignment_report(report: dict[str, Any] | None) -> list[di
     ]
 
 
+def validate_daily_status_reference_alignment_report(
+    report: dict[str, Any] | None,
+) -> list[dict[str, Any]]:
+    if report is None:
+        return [
+            status_entry(
+                "daily-status-reference-alignment",
+                False,
+                "Missing BaseScan daily-status reference alignment check.",
+                None,
+            )
+        ]
+
+    summary = report.get("summary", {})
+    canonical = report.get("canonicalReference", {})
+    canonical_fields = (
+        "dailyStatusGeneratedAt",
+        "dailyStatusDate",
+        "baseScanProfileCheckedAt",
+        "baseScanProfileCheckedDate",
+    )
+    return [
+        status_entry(
+            "daily-status-reference-alignment",
+            report.get("ok") is True,
+            "The daily-status reference scan must complete without missing targets or markers.",
+            report.get("status"),
+        ),
+        status_entry(
+            "daily-status-reference-canonical",
+            all(str(canonical.get(field) or "").strip() for field in canonical_fields),
+            "The alignment report must identify the canonical daily-status and BaseScan profile timestamps.",
+            canonical,
+        ),
+        status_entry(
+            "daily-status-reference-drift",
+            report.get("status") == "aligned" and summary.get("filesChanged") == 0,
+            "No BaseScan reviewer artifact may require a daily-status reference update.",
+            {
+                "status": report.get("status"),
+                "filesChanged": summary.get("filesChanged"),
+                "changedFiles": report.get("changedFiles", []),
+            },
+        ),
+        status_entry(
+            "daily-status-reference-targets",
+            summary.get("missingFiles") == 0
+            and summary.get("filesMissingCanonicalReference") == 0,
+            "All monitored reviewer artifacts must exist and contain the canonical reference.",
+            {
+                "missingFiles": summary.get("missingFiles"),
+                "filesMissingCanonicalReference": summary.get("filesMissingCanonicalReference"),
+                "missingFilePaths": report.get("missingFilePaths", []),
+                "missingCanonicalReferencePaths": report.get(
+                    "missingCanonicalReferencePaths", []
+                ),
+            },
+        ),
+    ]
+
+
 def missing_keys_from_checks(checks: list[dict[str, Any]]) -> list[str]:
     return [str(check.get("key") or check.get("field") or check.get("url")) for check in checks if not check.get("ok")]
 
@@ -332,12 +401,16 @@ def build_readiness_report(
     public_switch_report: dict[str, Any] | None,
     snapshot_alignment_report: dict[str, Any] | None,
     public_url_checks: list[dict[str, Any]],
+    daily_status_reference_alignment_report: dict[str, Any] | None = None,
     generated_at: str | None = None,
 ) -> dict[str, Any]:
     values_checks = validate_values(values)
     evidence_checks = validate_evidence_packet(evidence_packet)
     public_switch_checks = validate_public_switch_report(public_switch_report)
     snapshot_alignment_checks = validate_snapshot_alignment_report(snapshot_alignment_report)
+    daily_status_reference_alignment_checks = validate_daily_status_reference_alignment_report(
+        daily_status_reference_alignment_report
+    )
     public_checks = [
         status_entry(
             f"public-url:{check.get('field')}",
@@ -348,7 +421,14 @@ def build_readiness_report(
         for check in public_url_checks
     ]
 
-    all_checks = values_checks + evidence_checks + public_switch_checks + snapshot_alignment_checks + public_checks
+    all_checks = (
+        values_checks
+        + evidence_checks
+        + public_switch_checks
+        + snapshot_alignment_checks
+        + daily_status_reference_alignment_checks
+        + public_checks
+    )
     blocked = missing_keys_from_checks(all_checks)
     ready = not blocked
 
@@ -367,6 +447,8 @@ def build_readiness_report(
         "domainEmailPublicSwitchSummary": public_switch_report,
         "domainEmailSnapshotAlignmentChecks": snapshot_alignment_checks,
         "domainEmailSnapshotAlignmentSummary": snapshot_alignment_report,
+        "dailyStatusReferenceAlignmentChecks": daily_status_reference_alignment_checks,
+        "dailyStatusReferenceAlignmentSummary": daily_status_reference_alignment_report,
         "publicUrlChecks": public_url_checks,
         "nextAction": (
             "Owner may proceed with one clean BaseScan resubmission from support@gcagochina.com."
@@ -401,6 +483,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--evidence-packet", default=str(DEFAULT_EVIDENCE_PACKET_PATH), help="Path to domain email evidence packet JSON.")
     parser.add_argument("--public-switch-report", default="", help="Optional saved domain email public switch check JSON. If omitted, the checker scans current files.")
     parser.add_argument("--snapshot-alignment-report", default="", help="Optional saved domain email snapshot alignment JSON. If omitted, the checker scans current files.")
+    parser.add_argument(
+        "--daily-status-reference-alignment-report",
+        default="",
+        help=(
+            "Optional saved BaseScan daily-status reference alignment JSON. "
+            "If omitted, the checker scans current files without writing them."
+        ),
+    )
     parser.add_argument("--timeout", type=float, default=15.0, help="Public URL request timeout in seconds.")
     parser.add_argument("--skip-url-checks", action="store_true", help="Skip public URL reachability checks.")
     parser.add_argument("--json", action="store_true", help="Print JSON output.")
@@ -424,6 +514,11 @@ def main(argv: list[str] | None = None) -> int:
             if args.snapshot_alignment_report
             else build_snapshot_alignment_report()
         )
+        daily_status_reference_alignment_report = (
+            load_json_file(Path(args.daily_status_reference_alignment_report))
+            if args.daily_status_reference_alignment_report
+            else synchronize_daily_status_references(write=False)
+        )
         public_url_checks = check_public_urls(values, skip=args.skip_url_checks, timeout=args.timeout)
         report = build_readiness_report(
             values=values,
@@ -431,8 +526,14 @@ def main(argv: list[str] | None = None) -> int:
             public_switch_report=public_switch_report,
             snapshot_alignment_report=snapshot_alignment_report,
             public_url_checks=public_url_checks,
+            daily_status_reference_alignment_report=daily_status_reference_alignment_report,
         )
-    except (BaseScanReadinessError, PublicSwitchCheckError, SnapshotAlignmentError) as exc:
+    except (
+        BaseScanReadinessError,
+        PublicSwitchCheckError,
+        SnapshotAlignmentError,
+        DailyStatusReferenceSyncError,
+    ) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 
