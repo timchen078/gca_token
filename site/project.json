@@ -259,7 +259,7 @@
           "https://gcagochina.com/brand-kit.html",
           "https://gcagochina.com/data.html"
         ],
-        "checkCommand": "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20"
+        "checkCommand": "python3 tools/check_site_links.py --site-root site --base-url https://gcagochina.com/ --check-live --timeout 20 && python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20"
       },
       {
         "id": "founder-team-transparency",

@@ -12,8 +12,14 @@ import json
 from pathlib import Path
 from typing import Any
 
+try:
+    from tools.check_site_links import scan_site
+except ModuleNotFoundError:  # pragma: no cover - used when running from tools/
+    from check_site_links import scan_site
+
 
 ROOT = Path(__file__).resolve().parents[1]
+SITE_ROOT = ROOT / "site"
 REMEDIATION_PATH = ROOT / "site" / "basescan-remediation.json"
 VALUES_PATH = ROOT / "launch" / "basescan_resubmission_values.json"
 DOMAIN_EMAIL_PATH = ROOT / "site" / "domain-email.json"
@@ -51,6 +57,7 @@ def build_checklist(
     values_path: Path = VALUES_PATH,
     domain_email_path: Path = DOMAIN_EMAIL_PATH,
     reviewer_kit_path: Path = REVIEWER_KIT_PATH,
+    site_root: Path = SITE_ROOT,
 ) -> dict[str, Any]:
     remediation = load_json(remediation_path)
     values = load_json(values_path)
@@ -60,6 +67,7 @@ def build_checklist(
     email_state = remediation["currentEmailState"]
     market = values["officialMarketPool"]
     external_status = reviewer_kit["externalReviewStatus"]
+    link_report = scan_site(site_root)
 
     domain_email_ready = domain_email["baseScanUse"].get("resubmissionReady") is True
     sender_status = "implemented-domain-email-evidence-ready" if domain_email_ready else "blocked-owner-action-required"
@@ -72,6 +80,15 @@ def build_checklist(
         "Submit one clean BaseScan token-profile update from support@gcagochina.com, attaching the public evidence links and retaining private mailbox screenshots for reviewer follow-up."
         if domain_email_ready
         else "Activate support@gcagochina.com, add MX/SPF/DKIM/DMARC, verify inbound/outbound tests, switch public email, then archive the evidence packet."
+    )
+    link_status = "implemented-with-automated-check" if link_report.ok else "blocked-link-integrity-failed"
+    link_evidence = (
+        f"tools/check_site_links.py parsed {link_report.page_count} HTML pages and "
+        f"{link_report.reference_count} URL references, verified {len(link_report.internal_urls)} unique "
+        "internal targets, fragments, duplicate IDs, placeholder schemes, and safe external-link attributes, "
+        "and found no errors."
+        if link_report.ok
+        else f"The site link-integrity gate found {len(link_report.errors)} error(s); clean resubmission is blocked until they are fixed."
     )
 
     items = [
@@ -100,10 +117,10 @@ def build_checklist(
         checklist_item(
             "placeholder-and-link-review",
             "No obvious placeholders or broken reviewer links",
-            "implemented-with-automated-check",
-            "The public site checker validates canonical identity, current GCA/USDT route, public pages, raw JSON routing, sitemap, and robots.",
+            link_status,
+            link_evidence,
             ["https://gcagochina.com/data.html", "https://gcagochina.com/site-map.html"],
-            "Run .venv/bin/python tools/check_public_site.py after each public-material change.",
+            "Run the local link-integrity check before deployment, then run its live HTTPS mode and tools/check_public_site.py after deployment.",
         ),
         checklist_item(
             "founder-team-transparency",
@@ -176,8 +193,17 @@ def build_checklist(
         "officialEmail": values["officialEmail"],
         "targetDomainEmail": domain_email["targetDomainEmail"],
         "domainEmailReady": domain_email["baseScanUse"]["resubmissionReady"],
+        "siteLinkIntegrity": {
+            "ok": link_report.ok,
+            "pageCount": link_report.page_count,
+            "referenceCount": link_report.reference_count,
+            "uniqueInternalTargetCount": len(link_report.internal_urls),
+            "errors": list(link_report.errors),
+        },
         "checklist": items,
         "preflightCommands": [
+            "python3 tools/check_site_links.py --site-root site",
+            "python3 tools/check_site_links.py --site-root site --base-url https://gcagochina.com/ --check-live --timeout 30",
             "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
             "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
             "python3 tools/build_domain_email_switch_plan.py --json",

@@ -14,7 +14,7 @@
 | --- | --- | --- | --- |
 | Website accessible and safe to visit | `implemented` | Public HTTPS website, start page, verification page, sitemap, and robots file are published and checked by tools/check_public_site.py. | Keep public site checks passing before every resubmission. |
 | Clear token and project information | `implemented` | About, status, whitepaper, product, trust, and reviewer pages describe GCA without claiming approval, audit completion, or guaranteed market outcomes. | Use the readable pages first; raw JSON only when a reviewer asks for machine-readable data. |
-| No obvious placeholders or broken reviewer links | `implemented-with-automated-check` | The public site checker validates canonical identity, current GCA/USDT route, public pages, raw JSON routing, sitemap, and robots. | Run .venv/bin/python tools/check_public_site.py after each public-material change. |
+| No obvious placeholders or broken reviewer links | `implemented-with-automated-check` | tools/check_site_links.py parsed 122 HTML pages and 5737 URL references, verified 214 unique internal targets, fragments, duplicate IDs, placeholder schemes, and safe external-link attributes, and found no errors. | Run the local link-integrity check before deployment, then run its live HTTPS mode and tools/check_public_site.py after deployment. |
 | Founder and team transparency | `implemented-official-domain-equivalent` | Tim Chen is published on the team page and standalone official-domain professional profile with GitHub, X, Telegram, and role scope. | Add LinkedIn only if BaseScan specifically requires a third-party social-network profile. |
 | Sender email matches project domain | `implemented-domain-email-evidence-ready` | The official project-domain mailbox support@gcagochina.com is active, public DNS records pass MX/SPF/DKIM/DMARC checks, inbound and outbound tests are archived privately, and public support/BaseScan materials publish the same domain email. | Submit one clean BaseScan token-profile update from support@gcagochina.com, attaching the public evidence links and retaining private mailbox screenshots for reviewer follow-up. |
 | Verified source and fixed-supply token facts | `implemented` | BaseScan source verification and deployer-wallet ownership verification are complete; the contract has fixed supply and no post-deployment mint function. | Keep the chain as Base Mainnet / chainId 8453 and contract address unchanged. |
@@ -23,6 +23,8 @@
 
 ## Preflight Commands
 
+- `python3 tools/check_site_links.py --site-root site`
+- `python3 tools/check_site_links.py --site-root site --base-url https://gcagochina.com/ --check-live --timeout 30`
 - `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json`
 - `python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md`
 - `python3 tools/build_domain_email_switch_plan.py --json`

@@ -22,6 +22,12 @@ class BaseScanReviewerChecklistTests(unittest.TestCase):
         self.assertEqual(items["website-accessible"]["status"], "implemented")
         self.assertEqual(items["clear-project-information"]["status"], "implemented")
         self.assertEqual(items["placeholder-and-link-review"]["status"], "implemented-with-automated-check")
+        self.assertIn("tools/check_site_links.py parsed", items["placeholder-and-link-review"]["evidence"])
+        self.assertTrue(report["siteLinkIntegrity"]["ok"])
+        self.assertGreaterEqual(report["siteLinkIntegrity"]["pageCount"], 120)
+        self.assertGreaterEqual(report["siteLinkIntegrity"]["referenceCount"], 5000)
+        self.assertGreaterEqual(report["siteLinkIntegrity"]["uniqueInternalTargetCount"], 200)
+        self.assertEqual(report["siteLinkIntegrity"]["errors"], [])
         self.assertEqual(items["founder-team-transparency"]["status"], "implemented-official-domain-equivalent")
         self.assertEqual(items["sender-domain-email"]["status"], "implemented-domain-email-evidence-ready")
         self.assertEqual(items["source-and-contract"]["status"], "implemented")
@@ -33,11 +39,30 @@ class BaseScanReviewerChecklistTests(unittest.TestCase):
         self.assertIn("https://www.geckoterminal.com/base/pools/", " ".join(items["social-and-market-links"]["links"]))
 
         self.assertIn("python3 tools/check_basescan_resubmission_readiness.py --json --require-ready", report["preflightCommands"])
+        self.assertIn("python3 tools/check_site_links.py --site-root site", report["preflightCommands"])
+        self.assertIn(
+            "python3 tools/check_site_links.py --site-root site --base-url https://gcagochina.com/ --check-live --timeout 30",
+            report["preflightCommands"],
+        )
         self.assertFalse(report["boundaries"]["submitsBaseScanRequest"])
         self.assertFalse(report["boundaries"]["sendsEmail"])
         self.assertFalse(report["boundaries"]["writesDns"])
         self.assertFalse(report["boundaries"]["signsWalletMessage"])
         self.assertFalse(report["boundaries"]["touchesWalletsOrContracts"])
+
+    def test_link_integrity_failure_blocks_clean_resubmission(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            site = Path(temp_dir)
+            (site / "index.html").write_text('<a href="missing.html">Missing</a>', encoding="utf-8")
+
+            report = module.build_checklist(site_root=site)
+
+        items = {item["key"]: item for item in report["checklist"]}
+        self.assertEqual(items["placeholder-and-link-review"]["status"], "blocked-link-integrity-failed")
+        self.assertFalse(report["readyForCleanResubmission"])
+        self.assertIn("placeholder-and-link-review", report["blockedItems"])
+        self.assertFalse(report["siteLinkIntegrity"]["ok"])
+        self.assertIn("missing internal target /missing.html", "\n".join(report["siteLinkIntegrity"]["errors"]))
 
     def test_markdown_and_optional_outputs_are_copyable(self):
         report = module.build_checklist()
@@ -46,6 +71,7 @@ class BaseScanReviewerChecklistTests(unittest.TestCase):
         self.assertIn("Ready for clean resubmission: `true`", markdown)
         self.assertIn("Final submission package: `2026-08-10T15:51:53Z`", markdown)
         self.assertIn("Daily public status: `2026-07-23T16:08:40Z`", markdown)
+        self.assertIn("tools/check_site_links.py parsed", markdown)
         self.assertIn("Sender email matches project domain", markdown)
         self.assertIn("does not submit BaseScan requests", markdown)
 

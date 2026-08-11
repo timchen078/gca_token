@@ -816,6 +816,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("branches:", workflow)
         self.assertIn("- main", workflow)
         self.assertIn('"tools/check_public_site.py"', workflow)
+        self.assertIn('"tools/check_site_links.py"', workflow)
+        self.assertIn('"site/**"', workflow)
         self.assertIn('".github/workflows/check-public-site.yml"', workflow)
         self.assertIn("contents: read", workflow)
         self.assertIn("concurrency:", workflow)
@@ -825,6 +827,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('python-version: "3.12"', workflow)
         self.assertIn("python -m pip install certifi", workflow)
         self.assertIn("python tools/check_public_site.py --timeout 30", workflow)
+        self.assertIn("python tools/check_site_links.py --site-root site --base-url https://gcagochina.com/ --check-live --timeout 30", workflow)
         self.assertIn("for attempt in {1..20}", workflow)
         self.assertIn("retrying in 15 seconds", workflow)
         self.assertIn("sleep 15", workflow)
@@ -2015,6 +2018,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("basescan-handoff.html", page)
         self.assertIn("Project Profile Map", page)
         self.assertIn("project-profile.html#basescanMapTitle", page)
+        self.assertIn("tools/check_site_links.py", page)
         self.assertNotIn("Reviewer Data Room", page)
         self.assertNotIn("Data Room", page)
         self.assertNotIn("Raw JSON", page)
@@ -2066,6 +2070,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(data["teamTransparency"]["officialProfessionalProfileData"], TIM_CHEN_PROFILE_URL)
         self.assertTrue(data["teamTransparency"]["equivalentOfficialProfessionalProfilePublished"])
         self.assertTrue(data["teamTransparency"]["externalProfessionalProfileStillRecommended"])
+        remediation_items = {item["id"]: item for item in data["remediationChecklist"]}
+        link_item = remediation_items["placeholder-and-broken-link-review"]
+        self.assertEqual(link_item["status"], "implemented-with-automated-check")
+        self.assertIn("tools/check_site_links.py", link_item["evidence"])
+        self.assertIn("tools/check_public_site.py", link_item["evidence"])
         self.assertTrue(data["nextSubmissionGate"]["ready"])
         final_package = data["nextSubmissionGate"]["finalSubmissionPackage"]
         self.assertEqual(final_package["generatedAt"], "2026-08-10T15:51:53Z")

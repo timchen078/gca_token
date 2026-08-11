@@ -369,7 +369,7 @@
         <div class="grid">
           <div class="card">
             <h3>Website Accessible</h3>
-            <p class="note">Public HTTPS website, sitemap, robots, logo, and core pages are checked by <code>tools/check_public_site.py</code>.</p>
+            <p class="note">Public HTTPS identity, sitemap, robots, logo, and core-page content are checked by <code>tools/check_public_site.py</code>.</p>
             <div class="link-row">
               <a class="text-link" href="start.html">Start Here</a>
               <a class="text-link" href="site-map.html">Site Map</a>
@@ -387,7 +387,7 @@
           </div>
           <div class="card">
             <h3>Images And Links</h3>
-            <p class="note">The public brand kit exposes SVG and PNG logos, and the public check script validates links used for reviewer handoff.</p>
+            <p class="note">The public brand kit exposes SVG and PNG logos. <code>tools/check_site_links.py</code> traverses every HTML link and resource reference, verifies local files and fragments, rejects placeholders and duplicate IDs, and checks all discovered same-origin targets after deployment.</p>
             <div class="link-row">
               <a class="text-link" href="brand-kit.html">Brand Kit</a>
               <a class="text-link" href="assets/gca-logo.svg">SVG Logo</a>

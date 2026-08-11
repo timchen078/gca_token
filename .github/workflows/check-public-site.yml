@@ -8,7 +8,9 @@ on:
     branches:
       - main
     paths:
+      - "site/**"
       - "tools/check_public_site.py"
+      - "tools/check_site_links.py"
       - ".github/workflows/check-public-site.yml"
 
 permissions:
@@ -20,7 +22,7 @@ concurrency:
 
 jobs:
   check:
-    name: Check live gcagochina.com identity
+    name: Check live identity and link integrity
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -45,7 +47,8 @@ jobs:
           set -euo pipefail
 
           for attempt in {1..20}; do
-            if python tools/check_public_site.py --timeout 30; then
+            if python tools/check_public_site.py --timeout 30 && \
+              python tools/check_site_links.py --site-root site --base-url https://gcagochina.com/ --check-live --timeout 30; then
               exit 0
             fi
 
@@ -54,3 +57,4 @@ jobs:
           done
 
           python tools/check_public_site.py --timeout 30
+          python tools/check_site_links.py --site-root site --base-url https://gcagochina.com/ --check-live --timeout 30

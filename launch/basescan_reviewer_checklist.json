@@ -39,8 +39,8 @@
       "title": "Clear token and project information"
     },
     {
-      "action": "Run .venv/bin/python tools/check_public_site.py after each public-material change.",
-      "evidence": "The public site checker validates canonical identity, current GCA/USDT route, public pages, raw JSON routing, sitemap, and robots.",
+      "action": "Run the local link-integrity check before deployment, then run its live HTTPS mode and tools/check_public_site.py after deployment.",
+      "evidence": "tools/check_site_links.py parsed 122 HTML pages and 5737 URL references, verified 214 unique internal targets, fragments, duplicate IDs, placeholder schemes, and safe external-link attributes, and found no errors.",
       "key": "placeholder-and-link-review",
       "links": [
         "https://gcagochina.com/data.html",
@@ -120,6 +120,8 @@
   "latestReturnNoticeDate": "2026-05-23",
   "officialEmail": "support@gcagochina.com",
   "preflightCommands": [
+    "python3 tools/check_site_links.py --site-root site",
+    "python3 tools/check_site_links.py --site-root site --base-url https://gcagochina.com/ --check-live --timeout 30",
     "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
     "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
     "python3 tools/build_domain_email_switch_plan.py --json",
@@ -128,6 +130,13 @@
   ],
   "readyForCleanResubmission": true,
   "schema": "gca-basescan-reviewer-checklist-v1",
+  "siteLinkIntegrity": {
+    "errors": [],
+    "ok": true,
+    "pageCount": 122,
+    "referenceCount": 5737,
+    "uniqueInternalTargetCount": 214
+  },
   "status": "ready-for-owner-review",
   "targetDomainEmail": "support@gcagochina.com"
 }

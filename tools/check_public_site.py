@@ -1517,6 +1517,7 @@ def validate_basescan_remediation_page(text: str) -> None:
         "basescan-handoff.html",
         "Project Profile Map",
         f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle",
+        "tools/check_site_links.py",
         "Tim Chen",
         "team.html",
         GITHUB_REPO_URL,
@@ -1540,6 +1541,11 @@ def validate_basescan_remediation_json(text: str) -> None:
     identity = payload.get("officialIdentity", {})
     email_state = payload.get("currentEmailState", {})
     team = payload.get("teamTransparency", {})
+    remediation_items = {
+        item.get("id"): item
+        for item in payload.get("remediationChecklist", [])
+        if isinstance(item, dict) and item.get("id")
+    }
     gate = payload.get("nextSubmissionGate", {})
 
     if payload.get("schema") != BASESCAN_REMEDIATION_URL:
@@ -1617,6 +1623,12 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing official-domain professional profile")
     if team.get("externalProfessionalProfileStillRecommended") is not True:
         raise SiteCheckError(f"{label}: missing external professional profile recommendation")
+    link_item = remediation_items.get("placeholder-and-broken-link-review", {})
+    if link_item.get("status") != "implemented-with-automated-check":
+        raise SiteCheckError(f"{label}: wrong link-integrity remediation status")
+    for expected_tool in ("tools/check_site_links.py", "tools/check_public_site.py"):
+        if expected_tool not in link_item.get("evidence", ""):
+            raise SiteCheckError(f"{label}: missing {expected_tool} remediation evidence")
     if gate.get("ready") not in {False, True}:
         raise SiteCheckError(f"{label}: invalid submission gate ready flag")
     final_package = gate.get("finalSubmissionPackage", {})
@@ -13510,6 +13522,7 @@ def validate_project_profile_page(text: str) -> None:
         "Source and deployer-wallet ownership are verified",
         "not approved until BaseScan publishes it",
         "MX/SPF/DKIM/DMARC present",
+        "tools/check_site_links.py",
         "tools/check_public_site.py",
         "team.html#tim-chen",
         "domain-email-evidence.html",
@@ -13848,6 +13861,8 @@ def validate_project_json(text: str) -> None:
     if "MX/SPF/DKIM/DMARC present" not in domain_item.get("dnsEvidence", ""):
         raise SiteCheckError(f"{label}: missing domain email DNS evidence")
     placeholder_item = reason_items_by_id["placeholder-broken-link-review"]
+    if "check_site_links.py" not in placeholder_item.get("checkCommand", ""):
+        raise SiteCheckError(f"{label}: missing comprehensive link integrity check command in reason map")
     if "check_public_site.py" not in placeholder_item.get("checkCommand", ""):
         raise SiteCheckError(f"{label}: missing public site check command in reason map")
     logo_item = reason_items_by_id["logo-social-metadata"]
