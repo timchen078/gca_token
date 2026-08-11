@@ -2,7 +2,7 @@
   "schema": "https://gcagochina.com/basescan-handoff.json",
   "pageUrl": "https://gcagochina.com/basescan-handoff.html",
   "status": "ready-for-owner-resubmission",
-  "lastUpdated": "2026-08-10",
+  "lastUpdated": "2026-08-11",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
   "network": "Base Mainnet",
@@ -19,7 +19,7 @@
   },
   "finalSubmissionPackage": {
     "status": "ready-for-owner-submission",
-    "generatedAt": "2026-08-10T15:51:53Z",
+    "generatedAt": "2026-08-11T18:56:43Z",
     "builderCommand": "python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md",
     "outputMarkdown": "launch/basescan_final_submission_package.md",
     "outputJson": "launch/basescan_final_submission_package.json",
@@ -65,6 +65,36 @@
       "sendsEmail": false,
       "signsWalletMessage": false,
       "touchesWalletOrContract": false
+    },
+    "preflightSummary": {
+      "dailyStatusReferenceFilesChanged": 0,
+      "dailyStatusReferenceStatus": "aligned",
+      "filesPublishingForbiddenLegacyEmail": 0,
+      "filesStillUsingOldEmail": 0,
+      "generatedAt": "2026-08-11T18:56:43Z",
+      "readyForBaseScanResubmission": true,
+      "status": "ready-for-owner-resubmission"
+    },
+    "dailyStatusReferenceGuard": {
+      "aligned": true,
+      "boundary": "This is a read-only repository consistency guard. It does not submit BaseScan requests, send email, sign messages, or touch wallets/contracts.",
+      "canonicalReference": {
+        "baseScanProfileCheckedAt": "2026-08-11T17:22:15Z",
+        "baseScanProfileCheckedDate": "2026-08-11",
+        "dailyStatusDate": "2026-08-11",
+        "dailyStatusGeneratedAt": "2026-08-11T17:22:15Z"
+      },
+      "filesChanged": 0,
+      "filesChecked": 35,
+      "filesMissingCanonicalReference": 0,
+      "missingFiles": 0,
+      "status": "aligned"
+    },
+    "referenceSynchronization": {
+      "tool": "tools/sync_basescan_final_package_references.py",
+      "status": "aligned-after-canonical-build",
+      "canonicalGeneratedAt": "2026-08-11T18:56:43Z",
+      "checkCommand": "python3 tools/sync_basescan_final_package_references.py --check --json"
     }
   },
   "domainEmailGate": {
@@ -168,6 +198,7 @@
     "Confirm public support/BaseScan email values still publish support@gcagochina.com.",
     "Run tools/check_basescan_resubmission_readiness.py --json --require-ready.",
     "Regenerate launch/basescan_final_submission_package.md with tools/build_basescan_submission_package.py --json --require-ready.",
+    "Confirm tools/sync_basescan_final_package_references.py --check reports aligned with zero changed files.",
     "Submit one clean BaseScan request only after the final preflight passes."
   ],
   "boundaries": {

@@ -34,7 +34,10 @@
     "pageUrl": "https://gcagochina.com/content-library.html",
     "url": "https://gcagochina.com/content-library.json",
     "draftCount": 10,
-    "languages": ["en", "zh"]
+    "languages": [
+      "en",
+      "zh"
+    ]
   },
   "publishingDesk": {
     "status": "public-publishing-desk-published",
@@ -89,7 +92,7 @@
         "https://gcagochina.com",
         "#GCA #GoChinaAccess #Base #BaseMainnet #Web3 #DeFi #AIQuant #Onchain #Uniswap"
       ],
-      "currentStatusAfterPost": "Tim Chen public professional profile evidence, the domain email setup plan, public evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com mailbox are now ready. The final owner package was refreshed on 2026-08-10T15:51:53Z. The next step is one clean owner resubmission while waiting for BaseScan review and publication.",
+      "currentStatusAfterPost": "Tim Chen public professional profile evidence, the domain email setup plan, public evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com mailbox are now ready. The final owner package was refreshed on 2026-08-11T18:56:43Z. The next step is one clean owner resubmission while waiting for BaseScan review and publication.",
       "claimBoundary": "Build update only; no price forecast, no return promise, no external audit claim, and no BaseScan approval claim."
     }
   ],
