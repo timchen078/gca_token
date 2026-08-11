@@ -579,6 +579,15 @@ def validate_start_page(text: str) -> None:
 def validate_verify(text: str) -> None:
     label = "/verify.html"
     assert_contains(text, "Verify GCA", label)
+    assert_contains(text, "Live Read-Only Contract Identity", label)
+    assert_contains(text, "data-gca-contract-identity", label)
+    assert_contains(text, "data-contract-summary", label)
+    assert_contains(text, "data-contract-action", label)
+    assert_contains(text, "data-contract-field=\"network\"", label)
+    assert_contains(text, "data-contract-field=\"supply\"", label)
+    assert_contains(text, "assets/contract-identity.js?v=20260811-1", label)
+    assert_contains(text, "does not connect a wallet, request permissions or signatures, or submit a transaction", label)
+    assert_contains(text, "official Base public RPC is rate-limited", label)
     assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-08-10; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
     assert_contains(text, "Latest reviewer package", label)
     assert_contains(text, "Final package 2026-08-10T15:51:53Z; daily status 2026-07-23T16:08:40Z", label)
@@ -11725,6 +11734,69 @@ def validate_market_snapshot_script(text: str) -> None:
         assert_not_contains(text, forbidden, label)
 
 
+def validate_contract_identity_script(text: str) -> None:
+    label = "/assets/contract-identity.js"
+    for expected in (
+        'const RPC_URL = "https://mainnet.base.org"',
+        'const CONTRACT_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"',
+        "const EXPECTED_CHAIN_ID = 8453n",
+        'const EXPECTED_CHAIN_ID_HEX = "0x2105"',
+        'const EXPECTED_NAME = "GCA"',
+        'const EXPECTED_SYMBOL = "GCA"',
+        "const EXPECTED_DECIMALS = 18n",
+        "const EXPECTED_TOTAL_SUPPLY_RAW = 1000000000000000000000000000n",
+        "const REQUEST_TIMEOUT_MS = 8000",
+        "const MAX_RESPONSE_BYTES = 65536",
+        'method: "eth_chainId"',
+        'method: "eth_getCode"',
+        'method: "eth_call"',
+        'data: "0x06fdde03"',
+        'data: "0x95d89b41"',
+        'data: "0x313ce567"',
+        'data: "0x18160ddd"',
+        'method: "POST"',
+        'mode: "cors"',
+        'credentials: "omit"',
+        'cache: "no-store"',
+        'redirect: "error"',
+        "JSON.stringify(REQUESTS)",
+        "response.text()",
+        "new TextDecoder",
+        "BigInt",
+        "data-contract-summary",
+        "data-contract-field",
+        "data-contract-action",
+        "data-gca-contract-identity",
+        "textContent",
+        "Live identity matched",
+        "Identity mismatch detected",
+        "public Base RPC is rate-limited",
+    ):
+        assert_contains(text, expected, label)
+
+    methods = set(re.findall(r'method:\s*"([^"]+)"', text))
+    if methods != {"POST", "eth_chainId", "eth_getCode", "eth_call"}:
+        raise SiteCheckError(f"{label}: unexpected RPC or HTTP method set {sorted(methods)}")
+
+    for forbidden in (
+        "authorization:",
+        "innerHTML",
+        "localStorage",
+        "sessionStorage",
+        "document.cookie",
+        "window.ethereum",
+        "ethereum.request",
+        "eth_sendTransaction",
+        "eth_sendRawTransaction",
+        "personal_sign",
+        "eth_sign",
+        "wallet_",
+        'credentials: "include"',
+        "eval(",
+    ):
+        assert_not_contains(text, forbidden, label)
+
+
 def validate_api_health_styles(text: str) -> None:
     label = "/assets/api-health.css"
     for expected in (
@@ -17403,6 +17475,7 @@ def validate_sitemap(text: str) -> None:
     for path in (
         "markets.html",
         "zh-markets.html",
+        "verify.html",
     ):
         assert_sitemap_lastmod(path, "2026-08-11")
     for path in (
@@ -17463,7 +17536,6 @@ def validate_sitemap(text: str) -> None:
         "token-safety.html",
         "trust.html",
         "trust.json",
-        "verify.html",
         "zh-basescan-handoff.html",
         "zh-basescan-preflight.html",
         "zh-faq.html",
@@ -17873,6 +17945,7 @@ CHECKS: list[EndpointCheck] = [
     ("/assets/api-health.js", validate_api_health_script),
     ("/assets/api-health.css", validate_api_health_styles),
     ("/assets/market-snapshot.js", validate_market_snapshot_script),
+    ("/assets/contract-identity.js", validate_contract_identity_script),
     ("/daily-status.html", validate_daily_status_page),
     ("/daily-status.json", validate_daily_status_json),
     ("/review-queue.html", validate_review_queue_page),
