@@ -204,6 +204,8 @@ def build_checklist(
         "preflightCommands": [
             "python3 tools/check_site_links.py --site-root site",
             "python3 tools/check_site_links.py --site-root site --base-url https://gcagochina.com/ --check-live --timeout 30",
+            "python3 tools/sync_basescan_daily_status_references.py --check --json",
+            "python3 tools/sync_basescan_final_package_references.py --check --json",
             "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
             "python3 tools/build_domain_email_evidence_packet.py --dkim-selector <provider-selector> --evidence-dir launch/domain_email_evidence --website-email-updated --output-json launch/domain_email_evidence_packet.json --output-md launch/domain_email_evidence_packet.md",
             "python3 tools/build_domain_email_switch_plan.py --json",

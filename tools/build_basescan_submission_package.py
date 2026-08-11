@@ -35,6 +35,10 @@ try:
         DailyStatusReferenceSyncError,
         synchronize_references as synchronize_daily_status_references,
     )
+    from tools.sync_basescan_final_package_references import (
+        FinalPackageReferenceSyncError,
+        synchronize_references as synchronize_final_package_references,
+    )
 except ModuleNotFoundError:  # pragma: no cover - used when running from tools/
     from check_basescan_resubmission_readiness import (
         BaseScanReadinessError,
@@ -56,11 +60,17 @@ except ModuleNotFoundError:  # pragma: no cover - used when running from tools/
         DailyStatusReferenceSyncError,
         synchronize_references as synchronize_daily_status_references,
     )
+    from sync_basescan_final_package_references import (
+        FinalPackageReferenceSyncError,
+        synchronize_references as synchronize_final_package_references,
+    )
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_VALUES_PATH = ROOT / "launch" / "basescan_resubmission_values.json"
 DEFAULT_EVIDENCE_PACKET_PATH = ROOT / "launch" / "domain_email_evidence_packet.json"
+DEFAULT_OUTPUT_JSON_PATH = ROOT / "launch" / "basescan_final_submission_package.json"
+DEFAULT_OUTPUT_MD_PATH = ROOT / "launch" / "basescan_final_submission_package.md"
 
 
 def format_lines(items: list[str]) -> str:
@@ -608,6 +618,34 @@ def write_text(path: Path, content: str) -> None:
     path.write_text(content, encoding="utf-8")
 
 
+def is_canonical_output_pair(output_json: str, output_md: str) -> bool:
+    if not output_json or not output_md:
+        return False
+    return (
+        Path(output_json).resolve() == DEFAULT_OUTPUT_JSON_PATH.resolve()
+        and Path(output_md).resolve() == DEFAULT_OUTPUT_MD_PATH.resolve()
+    )
+
+
+def synchronize_canonical_outputs(
+    package: dict[str, Any],
+    *,
+    output_json: str,
+    output_md: str,
+) -> dict[str, Any] | None:
+    if not package.get("readyForOwnerSubmission") or not is_canonical_output_pair(
+        output_json,
+        output_md,
+    ):
+        return None
+    report = synchronize_final_package_references(write=True)
+    if report.get("ok") is not True:
+        raise FinalPackageReferenceSyncError(
+            f"final-package reference sync failed with status {report.get('status')}"
+        )
+    return report
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Build a gated GCA BaseScan submission package.")
     parser.add_argument("--values", default=str(DEFAULT_VALUES_PATH), help="Path to BaseScan resubmission values JSON.")
@@ -673,14 +711,24 @@ def main(argv: list[str] | None = None) -> int:
         PublicSwitchCheckError,
         SnapshotAlignmentError,
         DailyStatusReferenceSyncError,
+        FinalPackageReferenceSyncError,
     ) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 
-    if args.output_json:
-        write_text(Path(args.output_json), json.dumps(package, indent=2, sort_keys=True) + "\n")
-    if args.output_md:
-        write_text(Path(args.output_md), render_markdown(package))
+    try:
+        if args.output_json:
+            write_text(Path(args.output_json), json.dumps(package, indent=2, sort_keys=True) + "\n")
+        if args.output_md:
+            write_text(Path(args.output_md), render_markdown(package))
+        synchronize_canonical_outputs(
+            package,
+            output_json=args.output_json,
+            output_md=args.output_md,
+        )
+    except FinalPackageReferenceSyncError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
     if args.json or not (args.output_json or args.output_md):
         print(json.dumps(package, indent=2, sort_keys=True))
 

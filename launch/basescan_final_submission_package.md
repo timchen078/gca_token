@@ -1,6 +1,6 @@
 # GCA BaseScan Submission Package
 
-- Generated: `2026-08-10T15:51:53Z`
+- Generated: `2026-08-11T18:56:43Z`
 - Status: `ready-for-owner-submission`
 - Ready for owner submission: `true`
 - Next action: Owner may copy this package into one clean BaseScan token profile update.
@@ -29,6 +29,17 @@
 - Files publishing forbidden legacy email: `0`
 - Forbidden legacy email labels scanned: `redacted-legacy-outlook-inbox, redacted-non-domain-legacy-inbox`
 - Boundary: This guard is a read-only public-file scan. It does not send email, submit BaseScan requests, write DNS records, or touch wallets/contracts.
+
+## Daily Status Reference Guard
+
+- Status: `aligned`
+- Aligned: `true`
+- Files checked: `35`
+- Files requiring updates: `0`
+- Missing target files: `0`
+- Files missing canonical reference: `0`
+- Canonical reference: `{"baseScanProfileCheckedAt": "2026-08-11T17:22:15Z", "baseScanProfileCheckedDate": "2026-08-11", "dailyStatusDate": "2026-08-11", "dailyStatusGeneratedAt": "2026-08-11T17:22:15Z"}`
+- Boundary: This is a read-only repository consistency guard. It does not submit BaseScan requests, send email, sign messages, or touch wallets/contracts.
 
 ## Copy/Paste Reviewer Comment
 

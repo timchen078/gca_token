@@ -302,7 +302,7 @@
         <h1 id="title">GCA 中文 BaseScan 预检</h1>
         <p class="lead">这一页给你自己操作用：判断现在能不能再次提交 BaseScan Token Profile。当前结论：可以准备一次干净的复提交；<code>support@gcagochina.com</code> 已可收可发，DNS、证据包、官网公开邮箱和最终表单草稿已对齐。</p>
         <p class="lead">当前公开邮箱是 <code>support@gcagochina.com</code>。2026-05-30 DNS 快照显示 MX present、SPF present、DKIM present、DMARC present；因此 <code>readyForBaseScanResubmission</code> 可以为 true。</p>
-        <p class="lead">最终提交包已在 <code>2026-08-10T15:51:53Z</code> 刷新；本页同步到同一批 BaseScan Handoff 和最终复制包。</p>
+        <p class="lead">最终提交包已在 <code>2026-08-11T18:56:43Z</code> 刷新；本页同步到同一批 BaseScan Handoff 和最终复制包。</p>
         <p class="lead">下面出现的 <code>launch/</code> 路径是本机 owner 工具输出，不是公开证据链接；BaseScan 表单里只引用“通过后要给 BaseScan 的证据链接”这一栏里的公网页面。</p>
         <div class="actions">
           <a class="button primary" href="zh-domain-email.html">中文域名邮箱整改</a>
@@ -346,10 +346,11 @@
             <div class="row"><span>DNS 证据</span><strong>2026-05-30 快照：MX present、SPF present、DKIM present、DMARC present；MX/SPF/DKIM/DMARC present。</strong></div>
             <div class="row"><span>公开邮箱一致性</span><strong>官网支持页、机器可读文件和 BaseScan 表单草稿已统一使用 <code>support@gcagochina.com</code>。</strong></div>
             <div class="row"><span>日状态引用一致性</span><strong>所有受监控的 BaseScan 审核材料已统一引用 <code>2026-08-11T17:22:15Z</code> 日状态快照，待更新文件数为 0。</strong></div>
+            <div class="row"><span>最终包引用一致性</span><strong>最终包生成命令会自动同步受监控的交接材料；检查结果必须为 <code>aligned</code> 且待更新文件数为 0。</strong></div>
             <div class="row"><span>项目资料映射</span><strong><a href="project-profile.html#basescanMapTitle">Project Profile BaseScan reviewer map</a> 已把 BaseScan 退回原因对应到官网、团队、邮箱、白皮书、品牌、市场和边界证据。</strong></div>
             <div class="row"><span>证据包</span><strong><code>launch/domain_email_evidence_packet.json</code> 已可作为下一次 BaseScan 复审的本地证据索引；私密截图仍不公开。</strong></div>
             <div class="row"><span>Reviewer checklist</span><strong><code>launch/basescan_reviewer_checklist.json</code> 和 <code>launch/basescan_reviewer_checklist.md</code> 已生成，域名邮箱项为 ready。</strong></div>
-            <div class="row"><span>最终表单</span><strong>预检显示 <code>readyForBaseScanResubmission</code> true，最终复制包时间为 <code>2026-08-10T15:51:53Z</code>，可以由 owner 提交一次 clean resubmission。</strong></div>
+            <div class="row"><span>最终表单</span><strong>预检显示 <code>readyForBaseScanResubmission</code> true，最终复制包时间为 <code>2026-08-11T18:56:43Z</code>，可以由 owner 提交一次 clean resubmission。</strong></div>
             <div class="row"><span>本地路径边界</span><strong><code>launch/*.md/json</code> 是本机生成物，只作为复制和归档来源；不要把它当成官网 URL 提交。</strong></div>
           </div>
         </div>
@@ -363,6 +364,7 @@
             <div class="row"><span>发件证明</span><strong>从目标邮箱回复，发件人显示为 <code>support@gcagochina.com</code>。</strong></div>
             <div class="row"><span>公开资料切换</span><strong>官网、支持页、团队页和 BaseScan 表单值已统一到 <code>support@gcagochina.com</code>。</strong></div>
             <div class="row"><span>审核材料快照</span><strong>运行日状态引用检查，确认结果为 <code>aligned</code> 且 <code>filesChanged</code> 为 0。</strong></div>
+            <div class="row"><span>最终包交接材料</span><strong>运行最终包引用检查，确认所有交接页面和复制内容引用同一个最终包。</strong></div>
           </div>
         </div>
       </section>
@@ -402,6 +404,10 @@
           <div class="card">
             <h3>8. 最终表单草稿</h3>
             <p class="note"><code>python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md</code></p>
+          </div>
+          <div class="card">
+            <h3>9. 最终包引用一致性</h3>
+            <p class="note"><code>python3 tools/sync_basescan_final_package_references.py --check --json</code></p>
           </div>
         </div>
         <p class="note">这些命令不会提交 BaseScan，不会发送邮件，不会写 DNS，不会签名，不会转账，也不会操作钱包或合约。</p>

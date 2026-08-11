@@ -178,7 +178,15 @@ After the preflight passes, generate the final copyable BaseScan draft:
 python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md
 ```
 
-The final draft builder still does not submit the form. It only produces the local package the owner can copy into one clean BaseScan update. The package includes copy/paste blocks for the reviewer comment, BaseScan basic information, reviewer evidence links, and market/supply context. If any preflight gate is still blocked, the reviewer comment is clearly marked `DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.`.
+The final draft builder still does not submit the form. It only produces the local package the owner can copy into one clean BaseScan update. When both canonical output paths above are used and the package is ready, the builder also synchronizes the final-package timestamp and copy blocks across monitored handoff materials. The package includes copy/paste blocks for the reviewer comment, BaseScan basic information, reviewer evidence links, and market/supply context. If any preflight gate is still blocked, the reviewer comment is clearly marked `DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.`.
+
+After the canonical package is generated, verify that no handoff references drifted:
+
+```bash
+python3 tools/sync_basescan_final_package_references.py --check --json
+```
+
+The check must report `aligned` with zero changed files. This repository-only consistency guard does not submit BaseScan requests, send email, write DNS, sign messages, or touch wallets/contracts.
 
 ## Public Email Switch Planner
 

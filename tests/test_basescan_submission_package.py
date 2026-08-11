@@ -4,8 +4,15 @@ import unittest
 from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
+from unittest.mock import patch
 
-from tools.build_basescan_submission_package import build_submission_package, main, render_markdown
+import tools.build_basescan_submission_package as module
+from tools.build_basescan_submission_package import (
+    build_submission_package,
+    main,
+    render_markdown,
+    synchronize_canonical_outputs,
+)
 
 
 READY_VALUES = {
@@ -226,6 +233,54 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
             "DRAFT ONLY - DO NOT SUBMIT BASESCAN YET.",
             package["copyPasteBlocks"]["baseScanReviewerComment"],
         )
+
+    def test_ready_canonical_outputs_trigger_reference_sync(self):
+        package = build_submission_package(
+            values=READY_VALUES,
+            readiness_report=READY_PREFLIGHT,
+            generated_at="2026-08-12T00:00:00Z",
+        )
+        sync_report = {"ok": True, "status": "updated"}
+
+        with patch.object(
+            module,
+            "synchronize_final_package_references",
+            return_value=sync_report,
+        ) as synchronize:
+            result = synchronize_canonical_outputs(
+                package,
+                output_json=str(module.DEFAULT_OUTPUT_JSON_PATH),
+                output_md=str(module.DEFAULT_OUTPUT_MD_PATH),
+            )
+
+        self.assertEqual(result, sync_report)
+        synchronize.assert_called_once_with(write=True)
+
+    def test_noncanonical_or_blocked_outputs_do_not_trigger_reference_sync(self):
+        package = build_submission_package(
+            values=READY_VALUES,
+            readiness_report=READY_PREFLIGHT,
+            generated_at="2026-08-12T00:00:00Z",
+        )
+
+        with patch.object(module, "synchronize_final_package_references") as synchronize:
+            self.assertIsNone(
+                synchronize_canonical_outputs(
+                    package,
+                    output_json="draft.json",
+                    output_md="draft.md",
+                )
+            )
+            package["readyForOwnerSubmission"] = False
+            self.assertIsNone(
+                synchronize_canonical_outputs(
+                    package,
+                    output_json=str(module.DEFAULT_OUTPUT_JSON_PATH),
+                    output_md=str(module.DEFAULT_OUTPUT_MD_PATH),
+                )
+            )
+
+        synchronize.assert_not_called()
 
     def test_cli_blocks_current_unready_values_without_network(self):
         with tempfile.TemporaryDirectory() as temp:
