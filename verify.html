@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Verify GCA | Official Links and Identity</title>
-    <meta name="description" content="Official GCA verification page with canonical contract, Base Mainnet chain ID, GCA/USDT pool, website, Telegram, metadata files, and anti-scam link checks.">
+    <meta name="description" content="Official GCA verification page with live read-only Base contract identity checks, canonical contract, chain ID, GCA/USDT pool, official links, and anti-scam guidance.">
     <link rel="canonical" href="https://gcagochina.com/verify.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
     <meta property="og:title" content="Verify GCA | Official Links and Identity">
-    <meta property="og:description" content="Official GCA verification page with canonical contract, Base Mainnet chain ID, GCA/USDT pool, website, Telegram, metadata files, and anti-scam link checks.">
+    <meta property="og:description" content="Official GCA verification page with live read-only Base contract identity checks, canonical contract, chain ID, GCA/USDT pool, official links, and anti-scam guidance.">
     <meta property="og:url" content="https://gcagochina.com/verify.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Verify GCA | Official Links and Identity">
-    <meta name="twitter:description" content="Official GCA verification page with canonical contract, Base Mainnet chain ID, GCA/USDT pool, website, Telegram, metadata files, and anti-scam link checks.">
+    <meta name="twitter:description" content="Official GCA verification page with live read-only Base contract identity checks, canonical contract, chain ID, GCA/USDT pool, official links, and anti-scam guidance.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -214,6 +214,36 @@
         color: var(--gold);
       }
 
+      .bad {
+        color: #b42318;
+      }
+
+      .contract-live-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .contract-live-summary {
+        margin: 18px 0 0;
+        padding: 12px 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+        font-weight: 800;
+      }
+
+      .contract-live-summary.good {
+        border-color: #a9dbc9;
+        background: #f0faf6;
+      }
+
+      .contract-live-summary.bad {
+        border-color: #f0b5ae;
+        background: #fff4f2;
+      }
+
       .note,
       li {
         color: var(--muted);
@@ -288,10 +318,20 @@
         .row strong {
           white-space: normal;
         }
+
+        .contract-live-header {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .contract-live-header .button {
+          width: 100%;
+        }
       }
     </style>
       <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <script src="assets/gca-site.js?v=20260711" defer></script>
+    <script src="assets/contract-identity.js?v=20260811-1" defer></script>
   </head>
   <body>
     <header>
@@ -350,6 +390,27 @@
           <span class="label">Website</span>
           <span class="value">gcagochina.com</span>
         </div>
+      </section>
+
+      <section class="section panel" data-gca-contract-identity aria-labelledby="liveContractTitle">
+        <div class="contract-live-header">
+          <div>
+            <h2 id="liveContractTitle">Live Read-Only Contract Identity</h2>
+            <p class="note">This browser check reads the contract pinned below from the official Base public RPC. It verifies the network, deployed code, ERC-20 name, symbol, decimals, and fixed total supply.</p>
+          </div>
+          <button class="button" type="button" data-contract-action>Run check again</button>
+        </div>
+        <p class="contract-live-summary pending" data-contract-summary data-state="pending" aria-live="polite">Waiting for the live Base Mainnet check...</p>
+        <div class="list">
+          <div class="row"><span>Network response</span><strong data-contract-field="network">Checking...</strong></div>
+          <div class="row"><span>Contract code</span><strong data-contract-field="code">Checking...</strong></div>
+          <div class="row"><span>Token name</span><strong data-contract-field="name">Checking...</strong></div>
+          <div class="row"><span>Token symbol</span><strong data-contract-field="symbol">Checking...</strong></div>
+          <div class="row"><span>Decimals</span><strong data-contract-field="decimals">Checking...</strong></div>
+          <div class="row"><span>Total supply</span><strong data-contract-field="supply">Checking...</strong></div>
+          <div class="row"><span>Read source</span><strong data-contract-field="source">Checking...</strong></div>
+        </div>
+        <p class="note" style="margin-top: 14px;"><strong>Read-only boundary:</strong> this check does not connect a wallet, request permissions or signatures, or submit a transaction. The official Base public RPC is rate-limited, so a temporary read failure does not change the canonical identity; use the BaseScan Contract link above as the fallback.</p>
       </section>
 
       <section class="section two" aria-label="Canonical identity">
