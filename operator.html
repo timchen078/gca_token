@@ -528,7 +528,7 @@
 
       <section class="section panel" aria-labelledby="operatorDigestTitle">
         <h2 id="operatorDigestTitle">Operator Digest</h2>
-        <p class="note">Load the latest redacted local digest created by <code>tools/run_gca_daily_ops.py --build-digest</code>. It summarizes public health, BaseScan preflight status, member ops counts, support queue counts, holding evidence, and next actions without exposing user records, emails, admin tokens, wallet signatures, transactions, or automatic transfers.</p>
+        <p class="note">Load the latest redacted local digest created by <code>tools/run_gca_daily_ops.py --build-digest</code>. It summarizes public health, BaseScan preflight status, member and service ops counts, support queue counts, holding evidence, and next actions without exposing user records, emails, admin tokens, wallet signatures, transactions, or automatic transfers.</p>
         <div class="grid section" aria-label="GCA operator digest status">
           <div class="fact">
             <span class="label">Digest status</span>
@@ -577,6 +577,30 @@
           <div class="fact">
             <span class="label">30-day ready wallets</span>
             <span class="value" id="digestHoldingReady">0</span>
+          </div>
+          <div class="fact">
+            <span class="label">Service requests</span>
+            <span class="value" id="digestServiceRequests">-</span>
+          </div>
+          <div class="fact">
+            <span class="label">Pending service review</span>
+            <span class="value" id="digestServicePending">-</span>
+          </div>
+          <div class="fact">
+            <span class="label">Waiting member info</span>
+            <span class="value" id="digestServiceNeedsInfo">-</span>
+          </div>
+          <div class="fact">
+            <span class="label">Approved / delivery due</span>
+            <span class="value" id="digestServiceAwaitingDelivery">-</span>
+          </div>
+          <div class="fact">
+            <span class="label">Delivered services</span>
+            <span class="value" id="digestServiceDelivered">-</span>
+          </div>
+          <div class="fact">
+            <span class="label">Service follow-ups</span>
+            <span class="value" id="digestServiceFollowups">-</span>
           </div>
         </div>
         <div class="handoff-grid section">
@@ -1051,6 +1075,12 @@
       const digestMemberStatus = document.getElementById("digestMemberStatus");
       const digestSupportRows = document.getElementById("digestSupportRows");
       const digestHoldingReady = document.getElementById("digestHoldingReady");
+      const digestServiceRequests = document.getElementById("digestServiceRequests");
+      const digestServicePending = document.getElementById("digestServicePending");
+      const digestServiceNeedsInfo = document.getElementById("digestServiceNeedsInfo");
+      const digestServiceAwaitingDelivery = document.getElementById("digestServiceAwaitingDelivery");
+      const digestServiceDelivered = document.getElementById("digestServiceDelivered");
+      const digestServiceFollowups = document.getElementById("digestServiceFollowups");
       const digestNextActions = document.getElementById("digestNextActions");
       const digestCommandText = document.getElementById("digestCommandText");
       const digestCommandStatus = document.getElementById("digestCommandStatus");
@@ -1194,6 +1224,8 @@
         const baseScan = daily.baseScanPreflight || {};
         const memberSupport = member.supportQueue || {};
         const memberHolding = member.holdingPeriod || {};
+        const serviceReport = member.report || {};
+        const serviceMetricsAvailable = member.serviceRoutesIncluded === true;
         digestStatus.textContent = payload.available ? (payload.digestOk ? "Loaded" : "Attention") : "Missing";
         digestGeneratedAt.textContent = payload.digestGeneratedAt || payload.generatedAt || "-";
         digestPublicStatus.textContent = digestStatusLabel(daily.available, daily.ok);
@@ -1212,6 +1244,12 @@
         digestMemberStatus.textContent = digestStatusLabel(member.available, member.ok);
         digestSupportRows.textContent = support.replyReadyRows ?? memberSupport.replyReadyRows ?? 0;
         digestHoldingReady.textContent = holding.counts?.observedEligibleFor30Days ?? memberHolding.observedEligibleFor30Days ?? 0;
+        digestServiceRequests.textContent = serviceMetricsAvailable ? (serviceReport.serviceRequestRecords ?? 0) : "-";
+        digestServicePending.textContent = serviceMetricsAvailable ? (serviceReport.serviceRequestsPendingReview ?? 0) : "-";
+        digestServiceNeedsInfo.textContent = serviceMetricsAvailable ? (serviceReport.serviceRequestsAwaitingMemberFollowup ?? 0) : "-";
+        digestServiceAwaitingDelivery.textContent = serviceMetricsAvailable ? (serviceReport.serviceRequestsAwaitingDelivery ?? 0) : "-";
+        digestServiceDelivered.textContent = serviceMetricsAvailable ? (serviceReport.deliveredServiceRequests ?? 0) : "-";
+        digestServiceFollowups.textContent = serviceMetricsAvailable ? (serviceReport.serviceRequestFollowupRecords ?? 0) : "-";
         renderDigestNextActions(payload.nextActions);
       }
 
@@ -1228,6 +1266,12 @@
         digestMemberStatus.textContent = "-";
         digestSupportRows.textContent = "0";
         digestHoldingReady.textContent = "0";
+        digestServiceRequests.textContent = "-";
+        digestServicePending.textContent = "-";
+        digestServiceNeedsInfo.textContent = "-";
+        digestServiceAwaitingDelivery.textContent = "-";
+        digestServiceDelivered.textContent = "-";
+        digestServiceFollowups.textContent = "-";
         renderDigestNextActions([message]);
       }
 
