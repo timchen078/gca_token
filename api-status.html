@@ -321,7 +321,7 @@
       <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
     <link rel="stylesheet" href="assets/api-health.css?v=20260727">
     <script src="assets/gca-site.js?v=20260711" defer></script>
-    <script src="assets/api-health.js?v=20260810" defer></script>
+    <script src="assets/api-health.js?v=20260811" defer></script>
   </head>
   <body>
     <header>
@@ -468,11 +468,11 @@
           <div class="live-health-row" data-api-check="admin">
             <div class="live-health-copy">
               <strong>Existing admin-read protection</strong>
-              <span class="note">Eleven GET routes, including service follow-ups, member reviews, holding evidence, benefit-transfer evidence, and recovery requests, must reject anonymous access with HTTP 401</span>
+              <span class="note">Ten GET routes, including member reviews, holding evidence, benefit-transfer evidence, and recovery requests, must reject anonymous access with HTTP 401</span>
             </div>
             <span class="live-health-result" data-check-status>Waiting</span>
           </div>
-          <div class="live-health-row" data-api-check="pending">
+          <div class="live-health-row" data-api-check="service">
             <div class="live-health-copy">
               <strong>Protected operator routes</strong>
               <span class="note">Service requests, reviews, follow-up responses, and credit usage are live; HTTP 401 confirms anonymous reads are rejected</span>

@@ -19,7 +19,7 @@
     "/gca/member-benefit-transfers",
     "/gca/account-status/recovery-requests",
   ];
-  const PENDING_PATHS = [
+  const SERVICE_PATHS = [
     "/gca/service-requests",
     "/gca/credit-usage",
     "/gca/service-request-reviews",
@@ -34,14 +34,12 @@
       healthOk: "Service, chain and contract match",
       configOk: "Identity and no-custody boundaries match",
       protectedOk: (count) => `${count}/${ADMIN_PATHS.length} anonymous reads rejected`,
-      pendingNotDeployed: `${PENDING_PATHS.length}/${PENDING_PATHS.length} prepared routes are not deployed`,
-      pendingProtected: `${PENDING_PATHS.length}/${PENDING_PATHS.length} routes are deployed and token protected`,
-      pendingMixed: "Prepared-route state needs operator review",
+      serviceProtected: `${SERVICE_PATHS.length}/${SERVICE_PATHS.length} live service routes reject anonymous reads`,
+      serviceProtectionInvalid: "Live service-route protection needs operator review",
       unavailable: "Live response unavailable",
       healthInvalid: "Service identity does not match",
       configInvalid: "Access configuration does not match",
       protectionInvalid: "Anonymous read protection failed",
-      summaryHealthyPending: "Core API healthy; prepared routes remain undeployed",
       summaryAllLive: "Core API healthy; all checked admin routes reject anonymous reads",
       summaryDegraded: "One or more core API checks need operator review",
       checkedAt: (value) => `Checked in this browser at ${value}. No records were written.`,
@@ -53,14 +51,12 @@
       healthOk: "服务、链和合约一致",
       configOk: "身份与非托管边界一致",
       protectedOk: (count) => `${count}/${ADMIN_PATHS.length} 个匿名读取已拦截`,
-      pendingNotDeployed: `${PENDING_PATHS.length}/${PENDING_PATHS.length} 个准备中路由尚未部署`,
-      pendingProtected: `${PENDING_PATHS.length}/${PENDING_PATHS.length} 个路由已部署并受 token 保护`,
-      pendingMixed: "准备中路由状态需要运营复核",
+      serviceProtected: `${SERVICE_PATHS.length}/${SERVICE_PATHS.length} 个线上服务路由已拒绝匿名读取`,
+      serviceProtectionInvalid: "线上服务路由保护需要运营复核",
       unavailable: "无法取得实时响应",
       healthInvalid: "服务身份不一致",
       configInvalid: "访问配置不一致",
       protectionInvalid: "匿名读取保护检查失败",
-      summaryHealthyPending: "核心 API 正常；准备中路由仍未部署",
       summaryAllLive: "核心 API 正常；已检查的管理员路由都拒绝匿名读取",
       summaryDegraded: "一个或多个核心 API 检查需要运营复核",
       checkedAt: (value) => `本浏览器检查时间：${value}。本次检查没有写入记录。`,
@@ -277,15 +273,15 @@
     button.disabled = true;
     button.setAttribute("aria-busy", "true");
     setState(summary, "", copy.checking);
-    for (const id of ["health", "config", "admin", "pending"]) {
+    for (const id of ["health", "config", "admin", "service"]) {
       setRow(container, id, "", copy.checking);
     }
 
-    const [health, config, adminResults, pendingResults] = await Promise.all([
+    const [health, config, adminResults, serviceResults] = await Promise.all([
       request("/health", { parseJson: true }),
       request("/gca/access-config", { parseJson: true }),
       Promise.all(ADMIN_PATHS.map((path) => request(path))),
-      Promise.all(PENDING_PATHS.map((path) => request(path))),
+      Promise.all(SERVICE_PATHS.map((path) => request(path))),
     ]);
 
     const healthOk = healthMatches(health);
@@ -293,9 +289,8 @@
     const protectedCount = adminResults.filter((result) => result.reached && result.status === 401).length;
     const adminOk = protectedCount === ADMIN_PATHS.length;
     const anonymousReadExposed = adminResults.some((result) => result.reached && result.status === 200);
-    const pendingStatuses = pendingResults.map((result) => result.status);
-    const pendingNotDeployed = pendingResults.every((result) => result.reached && result.status === 404);
-    const pendingProtected = pendingResults.every((result) => result.reached && result.status === 401);
+    const serviceStatuses = serviceResults.map((result) => result.status);
+    const serviceProtected = serviceResults.every((result) => result.reached && result.status === 401);
 
     setRow(
       container,
@@ -317,31 +312,25 @@
     );
     setRow(
       container,
-      "pending",
-      pendingProtected ? "good" : (pendingNotDeployed ? "pending" : "bad"),
-      pendingProtected
-        ? copy.pendingProtected
-        : (pendingNotDeployed ? copy.pendingNotDeployed : copy.pendingMixed),
+      "service",
+      serviceProtected ? "good" : "bad",
+      serviceProtected ? copy.serviceProtected : copy.serviceProtectionInvalid,
     );
 
     const coreOk = healthOk && configOk && adminOk && !anonymousReadExposed;
     let summaryText = copy.summaryDegraded;
     let summaryState = "bad";
     let resultCode = "core-review-required";
-    if (coreOk && pendingProtected) {
+    if (coreOk && serviceProtected) {
       summaryText = copy.summaryAllLive;
       summaryState = "good";
       resultCode = "all-checked-routes-protected";
-    } else if (coreOk && pendingNotDeployed) {
-      summaryText = copy.summaryHealthyPending;
-      summaryState = "good";
-      resultCode = "core-healthy-pending-routes-undeployed";
     }
     const checkedAt = formatCheckedAt(locale);
     const summarySeparator = locale === "zh" ? "。" : ". ";
     setState(summary, summaryState, `${summaryText}${summarySeparator}${copy.checkedAt(checkedAt)}`);
     summary.dataset.result = resultCode;
-    summary.dataset.pendingStatuses = pendingStatuses.join(",");
+    summary.dataset.serviceStatuses = serviceStatuses.join(",");
     if (liveFact) {
       setState(liveFact, summaryState, summaryText);
     }
