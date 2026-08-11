@@ -3093,8 +3093,9 @@ class LaunchPackageTests(unittest.TestCase):
     def test_members_page_supports_local_pre_registration_safely(self):
         members = (ROOT / "site" / "members.html").read_text()
         self.assertIn("GCA Member Access", members)
+        self.assertIn("GCA Members | Live Account Access", members)
         self.assertIn("Open Live Member Access", members)
-        self.assertIn("This legacy page remains as a local packet generator", members)
+        self.assertIn("The legacy packet builder remains below only for local operator testing", members)
         self.assertIn("10,000 GCA", members)
         self.assertIn("100 GCA AI Quant Access credits", members)
         self.assertIn("1,000,000 GCA", members)
@@ -3130,6 +3131,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("/gca/credit-ledger", members)
         self.assertIn("/gca/member-ledger", members)
         self.assertIn("/gca/member-review", members)
+        self.assertIn("/gca/member-reviews", members)
         self.assertIn("Current public submission mode", members)
         self.assertIn("legacy-local-packet-live-member-access-available", members)
         self.assertIn("No private key, seed phrase, exchange API secret, withdrawal permission, or custody request", members)
@@ -3176,6 +3178,17 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("MEMBER_REFRESH_DAYS = 30", members)
         self.assertIn("reviewStatuses", members)
         self.assertIn("ledger_recorded", members)
+        for stale in (
+            "GCA Members | Pre-Registration",
+            "Planned holder programs",
+            "preview the planned holder tier",
+            "The planned holder bonus",
+            "The planned GCA Member tier",
+            "When a reviewed HTTPS endpoint is connected",
+            "After controlled HTTPS intake is live",
+            "<strong>Planned</strong>",
+        ):
+            self.assertNotIn(stale, members)
 
     def test_operator_console_reads_local_ledgers_without_public_claims(self):
         page = (ROOT / "site" / "operator.html").read_text()

@@ -119,7 +119,7 @@
       h1 {
         max-width: 920px;
         margin-bottom: 18px;
-        font-size: clamp(42px, 6vw, 76px);
+        font-size: 58px;
         line-height: 1.02;
         letter-spacing: 0;
       }
@@ -307,6 +307,10 @@
       }
 
       @media (max-width: 900px) {
+        h1 {
+          font-size: 42px;
+        }
+
         nav,
         .section-head {
           align-items: flex-start;
@@ -364,10 +368,10 @@
       <section aria-labelledby="title">
         <p class="eyebrow">中文会员规则</p>
         <h1 id="title">GCA 中文会员规则</h1>
-        <p class="lead">这一页把 GCA 会员相关规则用中文讲清楚：10,000 GCA 持有者对应未来 100 GCA AI Quant Access credits 审核，1,000,000 GCA 连续持有 30 天对应 GCA Member 审核，以及 10,000 GCA 会员权益审核。</p>
+        <p class="lead">这一页说明当前 GCA 会员规则：10,000 GCA 持有者对应一次性 100 GCA AI Quant Access credits 账本审核，1,000,000 GCA 连续持有 30 天对应 GCA Member 人工审核，以及会员通过后的 10,000 GCA 会员权益单独审核。</p>
         <p class="lead">当前规则已经接入受控 HTTPS 账户入口：后端只读验证当前 GCA 余额，符合 10,000 GCA 条件时写入 100 credits 记录，符合 1,000,000 GCA 条件时只把会员材料排入人工审核。用户填写的持有日期和交易哈希不能自动激活 GCA Member；10,000 GCA 会员权益转账仍是单独的人工流程。</p>
         <div class="actions">
-          <a class="button primary" href="members.html">会员预登记</a>
+          <a class="button primary" href="gca/member-access/">会员账户入口</a>
           <a class="button primary" href="zh-cn.html">中文入口</a>
           <a class="button secondary" href="zh-buy.html">中文购买说明</a>
           <a class="button secondary" href="zh-apply.html">中文参与指引</a>
@@ -407,19 +411,19 @@
       <section class="section grid" aria-label="GCA 会员规则">
         <article class="card">
           <h2>10,000 GCA 持有者</h2>
-          <p class="note">计划规则：每个注册用户只能绑定和审核一个钱包。钱包经只读余额验证后，如果持有至少 10,000 GCA，可进入一次性 100 GCA AI Quant Access credits 审核。</p>
-          <p class="note">这些 credits 是未来账户级服务额度，用于研究报告、回测、风险提醒、ENTRY_READY 复核、仓位计算器或教育内容，不是现金、代币领取、收入、报销或交易权限。</p>
+          <p class="note">当前规则：每个注册用户只能绑定和审核一个钱包。钱包经只读余额验证后，如果持有至少 10,000 GCA，可写入一次性 100 GCA AI Quant Access credits 账本记录。</p>
+          <p class="note">这些 credits 是账户级服务额度，用于研究报告、回测、风险提醒、ENTRY_READY 复核、仓位计算器或教育内容，不是现金、代币领取、收入、报销或交易权限。</p>
         </article>
 
         <article class="card">
           <h2>GCA Member</h2>
-          <p class="note">计划规则：用户需要购买并连续持有至少 1,000,000 GCA 满 30 天，才可以进入 GCA Member 状态审核。钱包地址、公开交易哈希和持有开始日期只是审核材料；运营人员必须审核公开链上证据并重新只读检查当前余额后，才能激活会员状态。</p>
+          <p class="note">当前规则：用户需要购买并连续持有至少 1,000,000 GCA 满 30 天，才可以进入 GCA Member 状态审核。钱包地址、公开交易哈希和持有开始日期只是审核材料；运营人员必须审核公开链上证据并重新只读检查当前余额后，才能激活会员状态。</p>
           <p class="note">GCA Member 不是自动身份，也不是永久身份。后续仍需要按公开规则复核余额和支持状态。</p>
         </article>
 
         <article class="card">
           <h2>10,000 GCA 会员权益审核</h2>
-          <p class="note">计划规则：通过 GCA Member 审核后，可进入一次性 10,000 GCA 会员权益审核。任何通过的转账都应来自项目或 owner-held reserve，不是新铸币，因为 GCA 合约没有后续增发函数。</p>
+          <p class="note">当前规则：通过 GCA Member 审核后，可进入一次性 10,000 GCA 会员权益审核。任何通过的转账都应来自项目或 owner-held reserve，不是新铸币，因为 GCA 合约没有后续增发函数。</p>
           <p class="note">该权益不是自动发放、不是现金、不是收入、不是交易结果承诺，也不是让用户绕过风控或合规边界的方式。</p>
         </article>
 
@@ -433,7 +437,7 @@
       <section class="section panel" aria-labelledby="processTitle">
         <div class="section-head">
           <div>
-            <p class="eyebrow">未来流程</p>
+            <p class="eyebrow">受控流程</p>
             <h2 id="processTitle">审核路径</h2>
           </div>
           <p class="note">这条受控 HTTPS 账户流程已经接入 Workers + D1。当前中文页用于说明规则，正式提交请使用会员账户入口。</p>
@@ -474,7 +478,7 @@
             <a class="text-link" href="zh-wallet-verify.html">中文只读钱包验证</a>
             <a class="text-link" href="zh-member-checklist.html">中文会员审核资料清单</a>
             <a class="text-link" href="zh-member-benefit-transfer.html">中文会员权益转账流程</a>
-            <a class="text-link" href="members.html">会员预登记</a>
+            <a class="text-link" href="gca/member-access/">会员账户入口</a>
             <a class="text-link" href="member-ledger.html">会员账本</a>
             <a class="text-link" href="member-benefit.html">会员权益规则</a>
             <a class="text-link" href="credits.html">Credits Catalog</a>

@@ -4638,6 +4638,8 @@ def validate_zh_members_page(text: str) -> None:
         "GCA/USDT",
         OFFICIAL_POOL_ADDRESS,
         "账户提交和账本记录已上线",
+        "当前规则",
+        "受控流程",
         "10,000 GCA 持有者",
         "100 GCA AI Quant Access credits",
         "1,000,000 GCA 连续持有 30 天",
@@ -4683,6 +4685,10 @@ def validate_zh_members_page(text: str) -> None:
     for forbidden in (
         "重要边界",
         "请这样对外描述",
+        "未来 100 GCA AI Quant Access credits",
+        "计划规则",
+        "未来流程",
+        "会员预登记",
         "Platform-Only Evidence Path",
         "Reviewer Data Room",
         'href="data.html"',
@@ -5516,7 +5522,12 @@ def validate_reserve_statement_json(text: str) -> None:
 def validate_members(text: str) -> None:
     label = "/members.html"
     assert_contains(text, "GCA Member Access", label)
+    assert_contains(text, "GCA Members | Live Account Access", label)
     assert_contains(text, "Open Live Member Access", label)
+    assert_contains(text, "Live account intake", label)
+    assert_contains(text, "One controlled account per email and verified wallet", label)
+    assert_contains(text, "The current holder benefit", label)
+    assert_contains(text, "The current GCA Member review", label)
     assert_contains(text, "live account path", label)
     assert_contains(text, "gca/member-access/", label)
     assert_contains(text, "100 Credit Rules", label)
@@ -5550,6 +5561,18 @@ def validate_members(text: str) -> None:
     assert_contains(text, "No cash, income, reimbursement, trading permission, or risk-control bypass", label)
     assert_contains(text, "10,000 GCA member benefit", label)
     assert_contains(text, "Public transaction hash + holding start date", label)
+    assert_contains(text, "/gca/member-reviews", label)
+    for stale in (
+        "GCA Members | Pre-Registration",
+        "Planned holder programs",
+        "preview the planned holder tier",
+        "The planned holder bonus",
+        "The planned GCA Member tier",
+        "When a reviewed HTTPS endpoint is connected",
+        "After controlled HTTPS intake is live",
+        "<strong>Planned</strong>",
+    ):
+        assert_not_contains(text, stale, label)
     assert_not_contains(text, "eth_sendTransaction", label)
     assert_not_contains(text, "personal_sign", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)

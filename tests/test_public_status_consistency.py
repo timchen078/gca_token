@@ -14,6 +14,7 @@ PRODUCT_STAGE = (
 SUPPORT_STATUS = "live-structured-account-service-intake-and-manual-email-support"
 SERVICE_REQUEST_ENDPOINT = "/gca/account-service-requests"
 LAST_UPDATED = "2026-08-10"
+MEMBER_PAGE_LAST_UPDATED = "2026-08-11"
 
 
 class PublicStatusConsistencyTests(unittest.TestCase):
@@ -191,6 +192,40 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             for marker in stale_markers:
                 self.assertNotIn(marker, text, f"{path} contains stale marker: {marker}")
 
+    def test_member_pages_match_live_account_and_manual_review_status(self):
+        members = (SITE / "members.html").read_text()
+        zh_members = (SITE / "zh-members.html").read_text()
+
+        for marker in (
+            "GCA Members | Live Account Access",
+            "Live account intake",
+            "One controlled account per email and verified wallet",
+            "The current holder benefit",
+            "The current GCA Member review",
+            "/gca/member-reviews",
+        ):
+            self.assertIn(marker, members)
+        for marker in (
+            "GCA Members | Pre-Registration",
+            "Planned holder programs",
+            "The planned holder bonus",
+            "The planned GCA Member tier",
+            "When a reviewed HTTPS endpoint is connected",
+            "After controlled HTTPS intake is live",
+            "<strong>Planned</strong>",
+        ):
+            self.assertNotIn(marker, members)
+
+        for marker in ("当前规则", "受控流程", "会员账户入口"):
+            self.assertIn(marker, zh_members)
+        for marker in (
+            "未来 100 GCA AI Quant Access credits",
+            "计划规则",
+            "未来流程",
+            "会员预登记",
+        ):
+            self.assertNotIn(marker, zh_members)
+
     def test_updated_public_documents_share_current_date_and_sitemap(self):
         json_paths = (
             "access.json",
@@ -256,6 +291,10 @@ class PublicStatusConsistencyTests(unittest.TestCase):
         for path in updated_paths:
             url = f"https://gcagochina.com/{path}"
             self.assertEqual(sitemap.get(url), LAST_UPDATED, url)
+
+        for path in ("members.html", "zh-members.html"):
+            url = f"https://gcagochina.com/{path}"
+            self.assertEqual(sitemap.get(url), MEMBER_PAGE_LAST_UPDATED, url)
 
 
 if __name__ == "__main__":

@@ -3,22 +3,22 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA Members | Pre-Registration</title>
-    <meta name="description" content="GCA holder bonus and member pre-registration page for the GCA AI Quant Access account path.">
+    <title>GCA Members | Live Account Access</title>
+    <meta name="description" content="Live GCA account access, read-only wallet verification, utility credits, and manually reviewed GCA Member eligibility.">
     <link rel="canonical" href="https://gcagochina.com/members.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="GCA Members | Pre-Registration">
-    <meta property="og:description" content="GCA holder bonus and member pre-registration page for the GCA AI Quant Access account path.">
+    <meta property="og:title" content="GCA Members | Live Account Access">
+    <meta property="og:description" content="Live GCA account access, read-only wallet verification, utility credits, and manually reviewed GCA Member eligibility.">
     <meta property="og:url" content="https://gcagochina.com/members.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="GCA Members | Pre-Registration">
-    <meta name="twitter:description" content="GCA holder bonus and member pre-registration page for the GCA AI Quant Access account path.">
+    <meta name="twitter:title" content="GCA Members | Live Account Access">
+    <meta name="twitter:description" content="Live GCA account access, read-only wallet verification, utility credits, and manually reviewed GCA Member eligibility.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <style>
       :root {
@@ -103,7 +103,7 @@
       h1 {
         margin: 0;
         max-width: 840px;
-        font-size: clamp(40px, 6vw, 72px);
+        font-size: 56px;
         line-height: 1;
         letter-spacing: 0;
       }
@@ -367,6 +367,10 @@
       }
 
       @media (max-width: 860px) {
+        h1 {
+          font-size: 40px;
+        }
+
         .section-head {
           align-items: flex-start;
           flex-direction: column;
@@ -433,7 +437,7 @@
       <section aria-labelledby="title">
         <h1 id="title">GCA Member Access</h1>
         <p class="lead">Use the live <a href="gca/member-access/">GCA Member Access</a> page for production account intake. It submits to the Workers + D1 backend, verifies a Base wallet with read-only GCA <code>balanceOf</code>, and writes eligible 100 credits / GCA Member ledger records.</p>
-        <p class="lead">This legacy page remains as a local packet generator and operator test surface. For localhost testing, run <code>tools/gca_member_backend.py</code>; in that mode the Submit Packet button posts to <code>/gca/pre-registrations</code> and writes local JSONL records for operator review at <code>http://127.0.0.1:8787/operator.html</code>.</p>
+        <p class="lead">Use this page to review the current eligibility rules, then open the live account. The legacy packet builder remains below only for local operator testing; public users should use the controlled HTTPS account path.</p>
         <div class="actions">
           <a class="button primary" href="gca/member-access/">Open Live Member Access</a>
           <a class="button" href="member-ledger.html">Member Ledger</a>
@@ -441,21 +445,21 @@
         </div>
       </section>
 
-      <section class="section grid" aria-label="Planned holder programs">
+      <section class="section grid" aria-label="Current holder programs">
         <div class="fact">
           <span class="label">Registered User</span>
-          <span class="value">Pre-registration packet</span>
-          <p class="note">Submit an email, Telegram handle, and Base wallet for future support follow-up.</p>
+          <span class="value">Live account intake</span>
+          <p class="note">Create or update one controlled account with an email and Base wallet. Never submit secrets or wallet approvals.</p>
         </div>
         <div class="fact">
-          <span class="label">Holder Bonus</span>
-          <span class="value">10,000 GCA</span>
-          <p class="note">Backend-supported one-time 100 GCA AI Quant Access credits after wallet balance verification, with a planned 180-day use window after ledger activation.</p>
+          <span class="label">10,000 GCA Holder</span>
+          <span class="value">100 utility credits</span>
+          <p class="note">After read-only wallet verification, an eligible account receives a one-time 100-credit ledger record. The 180-day use window starts at ledger activation.</p>
         </div>
         <div class="fact">
           <span class="label">GCA Member</span>
-          <span class="value">1,000,000 GCA</span>
-          <p class="note">Backend-supported member status for users who buy and continuously hold 1,000,000 GCA for 30 days, with a planned one-time 10,000 GCA member benefit after review.</p>
+          <span class="value">Manual member review</span>
+          <p class="note">A complete observed 30-day history with at least 1,000,000 GCA is required. Any one-time 10,000 GCA member benefit remains a separate manual reserve-wallet review.</p>
         </div>
       </section>
 
@@ -500,9 +504,9 @@
         </div>
       </section>
 
-      <section class="section two" aria-label="Pre-registration form">
+      <section class="section two" aria-label="Legacy local packet form">
         <div class="panel">
-          <h2>Pre-Register</h2>
+          <h2>Legacy Packet Builder</h2>
           <form class="form" id="registrationForm">
             <div class="field">
               <label for="email">Email</label>
@@ -566,7 +570,7 @@
           <h2>Eligibility Preview</h2>
           <div id="eligibilityResult" class="result">
             <strong>Waiting for input</strong>
-            <p class="note">Enter a declared GCA balance to preview the planned holder tier.</p>
+            <p class="note">Enter a declared GCA balance to preview the local eligibility tier.</p>
           </div>
           <div class="actions" style="margin-top: 14px;">
             <button class="button" type="button" id="checkOnchainBalance">Check On-chain Balance</button>
@@ -586,7 +590,7 @@
         <div class="panel">
           <h2>Program Rules</h2>
           <div class="list">
-            <div class="row"><span>One pre-registration packet per user email and verified wallet</span><strong>Planned</strong></div>
+            <div class="row"><span>One controlled account per email and verified wallet</span><strong>Live</strong></div>
             <div class="row"><span>Holder Bonus threshold</span><strong>10,000 GCA</strong></div>
             <div class="row"><span>GCA Member threshold</span><strong>1,000,000 GCA</strong></div>
             <div class="row"><span>GCA Member holding period</span><strong>30 consecutive days</strong></div>
@@ -595,7 +599,7 @@
             <div class="row"><span>Verification method</span><strong>Backend balanceOf check</strong></div>
             <div class="row"><span>100 credits use window after ledger activation</span><strong>180 days</strong></div>
             <div class="row"><span>GCA Member balance refresh cadence</span><strong>30 days</strong></div>
-            <div class="row"><span>Support target after controlled intake is live</span><strong>5-10 business days</strong></div>
+            <div class="row"><span>Support first-response target</span><strong>5-10 business days</strong></div>
             <div class="row"><span>Support and intake</span><strong><a href="support.html">support.html</a></strong></div>
             <div class="row"><span>Privacy notice</span><strong><a href="privacy.html">privacy.html</a></strong></div>
             <div class="row"><span>Participation terms</span><strong><a href="terms.html">terms.html</a></strong></div>
@@ -603,24 +607,24 @@
         </div>
         <div class="panel">
           <h2>Safety Boundary</h2>
-          <p class="note">This public static page does not store data on a server. The packet stays in your browser until you copy, download, or email it. The local operator backend stores data only when this page is opened from <code>localhost</code> through <code>tools/gca_member_backend.py</code>. The public <a href="privacy.html">Privacy Notice</a> and <a href="terms.html">Participation Terms</a> define the current data and participation boundary. When a reviewed HTTPS endpoint is connected, it may store only the pre-registration review fields, then GCA AI Quant Access may verify the queued wallet with an ERC-20 balanceOf read and holding-period evidence. Pre-registration is not financial advice, not cash, not income, not reimbursement, not trading permission, and not a way to bypass GCA AI Quant Access risk controls.</p>
+          <p class="note">This legacy form does not store data on the public server. Its packet stays in your browser until you copy, download, or email it; the local operator backend stores data only when this page is opened from <code>localhost</code> through <code>tools/gca_member_backend.py</code>. The live <a href="gca/member-access/">Member Access</a> page stores only the published account and review fields in Workers + D1, then performs read-only ERC-20 <code>balanceOf</code> checks and queues manual holding-evidence review. The public <a href="privacy.html">Privacy Notice</a> and <a href="terms.html">Participation Terms</a> define the current boundary. A registration or review record is not cash, income, reimbursement, trading permission, or a way to bypass risk controls.</p>
         </div>
       </section>
 
       <section class="section two" aria-label="Credit and member rules">
         <div class="panel">
           <h2>100 Credit Rules</h2>
-          <p class="note">The planned holder bonus is a one-time account-level service credit record for verified 10,000 GCA holders. Credits are intended for reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, and education access. They are not transferable and cannot be redeemed for cash, token claims, income, reimbursement, or trading permission.</p>
+          <p class="note">The current holder benefit is a one-time account-level service credit record for verified 10,000 GCA holders. Credits are intended for reports, backtests, risk warnings, ENTRY_READY signal review, position calculators, and education access. They are not transferable and cannot be redeemed for cash, token claims, income, reimbursement, or trading permission.</p>
         </div>
         <div class="panel">
           <h2>Member Rules</h2>
-          <p class="note">The planned GCA Member tier requires verified purchase and continuous holding of at least 1,000,000 GCA for 30 consecutive days. After member ledger activation and support review, an eligible member can enter one-time 10,000 GCA member benefit review from project or owner-held reserve. It does not activate live trading, leverage, custody, withdrawals, voting control, lifetime access, income, reimbursement, or risk-control bypass.</p>
+          <p class="note">The current GCA Member review requires a complete observed 30-day holding history and a verified current balance of at least 1,000,000 GCA. After manual member approval, an eligible member can enter a separate one-time 10,000 GCA member benefit review from project or owner-held reserve. It does not activate live trading, leverage, custody, withdrawals, voting control, lifetime access, income, reimbursement, or risk-control bypass.</p>
         </div>
       </section>
 
       <section class="section panel" aria-labelledby="supportTitle">
         <h2 id="supportTitle">Support Workflow</h2>
-        <p class="note">Use <a href="support.html">support.html</a> for official support routing and packet-handling boundaries. After controlled HTTPS intake is live, support can review packets through the statuses <code>received</code>, <code>wallet_pending</code>, <code>eligible</code>, <code>needs_more_information</code>, <code>rejected</code>, and <code>ledger_recorded</code>. The target first response is 5-10 business days after controlled intake is live, and it is not a guarantee. Manual support cannot override wallet-balance verification, risk controls, or the no-custody boundary.</p>
+        <p class="note">Use <a href="support.html">support.html</a> for official support routing and account-review boundaries. The controlled HTTPS intake records statuses including <code>received</code>, <code>wallet_pending</code>, <code>eligible</code>, <code>needs_more_information</code>, <code>rejected</code>, and <code>ledger_recorded</code>. The target first response is 5-10 business days and is not a guarantee. Manual support cannot override wallet-balance verification, risk controls, or the no-custody boundary.</p>
       </section>
 
       <section class="section panel" aria-labelledby="reviewTitle">
@@ -628,11 +632,13 @@
         <p class="note">GCA now has public HTTPS account intake, backend wallet verification, 100 credits records, and GCA Member ledger records. This legacy page remains useful for packet generation and localhost operator testing.</p>
         <div class="list">
           <div class="row"><span>Live member access page</span><strong><a href="gca/member-access/"><code>/gca/member-access</code></a></strong></div>
-          <div class="row"><span>Prepared GCA AI Quant Access intake path</span><strong><code>/gca/pre-registrations</code></strong></div>
-          <div class="row"><span>Prepared wallet verification path</span><strong><code>/gca/wallet-verifications</code></strong></div>
-          <div class="row"><span>Prepared credit ledger path</span><strong><code>/gca/credit-ledger</code></strong></div>
-          <div class="row"><span>Prepared member ledger path</span><strong><code>/gca/member-ledger</code></strong></div>
-          <div class="row"><span>Prepared review queue path</span><strong><code>/gca/member-review</code></strong></div>
+          <div class="row"><span>Live account intake path</span><strong><code>/gca/member-access</code></strong></div>
+          <div class="row"><span>Live wallet verification path</span><strong><code>/gca/wallet-verifications</code></strong></div>
+          <div class="row"><span>Live credit ledger path</span><strong><code>/gca/credit-ledger</code></strong></div>
+          <div class="row"><span>Live member ledger path</span><strong><code>/gca/member-ledger</code></strong></div>
+          <div class="row"><span>Protected production member review path</span><strong><code>/gca/member-reviews</code></strong></div>
+          <div class="row"><span>Local packet intake path</span><strong><code>/gca/pre-registrations</code></strong></div>
+          <div class="row"><span>Local support review path</span><strong><code>/gca/member-review</code></strong></div>
           <div class="row"><span>Local operator backend</span><strong><code>tools/gca_member_backend.py</code></strong></div>
           <div class="row"><span>Public ledger schema</span><strong><a href="member-ledger.html">member-ledger.html</a></strong></div>
           <div class="row"><span>Member benefit review rules</span><strong><a href="member-benefit.html">member-benefit.html</a></strong></div>
@@ -774,7 +780,7 @@
         return {
           tier: "General waitlist",
           eligiblePrograms: ["General Waitlist"],
-          message: "Declared balance is below the planned holder thresholds. You can still create a pre-registration packet.",
+          message: "Declared balance is below the current holder thresholds. You can still create a legacy local packet.",
           className: "warn"
         };
       }
@@ -951,7 +957,7 @@
         const packet = buildPacket();
         packetOutput.value = JSON.stringify(packet, null, 2);
         renderResult(packet);
-        const subject = encodeURIComponent(`GCA pre-registration packet - ${packet.user.walletAddress || "wallet pending"}`);
+        const subject = encodeURIComponent(`GCA legacy registration packet - ${packet.user.walletAddress || "wallet pending"}`);
         const body = encodeURIComponent(packetOutput.value);
         emailPacket.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
         submitPacket.disabled = !endpointConfigured();
