@@ -3,306 +3,26 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA Product Spec | GCA AI Quant Access</title>
-    <meta name="description" content="GCA public product specification for GCA AI Quant Access: China Narrative Radar, Liquidation Replay, backtests, risk warnings, ENTRY_READY review, position sizing, education, and member workflows.">
+    <title>GCA AI Quant Access | Research and Risk Tools</title>
+    <meta name="description" content="GCA AI Quant Access brings narrative research, trade planning, portfolio risk, backtesting, loss review, and member workflows into one browser-based product.">
     <link rel="canonical" href="https://gcagochina.com/product.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="GCA Product Spec | GCA AI Quant Access">
-    <meta property="og:description" content="GCA public product specification for non-custodial quant risk tools, narrative research, service credits, and member workflows.">
+    <meta property="og:title" content="GCA AI Quant Access | Research and Risk Tools">
+    <meta property="og:description" content="A browser-based workflow for narrative research, trade planning, risk control, backtesting, and disciplined review.">
     <meta property="og:url" content="https://gcagochina.com/product.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="GCA Product Spec | GCA AI Quant Access">
-    <meta name="twitter:description" content="GCA public product specification for non-custodial quant risk tools, narrative research, service credits, and member workflows.">
+    <meta name="twitter:title" content="GCA AI Quant Access | Research and Risk Tools">
+    <meta name="twitter:description" content="A browser-based workflow for narrative research, trade planning, risk control, backtesting, and disciplined review.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
-    <style>
-      :root {
-        color-scheme: light;
-        --ink: #111318;
-        --muted: #5f6773;
-        --line: #dfe3ea;
-        --panel: #ffffff;
-        --soft: #f6f7f9;
-        --red: #d71920;
-        --blue: #0052ff;
-        --green: #087f5b;
-        --gold: #8a650d;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        color: var(--ink);
-        background: #fbfbfc;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        line-height: 1.5;
-      }
-
-      a {
-        color: var(--blue);
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-      .shell {
-        width: min(1100px, calc(100% - 32px));
-        margin: 0 auto;
-      }
-
-      header {
-        border-bottom: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.94);
-        position: sticky;
-        top: 0;
-        z-index: 2;
-      }
-
-      nav {
-        min-height: 64px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--ink);
-        font-weight: 850;
-      }
-
-      .brand img {
-        width: 32px;
-        height: 32px;
-      }
-
-      .nav-links {
-        display: flex;
-        gap: 18px;
-        align-items: center;
-        font-size: 14px;
-      }
-
-      main {
-        padding: 42px 0 56px;
-      }
-
-      .eyebrow {
-        color: var(--red);
-        font-size: 13px;
-        font-weight: 850;
-        margin: 0 0 12px;
-        text-transform: uppercase;
-      }
-
-      h1 {
-        margin: 0;
-        max-width: 940px;
-        font-size: clamp(40px, 6vw, 72px);
-        line-height: 1;
-        letter-spacing: 0;
-      }
-
-      h2 {
-        margin: 0 0 14px;
-        font-size: 24px;
-      }
-
-      h3 {
-        margin: 0 0 8px;
-        font-size: 17px;
-      }
-
-      .lead {
-        max-width: 860px;
-        margin: 18px 0 0;
-        color: var(--muted);
-        font-size: 18px;
-      }
-
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 24px;
-      }
-
-      .button {
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel);
-        color: var(--ink);
-        min-height: 42px;
-        padding: 10px 14px;
-        font: inherit;
-        font-weight: 750;
-      }
-
-      .button.primary {
-        border-color: var(--red);
-        background: var(--red);
-        color: #fff;
-      }
-
-      .section {
-        margin-top: 30px;
-      }
-
-      .panel,
-      .fact {
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel);
-      }
-
-      .panel {
-        padding: 24px;
-      }
-
-      .grid,
-      .two,
-      .facts {
-        display: grid;
-        gap: 14px;
-      }
-
-      .grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-
-      .two {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .facts {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        margin-top: 22px;
-      }
-
-      .fact {
-        min-height: 128px;
-        padding: 16px;
-      }
-
-      .label {
-        display: block;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 750;
-        text-transform: uppercase;
-      }
-
-      .value {
-        display: block;
-        margin-top: 8px;
-        font-size: 16px;
-        font-weight: 850;
-        overflow-wrap: anywhere;
-      }
-
-      .good {
-        color: var(--green);
-      }
-
-      .pending {
-        color: var(--gold);
-      }
-
-      .note,
-      li {
-        color: var(--muted);
-      }
-
-      .note {
-        margin: 0;
-      }
-
-      .list {
-        display: grid;
-        gap: 10px;
-        margin-top: 12px;
-      }
-
-      .row {
-        display: grid;
-        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
-        gap: 12px;
-        align-items: start;
-        border-top: 1px solid var(--line);
-        padding-top: 10px;
-      }
-
-      .row:first-child {
-        border-top: 0;
-        padding-top: 0;
-      }
-
-      .row strong {
-        min-width: 0;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-        text-align: right;
-      }
-
-      code {
-        border: 1px solid var(--line);
-        border-radius: 6px;
-        background: var(--soft);
-        padding: 2px 5px;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        font-size: 0.92em;
-        max-width: 100%;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-      }
-
-      footer {
-        border-top: 1px solid var(--line);
-        color: var(--muted);
-        padding: 22px 0;
-        font-size: 13px;
-      }
-
-      @media (max-width: 860px) {
-        nav {
-          align-items: flex-start;
-          flex-direction: column;
-        }
-
-        .nav-links {
-          flex-wrap: wrap;
-        }
-
-        .grid,
-        .two,
-        .facts {
-          grid-template-columns: 1fr;
-        }
-
-        .row {
-          grid-template-columns: 1fr;
-        }
-
-        .row strong {
-          text-align: left;
-        }
-      }
-    </style>
-      <link rel="stylesheet" href="assets/gca-site.css?v=20260812">
-    <script src="assets/gca-site.js?v=20260812" defer></script>
+    <link rel="stylesheet" href="assets/gca-core.css?v=20260812-2">
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260812-2">
+    <script src="assets/gca-site.js?v=20260812-2" defer></script>
   </head>
   <body>
     <header>
@@ -311,270 +31,168 @@
           <img src="assets/gca-logo.svg" alt="GCA logo">
           <span>GCA</span>
         </a>
-        <div class="nav-links">
-          <a href="index.html">Home</a>
-          <a href="verify.html">Verify</a>
-          <a href="buy.html">Buy Guide</a>
-          <a href="markets.html">Markets</a>
-          <a href="supply.html">Supply</a>
-          <a href="security.html">Security</a>
-          <a href="risk.html">Risk</a>
-          <a href="faq.html">FAQ</a>
-          <a href="access.html">Access Portal</a>
-          <a href="credits.html">Credits Catalog</a>
-          <a href="utility.html">Utility</a>
-          <a href="members.html">Members</a>
-          <a href="support.html">Support</a>
-        </div>
+        <div class="nav-links"></div>
       </nav>
     </header>
 
-    <main class="shell">
-      <section aria-labelledby="title">
-        <p class="eyebrow">Public Product Spec / Updated 2026-07-19</p>
-        <h1 id="title">GCA AI Quant Access Product Spec</h1>
-        <p class="lead">This is the public product map for connecting the Go China Access narrative to practical non-custodial quant risk tools. It turns GCA from a token-only story into an account and membership layer for research, risk review, backtests, service credits, and member workflows.</p>
-        <p class="lead">Ten browser-based risk and research tools form a bounded workflow from Research Notes to Trade Plan Ledger, risk review, completed-plan Journal context, and Backtest Lab. No handoff auto-saves a record or imports a realized return. The tools use user-entered data and do not enable order execution.</p>
-        <div class="actions">
-          <a class="button primary" href="access.html">Access Portal</a>
-          <a class="button primary" href="tools.html">Open Risk Tools</a>
-          <a class="button primary" href="risk-calculator.html">Open Risk Calculator</a>
-          <a class="button primary" href="entry-ready.html">Run ENTRY_READY Review</a>
-          <a class="button primary" href="liquidation-replay.html">Run Loss Replay</a>
-          <a class="button primary" href="backtest-lab.html">Open Backtest Lab</a>
-          <a class="button primary" href="trade-journal.html">Open Trade Journal</a>
-          <a class="button primary" href="research-notes.html">Open Research Notes</a>
-          <a class="button primary" href="trade-plans.html">Open Trade Plan Ledger</a>
-          <a class="button primary" href="portfolio-risk.html">Open Portfolio Risk Map</a>
-          <a class="button primary" href="risk-warning.html">Run Risk Warning</a>
-          <a class="button primary" href="credits.html">Credits Catalog</a>
-          <a class="button" href="utility.html">GCA AI Quant Access</a>
-          <a class="button" href="member-ledger.html">Member Ledger</a>
-          <a class="button primary" href="member-workspace.html">Member Workspace</a>
-          <a class="button primary" href="risk-passport.html">Risk Passport</a>
-          <a class="button primary" href="workspace-vault.html">Workspace Vault</a>
-          <a class="button" href="radar.html">Weekly Radar</a>
-          <a class="button" href="#principles">Operating Principles</a>
-        </div>
-      </section>
-
-      <section class="facts" aria-label="Product facts">
-        <div class="fact">
-          <span class="label">Current Stage</span>
-          <span class="value good">Accounts, ledgers, reviewed services, and ten browser tools live</span>
-        </div>
-        <div class="fact">
-          <span class="label">Public Account UI</span>
-          <span class="value good">Live at /gca/member-access/</span>
-        </div>
-        <div class="fact">
-          <span class="label">Trading Execution</span>
-          <span class="value">Not enabled</span>
-        </div>
-      </section>
-
-      <section class="section panel" aria-labelledby="modulesTitle">
-        <h2 id="modulesTitle">Product Module Map</h2>
-        <div class="grid">
-          <div class="fact">
-            <span class="label">Research</span>
-            <span class="value">China Narrative Radar</span>
-            <p class="note">China-facing Web3 themes, bilingual notes, public narratives, and weekly research topics.</p>
-          </div>
-          <div class="fact">
-            <span class="label">Narrative Research · Browser Tool</span>
-            <span class="value">Member Research Notes</span>
-            <p class="note">Structure a thesis, public evidence, catalysts, invalidation conditions, risks, sources, tags, and scheduled reviews locally, then open a bounded unsaved draft in Trade Plan Ledger.</p>
-            <div class="actions"><a class="button" href="research-notes.html">Open Research Notes</a></div>
-          </div>
-          <div class="fact">
-            <span class="label">Update Format</span>
-            <span class="value">Weekly Go China Radar</span>
-            <p class="note">Repeatable public updates for trust stack, official links, risk notes, and community talking points.</p>
-          </div>
-          <div class="fact">
-            <span class="label">Post-Trade Review · Browser Tool</span>
-            <span class="value">Liquidation Replay · Loss Review</span>
-            <p class="note">Measure account impact, leverage, margin use, planned-stop deviation, costs, and execution discipline locally in the browser.</p>
-            <div class="actions"><a class="button" href="liquidation-replay.html">Run Replay</a></div>
-          </div>
-          <div class="fact">
-            <span class="label">Credits · Reviewed Service</span>
-            <span class="value">Risk Warning Credits</span>
-            <p class="note">A transparent manual review for exposure, leverage, loss budget, slippage, volatility, liquidity, funding, and process discipline.</p>
-            <div class="actions"><a class="button" href="risk-warning.html">Run Warning Review</a></div>
-          </div>
-          <div class="fact">
-            <span class="label">Research · Browser Tool</span>
-            <span class="value">Backtest Lab</span>
-            <p class="note">Analyze entered trade-return samples with compounding, expectancy, profit factor, drawdown, costs, and streak statistics.</p>
-            <div class="actions"><a class="button" href="backtest-lab.html">Open Lab</a></div>
-          </div>
-          <div class="fact">
-            <span class="label">Process · Browser Tool</span>
-            <span class="value">Trade Journal</span>
-            <p class="note">Accept bounded context from a completed plan, manually enter the actual account return, store and edit completed trades locally, inspect the outcome sequence, and send it to Backtest Lab.</p>
-            <div class="actions"><a class="button" href="trade-journal.html">Open Journal</a></div>
-          </div>
-          <div class="fact">
-            <span class="label">Signal Review · Browser Tool</span>
-            <span class="value">ENTRY_READY Review</span>
-            <p class="note">A transparent browser-only gate for price structure, invalidation, risk budget, execution conditions, liquidity, and discipline.</p>
-            <div class="actions"><a class="button" href="entry-ready.html">Run Review</a></div>
-          </div>
-          <div class="fact">
-            <span class="label">Sizing · Browser Tool</span>
-            <span class="value">Position Size Calculator</span>
-            <p class="note">Calculate risk budget, stop distance, position quantity, costs, leverage margin, exposure, and reward-to-risk locally in the browser.</p>
-            <div class="actions"><a class="button" href="risk-calculator.html">Open Calculator</a></div>
-          </div>
-          <div class="fact">
-            <span class="label">Portfolio Risk · Browser Tool</span>
-            <span class="value">Portfolio Risk Map</span>
-            <p class="note">Combine up to 20 manually entered positions into planned stop risk, gross and net exposure, margin use, asset and direction concentration, and symmetric stress scenarios, with validated portable JSON backup.</p>
-            <div class="actions"><a class="button" href="portfolio-risk.html">Open Portfolio Map</a></div>
-          </div>
-          <div class="fact">
-            <span class="label">Trade Planning · Browser Tool</span>
-            <span class="value">Trade Plan Ledger</span>
-            <p class="note">Review bounded Research Notes context, add prices and risk inputs, save a structured plan locally, use deterministic risk handoffs, and open Journal context only after the plan is marked completed.</p>
-            <div class="actions"><a class="button" href="trade-plans.html">Open Trade Plans</a></div>
-          </div>
-          <div class="fact">
-            <span class="label">Education · Browser Tool</span>
-            <span class="value">Risk Discipline Training</span>
-            <p class="note">Practice eight bilingual scenarios with transparent scoring, automatic browser-local draft recovery, privacy-minimized completed-attempt history, and validated portable JSON backup.</p>
-            <div class="actions"><a class="button" href="risk-training.html">Start Training</a></div>
-          </div>
-          <div class="fact">
-            <span class="label">Member Area · Browser-Local Workspace Live</span>
-            <span class="value">GCA Member Workspace</span>
-            <p class="note">Review the non-sensitive member snapshot and validated local summaries, use a deterministic priority queue for blockers, due reviews, and missing workflow foundations, open public tools, and build a manual service request packet. The queue reads summary counts and statuses only, does not write tool data, and does not approve execution.</p>
-            <div class="actions"><a class="button" href="member-workspace.html">Open Workspace</a></div>
-          </div>
-          <div class="fact">
-            <span class="label">Member Evidence · Browser-Local Report Live</span>
-            <span class="value">GCA Risk Passport</span>
-            <p class="note">Build and verify a portable workflow report from validated member, training, research, plan, portfolio, journal, and action-queue summaries. The export excludes identity, wallet, balance, note, plan, position, and journal details.</p>
-            <div class="actions"><a class="button" href="risk-passport.html">Open Risk Passport</a></div>
-          </div>
-          <div class="fact">
-            <span class="label">Data Portability · Encrypted Local Backup Live</span>
-            <span class="value">GCA Workspace Vault</span>
-            <p class="note">Encrypt validated journal, training, research, plan, portfolio-risk, and local request-receipt backups into one AES-256-GCM file. Restore previews per-module impact, skips no-op writes, rejects invalid current module data, and rolls back original local values after a failed write.</p>
-            <div class="actions"><a class="button" href="workspace-vault.html">Open Workspace Vault</a></div>
+    <main id="main-content">
+      <section class="core-hero" aria-labelledby="title">
+        <img class="core-hero-art" src="assets/gca-logo.svg" alt="" aria-hidden="true">
+        <div class="shell">
+          <div class="core-hero-content">
+            <p class="eyebrow">GCA AI Quant Access</p>
+            <h1 id="title">Research clearly. Control risk.</h1>
+            <p class="lead hero-copy">A practical browser workspace for turning a market thesis into a structured plan, deterministic risk checks, and a disciplined post-trade review.</p>
+            <div class="actions">
+              <a class="button primary" href="tools.html">Open Risk Tools</a>
+              <a class="button accent" href="gca/member-access/">Member Access</a>
+              <a class="button" href="zh-product.html">中文产品页</a>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="section two" id="principles" aria-label="Product access and operating principles">
-        <div class="panel">
-          <h2>Product Access</h2>
-          <div class="list">
-            <div class="row"><span><a href="access.html">Access Portal</a></span><strong class="good">Live account path</strong></div>
-            <div class="row"><span><a href="gca/member-access/">Member Account</a></span><strong class="good">Live</strong></div>
-            <div class="row"><span>Read-only GCA balance verification</span><strong class="good">Live via eth_call</strong></div>
-            <div class="row"><span>Utility credit records</span><strong class="good">Eligibility review</strong></div>
-            <div class="row"><span>GCA Member records</span><strong class="good">Eligibility review</strong></div>
-            <div class="row"><span>Browser tools</span><strong class="good">Local, transparent calculations</strong></div>
-          </div>
+      <section class="fact-band" aria-label="Product facts">
+        <div class="shell facts">
+          <div class="fact"><span class="fact-label">Workspace</span><span class="fact-value">10 browser-based tools</span></div>
+          <div class="fact"><span class="fact-label">Data</span><span class="fact-value">User-controlled and local</span></div>
+          <div class="fact"><span class="fact-label">Account</span><span class="fact-value">Email + read-only wallet check</span></div>
+          <div class="fact"><span class="fact-label">Custody</span><span class="fact-value">Non-custodial</span></div>
         </div>
-        <div class="panel">
-          <h2>GCA Access Rules</h2>
-          <div class="list">
-            <div class="row"><span>Holder bonus</span><strong>10,000 GCA / 100 utility credits</strong></div>
-            <div class="row"><span>GCA Member</span><strong>1,000,000 GCA / 30-day hold</strong></div>
-            <div class="row"><span>Member benefit</span><strong>10,000 GCA after approval</strong></div>
-            <div class="row"><span><a href="credits.html">Credits Catalog</a></span><strong>ledger path live</strong></div>
-            <div class="row"><span>Registered user limit</span><strong>one bonus and one member review</strong></div>
-            <div class="row"><span>Wallet limit</span><strong>one verified wallet per registered user</strong></div>
-            <div class="row"><span>Credit use</span><strong>reports, backtests, warnings, reviews, calculators, education</strong></div>
-            <div class="row"><span>Member use</span><strong>higher utility limits, notes, queues, training, support</strong></div>
+      </section>
+
+      <section class="section" aria-labelledby="toolsTitle">
+        <div class="shell">
+          <div class="section-heading">
+            <p class="eyebrow">Core tools</p>
+            <h2 id="toolsTitle">One workspace for the full risk cycle.</h2>
+            <p>Each tool has a specific job. Calculations use user-entered values and remain transparent, portable, and independent from exchange execution.</p>
+          </div>
+          <div class="tool-grid">
+            <article class="tool-card">
+              <div><h3>Research Notes</h3><p>Structure a thesis, sources, catalysts, invalidation conditions, and scheduled reviews.</p></div>
+              <a class="tool-link" href="research-notes.html">Open research notes →</a>
+            </article>
+            <article class="tool-card">
+              <div><h3>Trade Plan Ledger</h3><p>Define entry, stop, target, risk budget, leverage, and the conditions that cancel a setup.</p></div>
+              <a class="tool-link" href="trade-plans.html">Build a trade plan →</a>
+            </article>
+            <article class="tool-card">
+              <div><h3>Position Size Calculator</h3><p>Convert account risk and stop distance into position size, exposure, margin, and cost estimates.</p></div>
+              <a class="tool-link" href="risk-calculator.html">Calculate position size →</a>
+            </article>
+            <article class="tool-card">
+              <div><h3>Portfolio Risk Map</h3><p>Measure planned stop risk, exposure, margin use, concentration, and stress scenarios.</p></div>
+              <a class="tool-link" href="portfolio-risk.html">Map portfolio risk →</a>
+            </article>
+            <article class="tool-card">
+              <div><h3>Backtest Lab</h3><p>Analyze expectancy, drawdown, profit factor, costs, compounding, and streak behavior.</p></div>
+              <a class="tool-link" href="backtest-lab.html">Run a backtest →</a>
+            </article>
+            <article class="tool-card">
+              <div><h3>Liquidation Replay</h3><p>Review loss impact, leverage, margin use, planned-stop deviation, and execution discipline.</p></div>
+              <a class="tool-link" href="liquidation-replay.html">Review a loss →</a>
+            </article>
+          </div>
+          <div class="actions" style="margin-top:22px">
+            <a class="button" href="tools.html">View All 10 Tools</a>
+            <a class="button" href="entry-ready.html">ENTRY_READY Review</a>
+            <a class="button" href="risk-training.html">Risk Discipline Training</a>
           </div>
         </div>
       </section>
 
-      <section class="section panel" aria-labelledby="safetyTitle">
-        <h2 id="safetyTitle">Safety Architecture</h2>
-        <div class="grid">
-          <div class="fact">
-            <span class="label">Custody</span>
-            <span class="value">No custody</span>
-            <p class="note">The product path must not hold user funds and must keep no withdrawal permission.</p>
+      <section class="section soft" aria-labelledby="workflowTitle">
+        <div class="shell">
+          <div class="section-heading">
+            <p class="eyebrow">Product workflow</p>
+            <h2 id="workflowTitle">Move from idea to evidence.</h2>
+            <p>The product connects research, planning, risk review, and completed-trade analysis without hiding the calculation or taking control of funds.</p>
           </div>
-          <div class="fact">
-            <span class="label">Secrets</span>
-            <span class="value">No private keys</span>
-            <p class="note">No seed phrases, private keys, withdrawal-enabled API keys, or exchange API secret collection.</p>
-          </div>
-          <div class="fact">
-            <span class="label">Orders</span>
-            <span class="value">No live execution now</span>
-            <p class="note">Any future order flow must use unique client order IDs and pass risk checks first.</p>
-          </div>
-          <div class="fact">
-            <span class="label">Validation</span>
-            <span class="value">Simulation first</span>
-            <p class="note">Trading-related features must run simulated or testnet validation before live use.</p>
+          <div class="steps">
+            <div class="step"><h3>Research</h3><p>Record the thesis, public evidence, catalysts, risks, and invalidation.</p><a class="tool-link" href="research-notes.html">Research Notes</a></div>
+            <div class="step"><h3>Plan</h3><p>Set entry, stop, target, risk budget, leverage, and execution requirements.</p><a class="tool-link" href="trade-plans.html">Trade Plan Ledger</a></div>
+            <div class="step"><h3>Check</h3><p>Review position sizing, portfolio impact, liquidity, and readiness before acting.</p><a class="tool-link" href="entry-ready.html">ENTRY_READY</a></div>
+            <div class="step"><h3>Review</h3><p>Compare the completed outcome with the original process and build reusable evidence.</p><a class="tool-link" href="trade-journal.html">Trade Journal</a></div>
           </div>
         </div>
       </section>
 
-      <section class="section two" aria-label="Product principles">
-        <div class="panel">
-          <h2>Product Principles</h2>
-          <ul>
-            <li>Browser tools use transparent calculations and user-controlled local data.</li>
-            <li>Member accounts use read-only wallet verification and reviewed service records.</li>
-            <li>Every trading-related workflow starts with explicit risk checks and simulation.</li>
-            <li>The official market identity is the Base Mainnet Uniswap v4 GCA/USDT pool.</li>
-          </ul>
-        </div>
-        <div class="panel">
-          <h2>Security Boundaries</h2>
-          <ul>
-            <li>No custody, withdrawal permission, private key access, or exchange API secret collection.</li>
-            <li>No browser tool places orders or bypasses user confirmation and risk controls.</li>
-            <li>Member benefits use eligibility review and are not automatic self-service transfers.</li>
-            <li>Tool output is deterministic analysis, not a market-data feed or performance promise.</li>
+      <section class="section warm" aria-labelledby="memberTitle">
+        <div class="shell split">
+          <div>
+            <p class="eyebrow">GCA Member</p>
+            <h2 id="memberTitle">A controlled account layer for member access.</h2>
+            <p class="lead">Register by email, submit a public Base wallet, and use a read-only balance check to establish an account record without sharing private keys or signing a transaction.</p>
+            <div class="actions">
+              <a class="button primary" href="register.html">Create Account</a>
+              <a class="button" href="gca/member-access/">Open Member Access</a>
+              <a class="button" href="member-workspace.html">Member Workspace</a>
+            </div>
+          </div>
+          <ul class="detail-list" aria-label="GCA access rules">
+            <li><span>Registered holder access</span><strong>10,000 GCA verified balance</strong></li>
+            <li><span>Utility credit record</span><strong>100 credits after eligibility review</strong></li>
+            <li><span>GCA Member qualification</span><strong>1,000,000 GCA held for 30 days</strong></li>
+            <li><span>Member benefit review</span><strong>10,000 GCA after approval</strong></li>
+            <li><span>Wallet verification</span><strong>Read-only Base RPC call</strong></li>
           </ul>
         </div>
       </section>
 
-      <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
-        <h2 id="technicalEvidenceTitle">Product References</h2>
-        <p class="note">Use these product, account, credit, and risk-tool pages as the public GCA product path.</p>
-        <div class="actions">
-          <a class="button" href="utility.html">Utility Thesis</a>
-          <a class="button" href="access.html">Access Portal</a>
-          <a class="button" href="credits.html">Credits Catalog</a>
-          <a class="button" href="tools.html">Risk Tools Workspace</a>
-          <a class="button" href="risk-calculator.html">Position Size Calculator</a>
-          <a class="button" href="trade-plans.html">Trade Plan Ledger</a>
-          <a class="button" href="portfolio-risk.html">Portfolio Risk Map</a>
-          <a class="button" href="entry-ready.html">ENTRY_READY Review</a>
-          <a class="button" href="liquidation-replay.html">Liquidation Replay</a>
-          <a class="button" href="backtest-lab.html">Backtest Lab</a>
-          <a class="button" href="risk-warning.html">Risk Warning Review</a>
-          <a class="button" href="risk-training.html">Risk Discipline Training</a>
+      <section class="section dark" aria-labelledby="boundaryTitle">
+        <div class="shell">
+          <div class="section-heading">
+            <p class="eyebrow">Security boundaries</p>
+            <h2 id="boundaryTitle">Control remains with the user.</h2>
+            <p>GCA AI Quant Access is designed around explicit permissions and transparent calculations.</p>
+          </div>
+          <div class="boundary-grid">
+            <div class="boundary-item"><h3>No custody</h3><p>GCA does not hold user funds or request transfer control.</p></div>
+            <div class="boundary-item"><h3>No withdrawal access</h3><p>The product does not request exchange withdrawal permission.</p></div>
+            <div class="boundary-item"><h3>No secret collection</h3><p>Never submit private keys, seed phrases, or exchange API secrets.</p></div>
+            <div class="boundary-item"><h3>No automatic orders</h3><p>Browser tools calculate and review; they do not place trades.</p></div>
+          </div>
         </div>
       </section>
 
-      <section class="section panel" aria-labelledby="identityTitle">
-        <h2 id="identityTitle">Canonical Identity</h2>
-        <div class="list">
-          <div class="row"><span>Network</span><strong>Base Mainnet / chainId 8453</strong></div>
-          <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
-          <div class="row"><span>Official pool</span><strong>GCA/USDT</strong></div>
-          <div class="row"><span>Pool address</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
-          <div class="row"><span>Quote asset</span><strong>Base USDT / 0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
-          <div class="row"><span>Trust center</span><strong><a href="trust.html">trust.html</a></strong></div>
+      <section class="section" aria-labelledby="identityTitle">
+        <div class="shell split">
+          <div>
+            <p class="eyebrow">Official on-chain identity</p>
+            <h2 id="identityTitle">Verify the asset before using it.</h2>
+            <p class="lead">GCA is issued on Base Mainnet. Match the network, contract, pool, and quote asset before opening a market link or wallet prompt.</p>
+            <div class="actions">
+              <a class="button primary" href="verify.html">Verify GCA</a>
+              <a class="button" href="markets.html">Open Market Details</a>
+            </div>
+          </div>
+          <div class="identity-list" aria-label="Official GCA on-chain identity">
+            <div class="identity-row"><span>Network</span><strong>Base Mainnet · 8453</strong></div>
+            <div class="identity-row"><span>GCA contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+            <div class="identity-row"><span>Official market</span><strong>GCA/USDT · Uniswap v4</strong></div>
+            <div class="identity-row"><span>Pool</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
+            <div class="identity-row"><span>Base USDT</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="final-cta" aria-labelledby="startTitle">
+        <div class="shell split">
+          <h2 id="startTitle">Build a repeatable risk process.</h2>
+          <div class="actions">
+            <a class="button primary" href="tools.html">Open Product</a>
+            <a class="button" href="verify.html">Verify GCA</a>
+          </div>
         </div>
       </section>
     </main>
 
     <footer>
-      <div class="shell">GCA AI Quant Access · Browser-based research, risk tools, and member workflows.</div>
+      <div class="shell footer-line">
+        <strong>GCA · Go China Access</strong>
+        <div class="footer-links"><a href="about.html">About</a><a href="markets.html">Markets</a><a href="whitepaper.html">Whitepaper</a><a href="support.html">Support</a></div>
+      </div>
     </footer>
   </body>
 </html>
