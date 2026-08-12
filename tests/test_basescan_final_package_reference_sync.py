@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 
 from tools.sync_basescan_final_package_references import (
+    DEFAULT_TARGET_FILES,
     FinalPackageReferenceSyncError,
     canonical_reference,
     synchronize_references,
@@ -16,6 +17,9 @@ DAILY_TIMESTAMP = "2026-08-11T17:22:15Z"
 
 
 class BaseScanFinalPackageReferenceSyncTests(unittest.TestCase):
+    def test_public_verification_page_is_not_an_internal_sync_target(self):
+        self.assertNotIn("site/verify.html", DEFAULT_TARGET_FILES)
+
     def write_fixture(self, root: Path) -> tuple[Path, Path]:
         launch = root / "launch"
         launch.mkdir(parents=True, exist_ok=True)

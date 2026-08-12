@@ -54,7 +54,6 @@ DEFAULT_TARGET_FILES = [
     "site/token-safety.html",
     "site/trust.html",
     "site/trust.json",
-    "site/verify.html",
     "site/zh-basescan-preflight.html",
     "site/zh-release-gates.html",
     "tests/test_basescan_reviewer_checklist.py",
