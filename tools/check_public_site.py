@@ -5489,8 +5489,19 @@ def validate_members(text: str) -> None:
 def validate_member_access_page(text: str) -> None:
     label = "/gca/member-access/"
     assert_contains(text, "GCA Member Access", label)
+    assert_contains(text, "One account for GCA access.", label)
     assert_contains(text, "GCA 会员账户入口", label)
     assert_contains(text, "中英双语会员入口", label)
+    for journey_step in (
+        "Create Account",
+        "Verify Wallet",
+        "Track Eligibility",
+        "Use Services",
+    ):
+        assert_contains(text, journey_step, label)
+    assert_contains(text, '<details class="details-panel" id="beforeSubmit">', label)
+    assert_contains(text, '<details class="details-panel" id="technicalEvidence">', label)
+    assert_not_contains(text, 'aria-label="Live access status"', label)
     assert_contains(text, "controlled HTTPS account UI", label)
     assert_contains(text, "Create or Update Access Record", label)
     assert_contains(text, "创建或更新账户记录", label)

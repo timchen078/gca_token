@@ -146,6 +146,170 @@
         margin-top: 30px;
       }
 
+      .access-hero {
+        position: relative;
+        overflow: hidden;
+        border-bottom: 1px solid var(--line);
+        padding: 56px 0 44px;
+      }
+
+      .access-hero::after {
+        position: absolute;
+        right: -40px;
+        bottom: -110px;
+        width: min(42vw, 420px);
+        height: min(42vw, 420px);
+        background: url("../../assets/gca-logo.svg") center / contain no-repeat;
+        content: "";
+        opacity: 0.045;
+        pointer-events: none;
+      }
+
+      .access-hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 820px;
+      }
+
+      .access-hero .lead {
+        max-width: 760px;
+      }
+
+      .access-hero h1 {
+        font-size: clamp(42px, 5vw, 64px);
+        line-height: 1.02;
+      }
+
+      .access-hero h1 .zh {
+        font-size: 0.8em;
+        line-height: 1.08;
+      }
+
+      .hero-assurance {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+        margin-top: 20px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 750;
+      }
+
+      .hero-assurance span::before {
+        margin-right: 7px;
+        color: var(--green);
+        content: "✓";
+        font-weight: 900;
+      }
+
+      .journey {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 26px;
+        counter-reset: access-step;
+      }
+
+      .journey-step {
+        min-width: 0;
+        border-left: 1px solid var(--line);
+        padding: 0 20px;
+        counter-increment: access-step;
+      }
+
+      .journey-step:first-child {
+        border-left: 0;
+        padding-left: 0;
+      }
+
+      .journey-step::before {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--red);
+        content: "0" counter(access-step);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .journey-step strong,
+      .journey-step span {
+        display: block;
+      }
+
+      .journey-step span {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .eligibility-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1px;
+        margin-top: 24px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--line);
+      }
+
+      .eligibility-item {
+        background: var(--panel);
+        padding: 16px;
+      }
+
+      .eligibility-item strong,
+      .eligibility-item span {
+        display: block;
+      }
+
+      .eligibility-item strong {
+        font-size: 16px;
+      }
+
+      .eligibility-item span {
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .details-panel {
+        margin-top: 30px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .details-panel > summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 18px 22px;
+        cursor: pointer;
+        font-weight: 850;
+        list-style: none;
+      }
+
+      .details-panel > summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .details-panel > summary::after {
+        color: var(--muted);
+        content: "+";
+        font-size: 22px;
+        line-height: 1;
+      }
+
+      .details-panel[open] > summary::after {
+        content: "−";
+      }
+
+      .details-content {
+        border-top: 1px solid var(--line);
+        padding: 22px;
+      }
+
       .grid,
       .two {
         display: grid;
@@ -518,6 +682,34 @@
           grid-template-columns: 1fr;
         }
 
+        .journey {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .journey-step,
+        .journey-step:first-child {
+          border-top: 1px solid var(--line);
+          border-left: 0;
+          padding: 14px 16px;
+        }
+
+        .journey-step:nth-child(odd) {
+          padding-left: 0;
+        }
+
+        .journey-step:nth-child(even) {
+          border-left: 1px solid var(--line);
+        }
+
+        .journey-step:nth-child(-n + 2) {
+          border-top: 0;
+          padding-top: 0;
+        }
+
+        .eligibility-strip {
+          grid-template-columns: 1fr;
+        }
+
         .snapshot-head {
           flex-direction: column;
         }
@@ -548,6 +740,86 @@
           white-space: normal;
         }
       }
+
+      @media (max-width: 620px) {
+        body main {
+          padding-top: 0 !important;
+        }
+
+        .access-hero {
+          padding: 38px 0 34px;
+        }
+
+        .access-hero::after {
+          right: -70px;
+          bottom: -40px;
+          width: 280px;
+          height: 280px;
+        }
+
+        .access-hero h1 {
+          font-size: 38px;
+        }
+
+        .access-hero .lead {
+          font-size: 17px;
+        }
+
+        .access-hero .actions .button {
+          width: 100%;
+        }
+
+        .hero-assurance {
+          display: grid;
+          gap: 7px;
+        }
+
+        .journey {
+          margin-top: 22px;
+        }
+
+        .journey-step,
+        .journey-step:first-child {
+          padding: 13px 10px;
+        }
+
+        .journey-step:nth-child(odd) {
+          padding-left: 0;
+        }
+
+        .journey-step:nth-child(-n + 2) {
+          padding-top: 0;
+        }
+
+        .eligibility-strip {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .eligibility-item {
+          padding: 13px;
+        }
+
+        .eligibility-item:last-child {
+          grid-column: 1 / -1;
+        }
+
+        .eligibility-item strong {
+          font-size: 14px;
+        }
+
+        .section {
+          margin-top: 22px;
+        }
+
+        .panel {
+          padding: 19px;
+        }
+
+        .details-panel > summary,
+        .details-content {
+          padding: 17px;
+        }
+      }
     </style>
       <link rel="stylesheet" href="../../assets/gca-site.css?v=20260812-3">
     <script src="../../assets/gca-site.js?v=20260812-2" defer></script>
@@ -576,80 +848,50 @@
       </nav>
     </header>
 
-    <main class="shell">
-      <section aria-labelledby="title">
-        <p class="eyebrow">Bilingual live account entry / 中英双语会员入口</p>
-        <h1 id="title">GCA Member Access <span class="zh">GCA 会员账户入口</span></h1>
-        <p class="lead">This controlled HTTPS account UI submits a GCA member account request, verifies a Base wallet with read-only ERC-20 balanceOf, writes eligible 100-credit records, and queues GCA Member evidence for manual review.</p>
-        <p class="lead zh-note">中文用户可以在这里提交邮箱、Base 钱包地址、持有开始日期和公开交易哈希。后台只读取当前 GCA 余额；持有日期和交易哈希只作为人工审核材料，不会自动激活会员，也不会要求私钥、助记词、授权转账或钱包签名。</p>
-        <p class="lead">The 10,000 GCA member benefit is not automatic. If a member ledger becomes active, the benefit remains pending manual reserve-wallet transfer review.</p>
-        <p class="lead zh-note">10,000 GCA 会员权益不是自动领取。通过 GCA Member 记录后，仍需要支持团队人工审核和储备钱包处理。</p>
-        <p class="lead">After account creation, this browser can use a high-entropy device key to refresh redacted account, credits, member-review, and benefit-transfer status. The API stores only the key hash and never returns email or the key.</p>
-        <p class="lead zh-note">账户创建后，本浏览器可使用高强度设备密钥刷新脱敏的账户、积分、会员审核和权益转账状态。后台只保存密钥哈希，不会返回邮箱或密钥明文。</p>
-        <p class="lead">The same device key can submit a service request to the manual review queue and read that account's request history. Submission checks the catalog unit but does not reserve or deduct credits. Completed delivery records return the operator's non-sensitive delivery reference and let that account acknowledge receipt once.</p>
-        <p class="lead zh-note">同一设备密钥可提交服务申请并查看本账户申请历史。提交时会核对目录积分，但不会预占或自动扣除 credits；完成交付后，本账户可查看非敏感交付引用并进行一次收件确认。</p>
-        <div class="actions">
-          <a class="button primary" href="#accountForm">Open Account Form / 打开表单</a>
-          <a class="button" href="#accountServiceRequests">Request a Service / 提交服务申请</a>
-          <a class="button" href="../../buy.html">Buy GCA First</a>
-          <a class="button" href="../../zh-buy.html">中文购买说明</a>
-          <a class="button" href="../../register.html">Email Registration</a>
-          <a class="button" href="../../zh-access.html">中文说明</a>
-          <a class="button" href="../../zh-member-checklist.html">中文资料清单</a>
-          <a class="button" href="../../member-workspace.html">Member Workspace / 会员工作区</a>
-          <a class="button" href="#technicalEvidence">Technical Evidence</a>
+    <main>
+      <section class="access-hero" aria-labelledby="title">
+        <div class="shell access-hero-content">
+          <p class="eyebrow">GCA Member Access / GCA 会员账户入口</p>
+          <h1 id="title">One account for GCA access. <span class="zh">一个账户管理 GCA 权益。</span></h1>
+          <p class="lead">Create a controlled account, verify one Base wallet with a read-only ERC-20 balanceOf check, and follow credits, GCA Member review, and service requests from this device.</p>
+          <p class="lead zh-note">这是 GCA 中英双语会员入口。创建账户后，只读验证一个 Base 钱包，即可在本设备查看 credits、GCA Member 审核和服务申请状态。</p>
+          <div class="actions">
+            <a class="button primary" href="#accountForm">Create or Open Account / 创建或打开账户</a>
+            <a class="button" href="#accountServiceRequests">Member Services / 会员服务</a>
+            <a class="button" href="../../member-workspace.html">Open Workspace / 打开工作区</a>
+          </div>
+          <div class="hero-assurance" aria-label="Account safety assurances">
+            <span>No wallet signature / 无需钱包签名</span>
+            <span>No custody / 非托管</span>
+            <span>No automatic token transfer / 不自动转币</span>
+          </div>
+          <div class="journey" aria-label="Member account workflow">
+            <div class="journey-step"><strong>Create Account</strong><span>邮箱创建账户</span></div>
+            <div class="journey-step"><strong>Verify Wallet</strong><span>只读核验余额</span></div>
+            <div class="journey-step"><strong>Track Eligibility</strong><span>查看积分与会员审核</span></div>
+            <div class="journey-step"><strong>Use Services</strong><span>提交人工服务申请</span></div>
+          </div>
+          <div class="eligibility-strip" aria-label="GCA member thresholds">
+            <div class="eligibility-item"><strong>10,000 GCA</strong><span>Holder access + eligible 100-credit record / 持有者入口与积分资格</span></div>
+            <div class="eligibility-item"><strong>1,000,000 GCA · 30 days</strong><span>GCA Member review threshold / 会员审核门槛</span></div>
+            <div class="eligibility-item"><strong>10,000 GCA benefit</strong><span>Manual reserve-wallet transfer review only / 仅人工审核转账</span></div>
+          </div>
         </div>
       </section>
 
-      <section class="section grid" aria-label="Live access status">
-        <div class="fact">
-          <span class="label">Account UI</span>
-          <span class="value">Live controlled HTTPS</span>
-          <p class="note">Submits to Cloudflare Workers + D1.</p>
-          <p class="note zh-note">账户入口已上线，提交到 Cloudflare Workers + D1。</p>
-        </div>
-        <div class="fact">
-          <span class="label">Balance Method</span>
-          <span class="value">Backend eth_call</span>
-          <p class="note">Read-only Base Mainnet GCA balance verification.</p>
-          <p class="note zh-note">只读验证 Base Mainnet 上的 GCA 余额。</p>
-        </div>
-        <div class="fact">
-          <span class="label">Ledger Effect</span>
-          <span class="value">Credits and member records</span>
-          <p class="note">No signature, no transaction, no automatic token transfer.</p>
-          <p class="note zh-note">不签名、不发交易、不自动转币。</p>
-        </div>
-      </section>
-
-      <section class="section panel" aria-labelledby="beforeSubmitTitle">
-        <h2 id="beforeSubmitTitle">Before You Submit <span class="zh">提交前请确认</span></h2>
-        <p class="note">Use this page after you have an email and one Base wallet ready. Email registration, read-only wallet verification, and member review are separate steps; submitting this form does not create an automatic token transfer.</p>
-        <p class="note zh-note">请准备一个邮箱和一个 Base 钱包地址。邮箱注册、只读钱包验证和会员审核是不同步骤；提交此表单不会自动产生任何代币转账。</p>
-        <div class="grid" style="margin-top: 14px;">
-          <div class="fact">
-            <span class="label">Step 1</span>
-            <span class="value">Confirm official route <span class="zh">确认官方路径</span></span>
-            <p class="note">If you still need GCA, start from the official buy guide and verify Base Mainnet, the GCA contract, and the GCA/USDT pool before interacting.</p>
-            <p class="note zh-note">如果还需要购买 GCA，请先从官方购买说明进入，并核对 Base Mainnet、GCA 合约和 GCA/USDT 池。</p>
-            <div class="actions"><a class="button" href="../../buy.html">Open Buy Guide</a></div>
+      <div class="shell">
+        <details class="details-panel" id="beforeSubmit">
+          <summary>Before You Submit / 提交前准备</summary>
+          <div class="details-content">
+            <p class="note">Prepare one email, one Base wallet address, the public purchase transaction hash, and the holding start date. If you still need GCA, use the official buy guide first. The submitted date creates a preview only; an operator must review public evidence before GCA Member activation.</p>
+            <p class="note zh-note">请准备邮箱、Base 钱包地址、公开购买交易哈希和持有开始日期。尚未持有 GCA 时，请先使用官方购买说明。用户填写的日期只生成预览，GCA Member 激活前必须人工审核公开证据。</p>
+            <div class="actions">
+              <a class="button" href="../../buy.html">Official Buy Guide / 官方购买说明</a>
+              <a class="button" href="../../zh-member-checklist.html">Evidence Checklist / 资料清单</a>
+              <a class="button" href="../../support.html">Support / 支持</a>
+            </div>
           </div>
-          <div class="fact">
-            <span class="label">Step 2</span>
-            <span class="value">Keep review evidence <span class="zh">保留审核资料</span></span>
-            <p class="note">Save the wallet address, purchase transaction hash, holding start date, and read-only balance result. The submitted date creates a preview only; an operator must review public evidence before GCA Member activation.</p>
-            <p class="note zh-note">请保留钱包地址、购买交易哈希、持有开始日期和只读余额结果。用户填写的日期只生成预览，GCA Member 激活前必须由运营人员审核公开证据。</p>
-            <div class="actions"><a class="button" href="../../zh-member-checklist.html">中文资料清单</a></div>
-          </div>
-          <div class="fact">
-            <span class="label">Step 3</span>
-            <span class="value">Use support for exceptions <span class="zh">异常走支持</span></span>
-            <p class="note">If the result is below threshold, the API is unavailable, or you need a manual review note, use support. Do not send private keys, seed phrases, exchange API secrets, withdrawal permission, or one-time codes.</p>
-            <p class="note zh-note">如果余额低于门槛、API 不可用或需要补充说明，请用支持入口。不要提交任何敏感信息。</p>
-            <div class="actions"><a class="button" href="../../support.html">Support</a></div>
-          </div>
-        </div>
-      </section>
+        </details>
 
       <section class="section two" id="accountForm" aria-label="GCA account form">
         <div class="panel">
@@ -859,25 +1101,29 @@
         </div>
       </section>
 
-      <section class="section panel" id="technicalEvidence" aria-labelledby="technicalEvidenceTitle">
-        <h2 id="technicalEvidenceTitle">API And Account References <span class="zh">API 和账户参考</span></h2>
-        <p class="note">The live API is hosted at <code>https://gca-registration-api.gcagochina.workers.dev</code>. Admin ledger reads are token-protected; public account submission and wallet verification do not expose the admin token.</p>
-        <p class="note zh-note">公开提交和只读钱包验证不会暴露管理员读取 token。管理员账本读取接口仍受保护。</p>
-        <div class="list">
-          <div class="row"><span>Access config</span><strong><a href="https://gca-registration-api.gcagochina.workers.dev/gca/access-config">/gca/access-config</a></strong></div>
-          <div class="row"><span>Member account endpoint</span><strong>POST /gca/member-access</strong></div>
-          <div class="row"><span>Redacted account status endpoint</span><strong>POST /gca/account-status</strong></div>
-          <div class="row"><span>Device key rotation endpoint</span><strong>POST /gca/account-status/rotate</strong></div>
-          <div class="row"><span>Device recovery request endpoint</span><strong>POST /gca/account-status/recovery-requests</strong></div>
-          <div class="row"><span>Device recovery completion endpoint</span><strong>POST /gca/account-status/recover</strong></div>
-          <div class="row"><span>Account service request endpoint</span><strong>POST /gca/account-service-requests</strong></div>
-          <div class="row"><span>Account service history endpoint</span><strong>POST /gca/account-service-requests/status</strong></div>
-          <div class="row"><span>Account service follow-up endpoint</span><strong>POST /gca/account-service-requests/follow-ups</strong></div>
-          <div class="row"><span>Wallet verification endpoint</span><strong>POST /gca/wallet-verifications</strong></div>
-          <div class="row"><span>Ledger schema page</span><strong><a href="../../member-ledger.html">member-ledger.html</a></strong></div>
-          <div class="row"><span>Support page</span><strong><a href="../../support.html">support.html</a></strong></div>
-        </div>
-      </section>
+        <details class="details-panel" id="technicalEvidence">
+          <summary>Technical Account References / 技术账户参考</summary>
+          <div class="details-content">
+            <h2 id="technicalEvidenceTitle">API And Account References <span class="zh">API 和账户参考</span></h2>
+            <p class="note">The live controlled HTTPS account UI uses Cloudflare Workers + D1 at <code>https://gca-registration-api.gcagochina.workers.dev</code>. Backend eth_call performs the read-only ERC-20 balanceOf check on Base Mainnet. Admin ledger reads are token-protected; public account submission and wallet verification do not expose the admin token.</p>
+            <p class="note zh-note">公开提交和只读钱包验证不会暴露管理员读取 token。管理员账本读取接口仍受保护。</p>
+            <div class="list">
+              <div class="row"><span>Access config</span><strong><a href="https://gca-registration-api.gcagochina.workers.dev/gca/access-config">/gca/access-config</a></strong></div>
+              <div class="row"><span>Member account endpoint</span><strong>POST /gca/member-access</strong></div>
+              <div class="row"><span>Redacted account status endpoint</span><strong>POST /gca/account-status</strong></div>
+              <div class="row"><span>Device key rotation endpoint</span><strong>POST /gca/account-status/rotate</strong></div>
+              <div class="row"><span>Device recovery request endpoint</span><strong>POST /gca/account-status/recovery-requests</strong></div>
+              <div class="row"><span>Device recovery completion endpoint</span><strong>POST /gca/account-status/recover</strong></div>
+              <div class="row"><span>Account service request endpoint</span><strong>POST /gca/account-service-requests</strong></div>
+              <div class="row"><span>Account service history endpoint</span><strong>POST /gca/account-service-requests/status</strong></div>
+              <div class="row"><span>Account service follow-up endpoint</span><strong>POST /gca/account-service-requests/follow-ups</strong></div>
+              <div class="row"><span>Wallet verification endpoint</span><strong>POST /gca/wallet-verifications</strong></div>
+              <div class="row"><span>Ledger schema page</span><strong><a href="../../member-ledger.html">member-ledger.html</a></strong></div>
+              <div class="row"><span>Support page</span><strong><a href="../../support.html">support.html</a></strong></div>
+            </div>
+          </div>
+        </details>
+      </div>
     </main>
 
     <footer>

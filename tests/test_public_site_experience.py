@@ -126,6 +126,28 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("restoreSnapshot();", page)
         self.assertNotIn("email: email.value", page[page.index("function snapshotFromResponse"):page.index("function latestResponseLines")])
 
+    def test_member_access_prioritizes_the_user_journey_and_collapses_reference_material(self):
+        page = (SITE / "gca" / "member-access" / "index.html").read_text()
+
+        for text in (
+            "One account for GCA access.",
+            "Create Account",
+            "Verify Wallet",
+            "Track Eligibility",
+            "Use Services",
+            "No wallet signature",
+            "No custody",
+            "No automatic token transfer",
+        ):
+            self.assertIn(text, page)
+
+        self.assertIn('<details class="details-panel" id="beforeSubmit">', page)
+        self.assertIn('<details class="details-panel" id="technicalEvidence">', page)
+        self.assertIn("Technical Account References / 技术账户参考", page)
+        self.assertNotIn('<details class="details-panel" id="technicalEvidence" open>', page)
+        self.assertNotIn('aria-label="Live access status"', page)
+        self.assertLess(page.index('id="accountForm"'), page.index('id="technicalEvidence"'))
+
     def test_member_workspace_is_local_and_builds_manual_request_packets(self):
         page = (SITE / "member-workspace.html").read_text()
         engine = (SITE / "assets" / "member-workspace.js").read_text()
