@@ -8,6 +8,7 @@ import json
 import re
 import ssl
 import sys
+import xml.etree.ElementTree as ET
 from typing import Callable
 from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin
@@ -15,69 +16,65 @@ from urllib.request import Request, urlopen
 
 
 DEFAULT_BASE_URL = "https://gcagochina.com/"
-PUBLIC_INDEXABLE_PATHS = frozenset(
-    {
-        "/",
-        "/zh-cn.html",
-        "/product.html",
-        "/zh-product.html",
-        "/tools.html",
-        "/risk-calculator.html",
-        "/entry-ready.html",
-        "/risk-training.html",
-        "/liquidation-replay.html",
-        "/backtest-lab.html",
-        "/risk-warning.html",
-        "/trade-journal.html",
-        "/research-notes.html",
-        "/trade-plans.html",
-        "/portfolio-risk.html",
-        "/member-workspace.html",
-        "/risk-passport.html",
-        "/workspace-vault.html",
-        "/start.html",
-        "/register.html",
-        "/gca/member-access/",
-        "/markets.html",
-        "/zh-markets.html",
-        "/buy.html",
-        "/zh-buy.html",
-        "/liquidity.html",
-        "/zh-liquidity.html",
-        "/supply.html",
-        "/zh-supply.html",
-        "/holder-distribution.html",
-        "/verify.html",
-        "/zh-wallet-verify.html",
-        "/security.html",
-        "/zh-security.html",
-        "/token-safety.html",
-        "/onchain-proofs.html",
-        "/risk.html",
-        "/faq.html",
-        "/zh-faq.html",
-        "/wallet-warning.html",
-        "/about.html",
-        "/team.html",
-        "/tim-chen.html",
-        "/whitepaper.html",
-        "/project-profile.html",
-        "/brand-kit.html",
-        "/technical-report.html",
-        "/reserve-statement.html",
-        "/tokenlist.html",
-        "/radar.html",
-        "/radar-issue-006.html",
-        "/radar-issue-005.html",
-        "/radar-issue-004.html",
-        "/support.html",
-        "/zh-support.html",
-        "/privacy.html",
-        "/terms.html",
-        "/site-map.html",
-        "/zh-site-map.html",
-    }
-)
+PUBLIC_INDEXABLE_LASTMOD = {
+    "/": "2026-08-10",
+    "/zh-cn.html": "2026-08-12",
+    "/product.html": "2026-08-12",
+    "/zh-product.html": "2026-08-12",
+    "/tools.html": "2026-07-19",
+    "/risk-calculator.html": "2026-07-11",
+    "/entry-ready.html": "2026-07-11",
+    "/risk-training.html": "2026-07-15",
+    "/liquidation-replay.html": "2026-07-11",
+    "/backtest-lab.html": "2026-07-11",
+    "/risk-warning.html": "2026-07-11",
+    "/trade-journal.html": "2026-07-18",
+    "/research-notes.html": "2026-07-18",
+    "/trade-plans.html": "2026-07-18",
+    "/portfolio-risk.html": "2026-07-18",
+    "/member-workspace.html": "2026-07-19",
+    "/risk-passport.html": "2026-07-19",
+    "/workspace-vault.html": "2026-07-19",
+    "/start.html": "2026-05-21",
+    "/register.html": "2026-05-19",
+    "/gca/member-access/": "2026-07-24",
+    "/markets.html": "2026-08-11",
+    "/zh-markets.html": "2026-08-11",
+    "/buy.html": "2026-05-11",
+    "/zh-buy.html": "2026-05-19",
+    "/liquidity.html": "2026-05-16",
+    "/zh-liquidity.html": "2026-05-19",
+    "/supply.html": "2026-08-11",
+    "/zh-supply.html": "2026-08-11",
+    "/holder-distribution.html": "2026-05-16",
+    "/verify.html": "2026-08-12",
+    "/zh-wallet-verify.html": "2026-08-12",
+    "/security.html": "2026-05-11",
+    "/zh-security.html": "2026-05-19",
+    "/token-safety.html": "2026-08-10",
+    "/onchain-proofs.html": "2026-05-12",
+    "/risk.html": "2026-05-11",
+    "/faq.html": "2026-05-11",
+    "/zh-faq.html": "2026-08-10",
+    "/about.html": "2026-08-12",
+    "/team.html": "2026-08-12",
+    "/tim-chen.html": "2026-08-12",
+    "/whitepaper.html": "2026-08-10",
+    "/brand-kit.html": "2026-05-13",
+    "/reserve-statement.html": "2026-05-16",
+    "/tokenlist.html": "2026-06-03",
+    "/radar.html": "2026-08-11",
+    "/radar-issue-006.html": "2026-08-11",
+    "/radar-issue-005.html": "2026-06-14",
+    "/radar-issue-004.html": "2026-05-17",
+    "/support.html": "2026-08-12",
+    "/zh-support.html": "2026-08-12",
+    "/privacy.html": "2026-08-10",
+    "/terms.html": "2026-08-10",
+    "/site-map.html": "2026-08-12",
+    "/zh-site-map.html": "2026-08-12",
+}
+PUBLIC_INDEXABLE_PATHS = frozenset(PUBLIC_INDEXABLE_LASTMOD)
 SOURCE_DAILY_STATUS_GENERATED_AT = "2026-08-12T06:37:31Z"
 SOURCE_BASESCAN_PROFILE_CHECKED_DATE = "2026-08-12"
 DAILY_REFERENCE_DATE_FIELDS = {
@@ -17685,521 +17682,53 @@ def validate_security_txt(text: str) -> None:
 
 def validate_sitemap(text: str) -> None:
     label = "/sitemap.xml"
+    try:
+        root = ET.fromstring(text)
+    except ET.ParseError as exc:
+        raise SiteCheckError(f"{label}: invalid XML: {exc}") from exc
 
-    def assert_sitemap_lastmod(path: str, expected: str) -> None:
-        pattern = re.compile(
-            rf"<loc>https://gcagochina\.com/{re.escape(path)}</loc>\s*<lastmod>(?P<lastmod>[^<]+)</lastmod>"
+    namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    entries: dict[str, str] = {}
+    for item in root.findall("sm:url", namespace):
+        loc = item.findtext("sm:loc", namespaces=namespace)
+        lastmod = item.findtext("sm:lastmod", namespaces=namespace)
+        if not loc or not lastmod:
+            raise SiteCheckError(f"{label}: every URL requires loc and lastmod")
+        if loc == "https://gcagochina.com/":
+            path = "/"
+        elif loc.startswith("https://gcagochina.com/"):
+            path = "/" + loc.removeprefix("https://gcagochina.com/")
+        else:
+            raise SiteCheckError(f"{label}: non-canonical URL {loc!r}")
+        if path in entries:
+            raise SiteCheckError(f"{label}: duplicate URL {loc!r}")
+        entries[path] = lastmod
+
+    if set(entries) != PUBLIC_INDEXABLE_PATHS:
+        missing = sorted(PUBLIC_INDEXABLE_PATHS - set(entries))
+        unexpected = sorted(set(entries) - PUBLIC_INDEXABLE_PATHS)
+        raise SiteCheckError(
+            f"{label}: search index boundary drift; missing={missing!r}; unexpected={unexpected!r}"
         )
-        match = pattern.search(text)
-        if not match:
-            raise SiteCheckError(f"{label}: missing sitemap entry for {path}")
-        if match.group("lastmod") != expected:
-            raise SiteCheckError(f"{label}: wrong lastmod for {path}")
-
-    for expected in (
-        "https://gcagochina.com/start.html",
-        "https://gcagochina.com/about.html",
-        "https://gcagochina.com/team.html",
-        "https://gcagochina.com/tim-chen.html",
-        "https://gcagochina.com/tim-chen.json",
-        "https://gcagochina.com/domain-email.html",
-        "https://gcagochina.com/domain-email.json",
-        "https://gcagochina.com/domain-email-evidence.html",
-        "https://gcagochina.com/domain-email-evidence.json",
-        "https://gcagochina.com/basescan-remediation.html",
-        "https://gcagochina.com/basescan-remediation.json",
-        "https://gcagochina.com/basescan-preflight.html",
-        "https://gcagochina.com/basescan-preflight.json",
-        "https://gcagochina.com/basescan-handoff.html",
-        "https://gcagochina.com/basescan-handoff.json",
-        "https://gcagochina.com/basescan-followup.html",
-        "https://gcagochina.com/basescan-followup.json",
-        "https://gcagochina.com/action-plan.html",
-        "https://gcagochina.com/action-plan.json",
-        "https://gcagochina.com/register.html",
-        "https://gcagochina.com/unsubscribe.html",
-        "https://gcagochina.com/zh-cn.html",
-        "https://gcagochina.com/zh-product.html",
-        "https://gcagochina.com/zh-buy.html",
-        "https://gcagochina.com/zh-markets.html",
-        "https://gcagochina.com/zh-apply.html",
-        "https://gcagochina.com/zh-status.html",
-        "https://gcagochina.com/zh-domain-email.html",
-        "https://gcagochina.com/zh-basescan-preflight.html",
-        "https://gcagochina.com/zh-basescan-submit.html",
-        "https://gcagochina.com/zh-basescan-handoff.html",
-        "https://gcagochina.com/zh-basescan-followup.html",
-        "https://gcagochina.com/zh-liquidity.html",
-        "https://gcagochina.com/zh-supply.html",
-        "https://gcagochina.com/zh-security.html",
-        "https://gcagochina.com/zh-roadmap.html",
-        "https://gcagochina.com/zh-faq.html",
-        "https://gcagochina.com/zh-members.html",
-        "https://gcagochina.com/zh-support.html",
-        "https://gcagochina.com/zh-access.html",
-        "https://gcagochina.com/zh-release-gates.html",
-        "https://gcagochina.com/zh-wallet-verify.html",
-        "https://gcagochina.com/zh-member-checklist.html",
-        "https://gcagochina.com/zh-member-benefit-transfer.html",
-        "https://gcagochina.com/zh-site-map.html",
-        "https://gcagochina.com/zh-api-status.html",
-        "https://gcagochina.com/zh-operations.html",
-        "https://gcagochina.com/site-map.html",
-        "https://gcagochina.com/verify.html",
-        "https://gcagochina.com/status.html",
-        "https://gcagochina.com/listing-kit.html",
-        "https://gcagochina.com/whitepaper.html",
-        "https://gcagochina.com/buy.html",
-        "https://gcagochina.com/markets.html",
-        "https://gcagochina.com/security.html",
-        "https://gcagochina.com/risk.html",
-        "https://gcagochina.com/faq.html",
-        "https://gcagochina.com/wallet-warning.html",
-        "https://gcagochina.com/wallet-warning.json",
-        "https://gcagochina.com/reviewer-kit.html",
-        "https://gcagochina.com/reviewer-kit.json",
-        "https://gcagochina.com/platform-replies.html",
-        "https://gcagochina.com/platform-replies.json",
-        "https://gcagochina.com/trust.html",
-        "https://gcagochina.com/trust.json",
-        "https://gcagochina.com/market-quality.html",
-        "https://gcagochina.com/market-quality.json",
-        "https://gcagochina.com/liquidity.html",
-        "https://gcagochina.com/liquidity.json",
-        "https://gcagochina.com/holder-distribution.html",
-        "https://gcagochina.com/holder-distribution.json",
-        "https://gcagochina.com/risk-remediation.html",
-        "https://gcagochina.com/risk-remediation.json",
-        "https://gcagochina.com/custody-roadmap.html",
-        "https://gcagochina.com/custody-roadmap.json",
-        "https://gcagochina.com/audit-readiness.html",
-        "https://gcagochina.com/audit-readiness.json",
-        "https://gcagochina.com/token-safety.html",
-        "https://gcagochina.com/token-safety.json",
-        "https://gcagochina.com/blockaid-followup.html",
-        "https://gcagochina.com/blockaid-followup.json",
-        "https://gcagochina.com/technical-report.html",
-        "https://gcagochina.com/technical-report.json",
-        "https://gcagochina.com/reserve-statement.html",
-        "https://gcagochina.com/reserve-statement.json",
-        "https://gcagochina.com/brand-kit.html",
-        "https://gcagochina.com/brand-kit.json",
-        "https://gcagochina.com/onchain-proofs.html",
-        "https://gcagochina.com/onchain-proofs.json",
-        "https://gcagochina.com/external-reviews.html",
-        "https://gcagochina.com/external-reviews.json",
-        "https://gcagochina.com/roadmap.html",
-        "https://gcagochina.com/roadmap.json",
-        "https://gcagochina.com/community.html",
-        "https://gcagochina.com/community.json",
-        "https://gcagochina.com/announcements.html",
-        "https://gcagochina.com/announcements.json",
-        "https://gcagochina.com/campaign.html",
-        "https://gcagochina.com/campaign.json",
-        "https://gcagochina.com/content-library.html",
-        "https://gcagochina.com/content-library.json",
-        "https://gcagochina.com/publishing-desk.html",
-        "https://gcagochina.com/publishing-desk.json",
-        "https://gcagochina.com/narrative.html",
-        "https://gcagochina.com/narrative.json",
-        "https://gcagochina.com/radar.html",
-        "https://gcagochina.com/radar.json",
-        "https://gcagochina.com/radar-issue-006.html",
-        "https://gcagochina.com/radar-issue-006.json",
-        "https://gcagochina.com/radar-issue-005.html",
-        "https://gcagochina.com/radar-issue-005.json",
-        "https://gcagochina.com/radar-issue-004.html",
-        "https://gcagochina.com/radar-issue-004.json",
-        "https://gcagochina.com/member-access-brief-001.html",
-        "https://gcagochina.com/member-access-brief-001.json",
-        "https://gcagochina.com/liquidation-replay-001.html",
-        "https://gcagochina.com/liquidation-replay-001.json",
-        "https://gcagochina.com/liquidation-replay.html",
-        "https://gcagochina.com/backtest-lab.html",
-        "https://gcagochina.com/risk-warning.html",
-        "https://gcagochina.com/tools.html",
-        "https://gcagochina.com/risk-training.html",
-        "https://gcagochina.com/research-notes.html",
-        "https://gcagochina.com/trade-plans.html",
-        "https://gcagochina.com/portfolio-risk.html",
-        "https://gcagochina.com/service-delivery-playbook.html",
-        "https://gcagochina.com/service-delivery-playbook.json",
-        "https://gcagochina.com/worker-routes-handoff.html",
-        "https://gcagochina.com/worker-routes-handoff.json",
-        "https://gcagochina.com/gca/member-access/",
-        "https://gcagochina.com/member-workspace.html",
-        "https://gcagochina.com/risk-passport.html",
-        "https://gcagochina.com/workspace-vault.html",
-        "https://gcagochina.com/member-program.html",
-        "https://gcagochina.com/member-program.json",
-        "https://gcagochina.com/member-ledger.html",
-        "https://gcagochina.com/member-ledger.json",
-        "https://gcagochina.com/member-benefit.html",
-        "https://gcagochina.com/member-benefit.json",
-        "https://gcagochina.com/member-benefit-transfer.html",
-        "https://gcagochina.com/member-benefit-transfer.json",
-        "https://gcagochina.com/support.html",
-        "https://gcagochina.com/support.json",
-        "https://gcagochina.com/privacy.html",
-        "https://gcagochina.com/privacy.json",
-        "https://gcagochina.com/terms.html",
-        "https://gcagochina.com/terms.json",
-        "https://gcagochina.com/utility.html",
-        "https://gcagochina.com/utility.json",
-        "https://gcagochina.com/product.html",
-        "https://gcagochina.com/product.json",
-        "https://gcagochina.com/access.html",
-        "https://gcagochina.com/access.json",
-        "https://gcagochina.com/operations.html",
-        "https://gcagochina.com/operations.json",
-        "https://gcagochina.com/access-api.html",
-        "https://gcagochina.com/access-api.json",
-        "https://gcagochina.com/api-status.html",
-        "https://gcagochina.com/api-status.json",
-        "https://gcagochina.com/daily-status.html",
-        "https://gcagochina.com/daily-status.json",
-        "https://gcagochina.com/review-queue.html",
-        "https://gcagochina.com/review-queue.json",
-        "https://gcagochina.com/credits.html",
-        "https://gcagochina.com/credits.json",
-        "https://gcagochina.com/release-gates.html",
-        "https://gcagochina.com/release-gates.json",
-        "https://gcagochina.com/supply.json",
-        "https://gcagochina.com/listing-readiness.html",
-        "https://gcagochina.com/listing-readiness.json",
-        "https://gcagochina.com/project-profile.html",
-        "https://gcagochina.com/project.json",
-        "https://gcagochina.com/tokenlist.html",
-        "https://gcagochina.com/tokenlist.json",
-        "https://gcagochina.com/.well-known/gca-token.json",
-        "https://gcagochina.com/.well-known/wallet-security.json",
-        "https://gcagochina.com/.well-known/security.txt",
-    ):
-        assert_contains(text, expected, label)
-    assert_not_contains(text, "https://gcagochina.com/zh-data.html", label)
-    assert_not_contains(text, "https://gcagochina.com/data.html", label)
-    assert_not_contains(text, "https://gcagochina.com/operator.html", label)
-    for path in (
-        "markets.html",
-        "zh-markets.html",
-        "community.html",
-        "community.json",
-        "announcements.html",
-        "announcements.json",
-        "campaign.html",
-        "campaign.json",
-        "content-library.html",
-        "content-library.json",
-        "publishing-desk.html",
-        "publishing-desk.json",
-        "project.json",
-    ):
-        assert_sitemap_lastmod(path, "2026-08-11")
-    for path in (
-        "product.html",
-        "verify.html",
-        "zh-product.html",
-        "zh-wallet-verify.html",
-        "support.html",
-        "site-map.html",
-        "zh-support.html",
-        "zh-site-map.html",
-    ):
-        assert_sitemap_lastmod(path, "2026-08-12")
-    for path in (
-        "roadmap.html",
-        "roadmap.json",
-    ):
-        assert_sitemap_lastmod(path, "2026-08-10")
-    for path in (
-        "access-api.html",
-        "access-api.json",
-        "api-status.html",
-        "api-status.json",
-        "member-ledger.html",
-        "member-ledger.json",
-        "operations.html",
-        "operations.json",
-        "service-delivery-playbook.html",
-        "service-delivery-playbook.json",
-        "worker-routes-handoff.html",
-        "worker-routes-handoff.json",
-        "zh-api-status.html",
-        "zh-operations.html",
-    ):
-        assert_sitemap_lastmod(path, "2026-07-27")
-    for path in (
-        "zh-access.html",
-    ):
-        assert_sitemap_lastmod(path, "2026-07-24")
-    for path in (
-        "action-plan.html",
-        "action-plan.json",
-    ):
-        assert_sitemap_lastmod(path, "2026-08-11")
-    for path in (
-        "basescan-followup.html",
-        "basescan-followup.json",
-        "zh-basescan-followup.html",
-        "daily-status.html",
-        "daily-status.json",
-    ):
-        assert_sitemap_lastmod(path, "2026-06-15")
-    assert_sitemap_lastmod("risk-training.html", "2026-07-15")
-    for path in (
-        "basescan-handoff.html",
-        "basescan-handoff.json",
-        "basescan-preflight.html",
-        "basescan-preflight.json",
-        "basescan-remediation.html",
-        "basescan-remediation.json",
-        "external-reviews.html",
-        "external-reviews.json",
-        "listing-readiness.html",
-        "listing-readiness.json",
-        "reviewer-kit.html",
-        "reviewer-kit.json",
-        "token-safety.html",
-        "trust.html",
-        "trust.json",
-        "zh-basescan-handoff.html",
-        "zh-basescan-preflight.html",
-        "zh-faq.html",
-        "credits.html",
-        "credits.json",
-        "listing-kit.html",
-        "narrative.html",
-        "narrative.json",
-        "release-gates.html",
-        "release-gates.json",
-        "team.html",
-        "tim-chen.html",
-        "tim-chen.json",
-        "utility.html",
-        "utility.json",
-        "whitepaper.html",
-        "zh-release-gates.html",
-    ):
-        assert_sitemap_lastmod(path, "2026-08-10")
-    for path in (
-        "about.html",
-        "portfolio-risk.html",
-        "research-notes.html",
-        "trade-journal.html",
-        "trade-plans.html",
-    ):
-        assert_sitemap_lastmod(path, "2026-07-18")
-    for path in (
-        "member-workspace.html",
-        "risk-passport.html",
-        "workspace-vault.html",
-        "tools.html",
-    ):
-        assert_sitemap_lastmod(path, "2026-07-19")
-    for path in (
-        "",
-        "access.html",
-        "access.json",
-        "liquidation-replay-001.html",
-        "liquidation-replay-001.json",
-        "market-quality.html",
-        "market-quality.json",
-        "member-program.html",
-        "member-program.json",
-        "privacy.html",
-        "privacy.json",
-        "product.json",
-        "support.json",
-        "terms.html",
-        "terms.json",
-    ):
-        assert_sitemap_lastmod(path, "2026-08-10")
+    for path, expected_lastmod in PUBLIC_INDEXABLE_LASTMOD.items():
+        if entries[path] != expected_lastmod:
+            raise SiteCheckError(
+                f"{label}: wrong lastmod for {path}: {entries[path]!r} != {expected_lastmod!r}"
+            )
 
 
 def validate_robots(text: str) -> None:
     label = "/robots.txt"
-    assert_contains(text, "Allow: /start.html", label)
-    assert_contains(text, "Allow: /about.html", label)
-    assert_contains(text, "Allow: /team.html", label)
-    assert_contains(text, "Allow: /tim-chen.html", label)
-    assert_contains(text, "Allow: /tim-chen.json", label)
-    assert_contains(text, "Allow: /domain-email.html", label)
-    assert_contains(text, "Allow: /domain-email.json", label)
-    assert_contains(text, "Allow: /domain-email-evidence.html", label)
-    assert_contains(text, "Allow: /domain-email-evidence.json", label)
-    assert_contains(text, "Allow: /basescan-remediation.html", label)
-    assert_contains(text, "Allow: /basescan-remediation.json", label)
-    assert_contains(text, "Allow: /basescan-preflight.html", label)
-    assert_contains(text, "Allow: /basescan-preflight.json", label)
-    assert_contains(text, "Allow: /basescan-handoff.html", label)
-    assert_contains(text, "Allow: /basescan-handoff.json", label)
-    assert_contains(text, "Allow: /basescan-followup.html", label)
-    assert_contains(text, "Allow: /basescan-followup.json", label)
-    assert_contains(text, "Allow: /action-plan.html", label)
-    assert_contains(text, "Allow: /action-plan.json", label)
-    assert_contains(text, "Allow: /register.html", label)
-    assert_contains(text, "Allow: /unsubscribe.html", label)
-    assert_contains(text, "Allow: /zh-cn.html", label)
-    assert_contains(text, "Allow: /zh-product.html", label)
-    assert_contains(text, "Allow: /zh-buy.html", label)
-    assert_contains(text, "Allow: /zh-markets.html", label)
-    assert_contains(text, "Allow: /zh-apply.html", label)
-    assert_contains(text, "Allow: /zh-status.html", label)
-    assert_contains(text, "Allow: /zh-domain-email.html", label)
-    assert_contains(text, "Allow: /zh-basescan-preflight.html", label)
-    assert_contains(text, "Allow: /zh-basescan-submit.html", label)
-    assert_contains(text, "Allow: /zh-basescan-handoff.html", label)
-    assert_contains(text, "Allow: /zh-basescan-followup.html", label)
-    assert_contains(text, "Allow: /zh-liquidity.html", label)
-    assert_contains(text, "Allow: /zh-supply.html", label)
-    assert_contains(text, "Allow: /zh-security.html", label)
-    assert_contains(text, "Allow: /zh-roadmap.html", label)
-    assert_contains(text, "Allow: /zh-faq.html", label)
-    assert_contains(text, "Allow: /zh-members.html", label)
-    assert_contains(text, "Allow: /zh-support.html", label)
-    assert_contains(text, "Allow: /zh-access.html", label)
-    assert_contains(text, "Allow: /zh-release-gates.html", label)
-    assert_contains(text, "Allow: /zh-wallet-verify.html", label)
-    assert_contains(text, "Allow: /zh-member-checklist.html", label)
-    assert_contains(text, "Allow: /zh-member-benefit-transfer.html", label)
-    assert_contains(text, "Allow: /zh-site-map.html", label)
-    assert_contains(text, "Disallow: /zh-data.html", label)
-    assert_contains(text, "Allow: /zh-api-status.html", label)
-    assert_contains(text, "Allow: /zh-operations.html", label)
-    assert_contains(text, "Allow: /site-map.html", label)
-    assert_contains(text, "Allow: /verify.html", label)
-    assert_contains(text, "Disallow: /data.html", label)
-    assert_contains(text, "Allow: /status.html", label)
-    assert_contains(text, "Allow: /listing-kit.html", label)
-    assert_contains(text, "Allow: /whitepaper.html", label)
-    assert_contains(text, "Allow: /buy.html", label)
-    assert_contains(text, "Allow: /markets.html", label)
-    assert_contains(text, "Allow: /security.html", label)
-    assert_contains(text, "Allow: /risk.html", label)
-    assert_contains(text, "Allow: /risk-training.html", label)
-    assert_contains(text, "Allow: /research-notes.html", label)
-    assert_contains(text, "Allow: /trade-plans.html", label)
-    assert_contains(text, "Allow: /portfolio-risk.html", label)
-    assert_contains(text, "Allow: /faq.html", label)
-    assert_contains(text, "Allow: /wallet-warning.html", label)
-    assert_contains(text, "Allow: /brand-kit.html", label)
-    assert_contains(text, "Allow: /brand-kit.json", label)
-    assert_contains(text, "Allow: /reviewer-kit.html", label)
-    assert_contains(text, "Allow: /reviewer-kit.json", label)
-    assert_contains(text, "Allow: /platform-replies.html", label)
-    assert_contains(text, "Allow: /platform-replies.json", label)
-    assert_contains(text, "Allow: /trust.html", label)
-    assert_contains(text, "Allow: /trust.json", label)
-    assert_contains(text, "Allow: /wallet-warning.json", label)
-    assert_contains(text, "Allow: /listing-readiness.html", label)
-    assert_contains(text, "Allow: /listing-readiness.json", label)
-    assert_contains(text, "Allow: /external-reviews.html", label)
-    assert_contains(text, "Allow: /external-reviews.json", label)
-    assert_contains(text, "Allow: /roadmap.html", label)
-    assert_contains(text, "Allow: /roadmap.json", label)
-    assert_contains(text, "Allow: /community.html", label)
-    assert_contains(text, "Allow: /community.json", label)
-    assert_contains(text, "Allow: /announcements.html", label)
-    assert_contains(text, "Allow: /announcements.json", label)
-    assert_contains(text, "Allow: /campaign.html", label)
-    assert_contains(text, "Allow: /campaign.json", label)
-    assert_contains(text, "Allow: /content-library.html", label)
-    assert_contains(text, "Allow: /content-library.json", label)
-    assert_contains(text, "Allow: /publishing-desk.html", label)
-    assert_contains(text, "Allow: /publishing-desk.json", label)
-    assert_contains(text, "Allow: /narrative.html", label)
-    assert_contains(text, "Allow: /narrative.json", label)
-    assert_contains(text, "Allow: /radar.html", label)
-    assert_contains(text, "Allow: /radar.json", label)
-    assert_contains(text, "Allow: /radar-issue-006.html", label)
-    assert_contains(text, "Allow: /radar-issue-006.json", label)
-    assert_contains(text, "Allow: /radar-issue-005.html", label)
-    assert_contains(text, "Allow: /radar-issue-005.json", label)
-    assert_contains(text, "Allow: /radar-issue-004.html", label)
-    assert_contains(text, "Allow: /radar-issue-004.json", label)
-    assert_contains(text, "Allow: /liquidation-replay-001.html", label)
-    assert_contains(text, "Allow: /liquidation-replay-001.json", label)
-    assert_contains(text, "Allow: /service-delivery-playbook.html", label)
-    assert_contains(text, "Allow: /service-delivery-playbook.json", label)
-    assert_contains(text, "Allow: /worker-routes-handoff.html", label)
-    assert_contains(text, "Allow: /worker-routes-handoff.json", label)
-    assert_contains(text, "Allow: /member-access-brief-001.html", label)
-    assert_contains(text, "Allow: /member-access-brief-001.json", label)
-    assert_contains(text, "Allow: /market-quality.html", label)
-    assert_contains(text, "Allow: /market-quality.json", label)
-    assert_contains(text, "Allow: /liquidity.html", label)
-    assert_contains(text, "Allow: /liquidity.json", label)
-    assert_contains(text, "Allow: /holder-distribution.html", label)
-    assert_contains(text, "Allow: /holder-distribution.json", label)
-    assert_contains(text, "Allow: /risk-remediation.html", label)
-    assert_contains(text, "Allow: /risk-remediation.json", label)
-    assert_contains(text, "Allow: /custody-roadmap.html", label)
-    assert_contains(text, "Allow: /custody-roadmap.json", label)
-    assert_contains(text, "Allow: /audit-readiness.html", label)
-    assert_contains(text, "Allow: /audit-readiness.json", label)
-    assert_contains(text, "Allow: /token-safety.html", label)
-    assert_contains(text, "Allow: /token-safety.json", label)
-    assert_contains(text, "Allow: /blockaid-followup.html", label)
-    assert_contains(text, "Allow: /blockaid-followup.json", label)
-    assert_contains(text, "Allow: /technical-report.html", label)
-    assert_contains(text, "Allow: /technical-report.json", label)
-    assert_contains(text, "Allow: /reserve-statement.html", label)
-    assert_contains(text, "Allow: /reserve-statement.json", label)
-    assert_contains(text, "Allow: /supply.html", label)
-    assert_contains(text, "Allow: /supply.json", label)
-    assert_contains(text, "Allow: /onchain-proofs.html", label)
-    assert_contains(text, "Allow: /onchain-proofs.json", label)
-    assert_contains(text, "Allow: /member-ledger.html", label)
-    assert_contains(text, "Allow: /member-ledger.json", label)
-    assert_contains(text, "Allow: /member-benefit.html", label)
-    assert_contains(text, "Allow: /member-benefit.json", label)
-    assert_contains(text, "Allow: /member-benefit-transfer.html", label)
-    assert_contains(text, "Allow: /member-benefit-transfer.json", label)
-    assert_contains(text, "Disallow: /operator.html", label)
-    assert_contains(text, "Allow: /members.html", label)
-    assert_contains(text, "Allow: /member-program.html", label)
-    assert_contains(text, "Allow: /member-program.json", label)
-    assert_contains(text, "Allow: /gca/member-access/", label)
-    assert_contains(text, "Allow: /member-workspace.html", label)
-    assert_contains(text, "Allow: /risk-passport.html", label)
-    assert_contains(text, "Allow: /workspace-vault.html", label)
-    assert_contains(text, "Allow: /support.html", label)
-    assert_contains(text, "Allow: /support.json", label)
-    assert_contains(text, "Allow: /privacy.html", label)
-    assert_contains(text, "Allow: /privacy.json", label)
-    assert_contains(text, "Allow: /terms.html", label)
-    assert_contains(text, "Allow: /terms.json", label)
-    assert_contains(text, "Allow: /utility.html", label)
-    assert_contains(text, "Allow: /utility.json", label)
-    assert_contains(text, "Allow: /product.html", label)
-    assert_contains(text, "Allow: /product.json", label)
-    assert_contains(text, "Allow: /liquidation-replay.html", label)
-    assert_contains(text, "Allow: /backtest-lab.html", label)
-    assert_contains(text, "Allow: /risk-warning.html", label)
-    assert_contains(text, "Allow: /tools.html", label)
-    assert_contains(text, "Allow: /access.html", label)
-    assert_contains(text, "Allow: /access.json", label)
-    assert_contains(text, "Allow: /operations.html", label)
-    assert_contains(text, "Allow: /operations.json", label)
-    assert_contains(text, "Allow: /access-api.html", label)
-    assert_contains(text, "Allow: /access-api.json", label)
-    assert_contains(text, "Allow: /api-status.html", label)
-    assert_contains(text, "Allow: /api-status.json", label)
-    assert_contains(text, "Allow: /daily-status.html", label)
-    assert_contains(text, "Allow: /daily-status.json", label)
-    assert_contains(text, "Allow: /review-queue.html", label)
-    assert_contains(text, "Allow: /review-queue.json", label)
-    assert_contains(text, "Allow: /credits.html", label)
-    assert_contains(text, "Allow: /credits.json", label)
-    assert_contains(text, "Allow: /release-gates.html", label)
-    assert_contains(text, "Allow: /release-gates.json", label)
-    assert_contains(text, "Allow: /project-profile.html", label)
-    assert_contains(text, "Allow: /project.json", label)
-    assert_contains(text, "Allow: /tokenlist.html", label)
-    assert_contains(text, "Allow: /tokenlist.json", label)
-    assert_contains(text, "Allow: /.well-known/gca-token.json", label)
-    assert_contains(text, "Allow: /.well-known/wallet-security.json", label)
-    assert_contains(text, "Allow: /.well-known/security.txt", label)
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    if lines.count("User-agent: *") != 1:
+        raise SiteCheckError(f"{label}: expected one global user-agent block")
+    if lines.count("Allow: /") != 1:
+        raise SiteCheckError(f"{label}: expected one canonical allow rule")
+    unexpected_rules = [
+        line for line in lines if line.startswith(("Allow:", "Disallow:")) and line != "Allow: /"
+    ]
+    if unexpected_rules:
+        raise SiteCheckError(f"{label}: per-page crawl rules are not allowed: {unexpected_rules!r}")
     assert_contains(text, "Sitemap: https://gcagochina.com/sitemap.xml", label)
 
 

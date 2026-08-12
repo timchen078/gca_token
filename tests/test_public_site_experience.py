@@ -509,7 +509,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("member-risk-passport-live", [item["id"] for item in roadmap["completedMilestones"]])
         self.assertEqual(roadmap["publicLinks"]["riskPassport"], "https://gcagochina.com/risk-passport.html")
         self.assertIn("https://gcagochina.com/risk-passport.html", sitemap)
-        self.assertIn("Allow: /risk-passport.html", robots)
+        self.assertIn("Allow: /", robots)
         self.assertIn('href="risk-passport.html"', site_map)
         self.assertIn('href="risk-passport.html"', zh_site_map)
 
@@ -668,7 +668,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("encrypted-workspace-vault-live", [item["id"] for item in roadmap["completedMilestones"]])
         self.assertEqual(roadmap["publicLinks"]["workspaceVault"], "https://gcagochina.com/workspace-vault.html")
         self.assertIn("https://gcagochina.com/workspace-vault.html", sitemap)
-        self.assertIn("Allow: /workspace-vault.html", robots)
+        self.assertIn("Allow: /", robots)
         self.assertIn('href="workspace-vault.html"', member_workspace)
         self.assertIn('href="workspace-vault.html"', risk_passport)
 

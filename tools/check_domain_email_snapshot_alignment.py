@@ -41,7 +41,6 @@ DEFAULT_MONITORED_FILES = [
     "site/platform-replies.json",
     "site/reviewer-kit.html",
     "site/reviewer-kit.json",
-    "site/sitemap.xml",
     "site/status.html",
     "site/trust.html",
     "site/trust.json",

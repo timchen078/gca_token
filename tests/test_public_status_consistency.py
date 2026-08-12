@@ -300,50 +300,28 @@ class PublicStatusConsistencyTests(unittest.TestCase):
         }
         updated_paths = (
             "",
-            "access.html",
-            "access.json",
-            "liquidation-replay-001.html",
-            "liquidation-replay-001.json",
-            "market-quality.html",
-            "market-quality.json",
-            "member-program.html",
-            "member-program.json",
             "privacy.html",
-            "privacy.json",
-            "product.json",
-            "roadmap.html",
-            "roadmap.json",
-            "credits.html",
-            "credits.json",
-            "listing-kit.html",
-            "narrative.html",
-            "narrative.json",
-            "team.html",
-            "tim-chen.html",
-            "tim-chen.json",
-            "utility.html",
-            "utility.json",
             "whitepaper.html",
-            "support.json",
             "terms.html",
-            "terms.json",
         )
         for path in updated_paths:
             url = f"https://gcagochina.com/{path}"
             self.assertEqual(sitemap.get(url), LAST_UPDATED, url)
 
-        for path in ("product.html", "support.html"):
+        for path in ("product.html", "support.html", "team.html", "tim-chen.html"):
             url = f"https://gcagochina.com/{path}"
             self.assertEqual(sitemap.get(url), CORE_PAGE_LAST_UPDATED, url)
 
-        self.assertEqual(
-            sitemap.get("https://gcagochina.com/project.json"),
-            CONTENT_CYCLE_LAST_UPDATED,
-        )
-
-        for path in ("members.html", "zh-members.html"):
-            url = f"https://gcagochina.com/{path}"
-            self.assertEqual(sitemap.get(url), MEMBER_PAGE_LAST_UPDATED, url)
+        for path in (
+            "access.html",
+            "project.json",
+            "members.html",
+            "zh-members.html",
+            "tim-chen.json",
+            "roadmap.html",
+            "credits.html",
+        ):
+            self.assertNotIn(f"https://gcagochina.com/{path}", sitemap)
 
     def test_product_operations_content_cycle_is_current_and_aligned(self):
         campaign = self.load_json("site/campaign.json")

@@ -2,6 +2,7 @@ import importlib.util
 import json
 import re
 import unittest
+import xml.etree.ElementTree as ET
 from html import escape
 from pathlib import Path
 
@@ -801,14 +802,16 @@ class LaunchPackageTests(unittest.TestCase):
                 return "/" + relative.removesuffix("index.html")
             return "/" + relative
 
-        self.assertEqual(59, len(module.PUBLIC_INDEXABLE_PATHS))
+        self.assertEqual(56, len(module.PUBLIC_INDEXABLE_PATHS))
         for path in (ROOT / "site").rglob("*.html"):
             route = public_path(path)
             page = path.read_text()
             module.assert_search_index_policy(page, route)
+            canonical = "https://gcagochina.com/" if route == "/" else f"https://gcagochina.com{route}"
             if route in module.PUBLIC_INDEXABLE_PATHS:
-                canonical = "https://gcagochina.com/" if route == "/" else f"https://gcagochina.com{route}"
                 self.assertIn(f"<loc>{canonical}</loc>", sitemap, route)
+            else:
+                self.assertNotIn(f"<loc>{canonical}</loc>", sitemap, route)
 
     def test_pages_publish_workflow_syncs_site_to_gh_pages(self):
         workflow = (ROOT / ".github" / "workflows" / "publish-site.yml").read_text()
@@ -1104,381 +1107,70 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(cname, "gcagochina.com")
 
     def test_site_has_discovery_files(self):
+        script_path = ROOT / "tools" / "check_public_site.py"
+        spec = importlib.util.spec_from_file_location("check_public_site_discovery", script_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
         robots = (ROOT / "site" / "robots.txt").read_text()
         sitemap = (ROOT / "site" / "sitemap.xml").read_text()
 
         self.assertTrue((ROOT / "site" / ".nojekyll").exists())
-        self.assertIn("User-agent: *", robots)
-        self.assertIn("Allow: /", robots)
-        self.assertIn("Allow: /start.html", robots)
-        self.assertIn("Allow: /register.html", robots)
-        self.assertIn("Allow: /unsubscribe.html", robots)
-        self.assertIn("Allow: /about.html", robots)
-        self.assertIn("Allow: /team.html", robots)
-        self.assertIn("Allow: /tim-chen.html", robots)
-        self.assertIn("Allow: /tim-chen.json", robots)
-        self.assertIn("Allow: /domain-email.html", robots)
-        self.assertIn("Allow: /domain-email.json", robots)
-        self.assertIn("Allow: /domain-email-evidence.html", robots)
-        self.assertIn("Allow: /domain-email-evidence.json", robots)
-        self.assertIn("Allow: /basescan-remediation.html", robots)
-        self.assertIn("Allow: /basescan-remediation.json", robots)
-        self.assertIn("Allow: /basescan-preflight.html", robots)
-        self.assertIn("Allow: /basescan-preflight.json", robots)
-        self.assertIn("Allow: /basescan-handoff.html", robots)
-        self.assertIn("Allow: /basescan-handoff.json", robots)
-        self.assertIn("Allow: /basescan-followup.html", robots)
-        self.assertIn("Allow: /basescan-followup.json", robots)
-        self.assertIn("Allow: /action-plan.html", robots)
-        self.assertIn("Allow: /zh-cn.html", robots)
-        self.assertIn("Allow: /zh-product.html", robots)
-        self.assertIn("Allow: /zh-buy.html", robots)
-        self.assertIn("Allow: /zh-markets.html", robots)
-        self.assertIn("Allow: /zh-apply.html", robots)
-        self.assertIn("Allow: /zh-status.html", robots)
-        self.assertIn("Allow: /zh-domain-email.html", robots)
-        self.assertIn("Allow: /zh-basescan-preflight.html", robots)
-        self.assertIn("Allow: /zh-basescan-submit.html", robots)
-        self.assertIn("Allow: /zh-basescan-handoff.html", robots)
-        self.assertIn("Allow: /zh-basescan-followup.html", robots)
-        self.assertIn("Allow: /zh-liquidity.html", robots)
-        self.assertIn("Allow: /zh-supply.html", robots)
-        self.assertIn("Allow: /zh-security.html", robots)
-        self.assertIn("Allow: /zh-roadmap.html", robots)
-        self.assertIn("Allow: /zh-faq.html", robots)
-        self.assertIn("Allow: /zh-members.html", robots)
-        self.assertIn("Allow: /zh-support.html", robots)
-        self.assertIn("Allow: /zh-access.html", robots)
-        self.assertIn("Allow: /zh-release-gates.html", robots)
-        self.assertIn("Allow: /zh-wallet-verify.html", robots)
-        self.assertIn("Allow: /zh-member-checklist.html", robots)
-        self.assertIn("Allow: /zh-member-benefit-transfer.html", robots)
-        self.assertIn("Allow: /zh-site-map.html", robots)
-        self.assertIn("Disallow: /zh-data.html", robots)
-        self.assertIn("Allow: /zh-api-status.html", robots)
-        self.assertIn("Allow: /zh-operations.html", robots)
-        self.assertIn("Allow: /site-map.html", robots)
-        self.assertIn("Allow: /verify.html", robots)
-        self.assertIn("Allow: /markets.html", robots)
-        self.assertIn("Allow: /wallet-warning.html", robots)
-        self.assertIn("Allow: /wallet-warning.json", robots)
-        self.assertIn("Allow: /brand-kit.html", robots)
-        self.assertIn("Allow: /brand-kit.json", robots)
-        self.assertIn("Allow: /reviewer-kit.html", robots)
-        self.assertIn("Allow: /reviewer-kit.json", robots)
-        self.assertIn("Allow: /platform-replies.html", robots)
-        self.assertIn("Allow: /platform-replies.json", robots)
-        self.assertIn("Allow: /trust.html", robots)
-        self.assertIn("Allow: /trust.json", robots)
-        self.assertIn("Allow: /technical-report.html", robots)
-        self.assertIn("Allow: /technical-report.json", robots)
-        self.assertIn("Allow: /reserve-statement.html", robots)
-        self.assertIn("Allow: /reserve-statement.json", robots)
-        self.assertIn("Allow: /external-reviews.html", robots)
-        self.assertIn("Allow: /external-reviews.json", robots)
-        self.assertIn("Allow: /listing-readiness.html", robots)
-        self.assertIn("Allow: /listing-readiness.json", robots)
-        self.assertIn("Allow: /market-quality.html", robots)
-        self.assertIn("Allow: /market-quality.json", robots)
-        self.assertIn("Allow: /liquidity.html", robots)
-        self.assertIn("Allow: /liquidity.json", robots)
-        self.assertIn("Allow: /holder-distribution.html", robots)
-        self.assertIn("Allow: /holder-distribution.json", robots)
-        self.assertIn("Allow: /risk-remediation.html", robots)
-        self.assertIn("Allow: /risk-remediation.json", robots)
-        self.assertIn("Allow: /custody-roadmap.html", robots)
-        self.assertIn("Allow: /custody-roadmap.json", robots)
-        self.assertIn("Allow: /audit-readiness.html", robots)
-        self.assertIn("Allow: /audit-readiness.json", robots)
-        self.assertIn("Allow: /token-safety.html", robots)
-        self.assertIn("Allow: /token-safety.json", robots)
-        self.assertIn("Allow: /blockaid-followup.html", robots)
-        self.assertIn("Allow: /blockaid-followup.json", robots)
-        self.assertIn("Allow: /onchain-proofs.html", robots)
-        self.assertIn("Allow: /onchain-proofs.json", robots)
-        self.assertIn("Allow: /supply.html", robots)
-        self.assertIn("Allow: /supply.json", robots)
-        self.assertIn("Allow: /members.html", robots)
-        self.assertIn("Allow: /member-program.json", robots)
-        self.assertIn("Allow: /gca/member-access/", robots)
-        self.assertIn("Allow: /member-workspace.html", robots)
-        self.assertIn("Allow: /risk-passport.html", robots)
-        self.assertIn("Allow: /member-ledger.html", robots)
-        self.assertIn("Allow: /member-ledger.json", robots)
-        self.assertIn("Allow: /member-benefit.html", robots)
-        self.assertIn("Allow: /member-benefit.json", robots)
-        self.assertIn("Allow: /member-benefit-transfer.html", robots)
-        self.assertIn("Allow: /member-benefit-transfer.json", robots)
-        self.assertIn("Disallow: /operator.html", robots)
-        self.assertIn("Allow: /support.html", robots)
-        self.assertIn("Allow: /support.json", robots)
-        self.assertIn("Allow: /roadmap.html", robots)
-        self.assertIn("Allow: /roadmap.json", robots)
-        self.assertIn("Allow: /community.html", robots)
-        self.assertIn("Allow: /community.json", robots)
-        self.assertIn("Allow: /announcements.html", robots)
-        self.assertIn("Allow: /announcements.json", robots)
-        self.assertIn("Allow: /campaign.html", robots)
-        self.assertIn("Allow: /campaign.json", robots)
-        self.assertIn("Allow: /content-library.html", robots)
-        self.assertIn("Allow: /content-library.json", robots)
-        self.assertIn("Allow: /publishing-desk.html", robots)
-        self.assertIn("Allow: /publishing-desk.json", robots)
-        self.assertIn("Allow: /narrative.html", robots)
-        self.assertIn("Allow: /narrative.json", robots)
-        self.assertIn("Allow: /radar.html", robots)
-        self.assertIn("Allow: /radar.json", robots)
-        self.assertIn("Allow: /radar-issue-006.html", robots)
-        self.assertIn("Allow: /radar-issue-006.json", robots)
-        self.assertIn("Allow: /radar-issue-005.html", robots)
-        self.assertIn("Allow: /radar-issue-005.json", robots)
-        self.assertIn("Allow: /radar-issue-004.html", robots)
-        self.assertIn("Allow: /radar-issue-004.json", robots)
-        self.assertIn("Allow: /liquidation-replay-001.html", robots)
-        self.assertIn("Allow: /liquidation-replay-001.json", robots)
-        self.assertIn("Allow: /service-delivery-playbook.html", robots)
-        self.assertIn("Allow: /service-delivery-playbook.json", robots)
-        self.assertIn("Allow: /worker-routes-handoff.html", robots)
-        self.assertIn("Allow: /worker-routes-handoff.json", robots)
-        self.assertIn("Allow: /member-access-brief-001.html", robots)
-        self.assertIn("Allow: /member-access-brief-001.json", robots)
-        self.assertIn("Allow: /privacy.html", robots)
-        self.assertIn("Allow: /privacy.json", robots)
-        self.assertIn("Allow: /terms.html", robots)
-        self.assertIn("Allow: /terms.json", robots)
-        self.assertIn("Allow: /utility.html", robots)
-        self.assertIn("Allow: /utility.json", robots)
-        self.assertIn("Allow: /product.html", robots)
-        self.assertIn("Allow: /product.json", robots)
-        self.assertIn("Allow: /access.html", robots)
-        self.assertIn("Allow: /access.json", robots)
-        self.assertIn("Allow: /operations.html", robots)
-        self.assertIn("Allow: /operations.json", robots)
-        self.assertIn("Allow: /access-api.html", robots)
-        self.assertIn("Allow: /access-api.json", robots)
-        self.assertIn("Allow: /api-status.html", robots)
-        self.assertIn("Allow: /api-status.json", robots)
-        self.assertIn("Allow: /daily-status.html", robots)
-        self.assertIn("Allow: /daily-status.json", robots)
-        self.assertIn("Allow: /review-queue.html", robots)
-        self.assertIn("Allow: /review-queue.json", robots)
-        self.assertIn("Allow: /credits.html", robots)
-        self.assertIn("Allow: /credits.json", robots)
-        self.assertIn("Allow: /release-gates.html", robots)
-        self.assertIn("Allow: /release-gates.json", robots)
-        self.assertIn("Allow: /project.json", robots)
-        self.assertIn("Allow: /tokenlist.json", robots)
-        self.assertIn("Allow: /.well-known/gca-token.json", robots)
-        self.assertIn("Allow: /.well-known/wallet-security.json", robots)
-        self.assertIn("Allow: /.well-known/security.txt", robots)
-        self.assertIn("Disallow: /data.html", robots)
+        self.assertEqual(robots.count("User-agent: *"), 1)
+        self.assertEqual(robots.count("Allow: /"), 1)
+        self.assertNotIn("Disallow:", robots)
         self.assertIn("Sitemap: https://gcagochina.com/sitemap.xml", robots)
-        self.assertIn("https://gcagochina.com/", sitemap)
-        self.assertIn(START_PAGE_URL, sitemap)
-        self.assertIn(REGISTER_PAGE_URL, sitemap)
-        self.assertIn(UNSUBSCRIBE_PAGE_URL, sitemap)
-        self.assertIn(ABOUT_PAGE_URL, sitemap)
-        self.assertIn(TEAM_PAGE_URL, sitemap)
-        self.assertIn(TIM_CHEN_PROFILE_PAGE_URL, sitemap)
-        self.assertIn(TIM_CHEN_PROFILE_URL, sitemap)
-        self.assertIn(DOMAIN_EMAIL_PAGE_URL, sitemap)
-        self.assertIn(DOMAIN_EMAIL_URL, sitemap)
-        self.assertIn(DOMAIN_EMAIL_EVIDENCE_PAGE_URL, sitemap)
-        self.assertIn(DOMAIN_EMAIL_EVIDENCE_URL, sitemap)
-        self.assertIn(BASESCAN_REMEDIATION_PAGE_URL, sitemap)
-        self.assertIn(BASESCAN_REMEDIATION_URL, sitemap)
-        self.assertIn(BASESCAN_PREFLIGHT_PAGE_URL, sitemap)
-        self.assertIn(BASESCAN_PREFLIGHT_URL, sitemap)
-        self.assertIn(BASESCAN_HANDOFF_PAGE_URL, sitemap)
-        self.assertIn(BASESCAN_HANDOFF_URL, sitemap)
-        self.assertIn(BASESCAN_FOLLOWUP_PAGE_URL, sitemap)
-        self.assertIn(BASESCAN_FOLLOWUP_URL, sitemap)
-        self.assertIn(ACTION_PLAN_PAGE_URL, sitemap)
-        self.assertIn(ZH_CN_PAGE_URL, sitemap)
-        self.assertIn(ZH_PRODUCT_PAGE_URL, sitemap)
-        self.assertIn(ZH_BUY_PAGE_URL, sitemap)
-        self.assertIn(ZH_APPLY_PAGE_URL, sitemap)
-        self.assertIn(ZH_STATUS_PAGE_URL, sitemap)
-        self.assertIn(ZH_DOMAIN_EMAIL_PAGE_URL, sitemap)
-        self.assertIn(ZH_BASESCAN_PREFLIGHT_PAGE_URL, sitemap)
-        self.assertIn(ZH_BASESCAN_SUBMIT_PAGE_URL, sitemap)
-        self.assertIn(ZH_BASESCAN_HANDOFF_PAGE_URL, sitemap)
-        self.assertIn(ZH_BASESCAN_FOLLOWUP_PAGE_URL, sitemap)
-        self.assertIn(ZH_LIQUIDITY_PAGE_URL, sitemap)
-        self.assertIn(ZH_SUPPLY_PAGE_URL, sitemap)
-        self.assertIn(ZH_SECURITY_PAGE_URL, sitemap)
-        self.assertIn(ZH_ROADMAP_PAGE_URL, sitemap)
-        self.assertIn(ZH_FAQ_PAGE_URL, sitemap)
-        self.assertIn(ZH_MEMBERS_PAGE_URL, sitemap)
-        self.assertIn(ZH_SUPPORT_PAGE_URL, sitemap)
-        self.assertIn(ZH_ACCESS_PAGE_URL, sitemap)
-        self.assertIn(ZH_RELEASE_GATES_PAGE_URL, sitemap)
-        self.assertIn(ZH_WALLET_VERIFY_PAGE_URL, sitemap)
-        self.assertIn(ZH_MEMBER_CHECKLIST_PAGE_URL, sitemap)
-        self.assertIn(ZH_SITE_MAP_PAGE_URL, sitemap)
-        self.assertNotIn(ZH_DATA_PAGE_URL, sitemap)
-        self.assertIn(ZH_API_STATUS_PAGE_URL, sitemap)
-        self.assertIn(ZH_OPERATIONS_PAGE_URL, sitemap)
-        self.assertNotIn(DATA_PAGE_URL, sitemap)
-        self.assertIn(API_STATUS_PAGE_URL, sitemap)
-        self.assertIn(API_STATUS_URL, sitemap)
-        self.assertIn(DAILY_STATUS_PAGE_URL, sitemap)
-        self.assertIn(DAILY_STATUS_URL, sitemap)
-        self.assertIn(SITE_MAP_PAGE_URL, sitemap)
-        self.assertIn(VERIFY_PAGE_URL, sitemap)
-        self.assertIn("https://gcagochina.com/status.html", sitemap)
-        self.assertIn("https://gcagochina.com/listing-kit.html", sitemap)
-        self.assertIn(WALLET_WARNING_PAGE_URL, sitemap)
-        self.assertIn(WALLET_WARNING_URL, sitemap)
-        self.assertIn(EXTERNAL_REVIEW_PAGE_URL, sitemap)
-        self.assertIn(EXTERNAL_REVIEW_URL, sitemap)
-        self.assertIn(REVIEWER_KIT_PAGE_URL, sitemap)
-        self.assertIn(REVIEWER_KIT_URL, sitemap)
-        self.assertIn(PLATFORM_REPLIES_PAGE_URL, sitemap)
-        self.assertIn(PLATFORM_REPLIES_URL, sitemap)
-        self.assertIn(TRUST_CENTER_PAGE_URL, sitemap)
-        self.assertIn(TRUST_CENTER_URL, sitemap)
-        self.assertIn(LISTING_READINESS_PAGE_URL, sitemap)
-        self.assertIn(LISTING_READINESS_URL, sitemap)
-        self.assertIn(BRAND_KIT_PAGE_URL, sitemap)
-        self.assertIn(BRAND_KIT_URL, sitemap)
-        self.assertIn(MARKET_QUALITY_PAGE_URL, sitemap)
-        self.assertIn(MARKET_QUALITY_URL, sitemap)
-        self.assertIn(LIQUIDITY_PAGE_URL, sitemap)
-        self.assertIn(LIQUIDITY_URL, sitemap)
-        self.assertIn(HOLDER_DISTRIBUTION_PAGE_URL, sitemap)
-        self.assertIn(HOLDER_DISTRIBUTION_URL, sitemap)
-        self.assertIn(RISK_REMEDIATION_PAGE_URL, sitemap)
-        self.assertIn(RISK_REMEDIATION_URL, sitemap)
-        self.assertIn(CUSTODY_ROADMAP_PAGE_URL, sitemap)
-        self.assertIn(CUSTODY_ROADMAP_URL, sitemap)
-        self.assertIn(AUDIT_READINESS_PAGE_URL, sitemap)
-        self.assertIn(AUDIT_READINESS_URL, sitemap)
-        self.assertIn(TOKEN_SAFETY_PAGE_URL, sitemap)
-        self.assertIn(TOKEN_SAFETY_URL, sitemap)
-        self.assertIn(BLOCKAID_FOLLOWUP_PAGE_URL, sitemap)
-        self.assertIn(BLOCKAID_FOLLOWUP_URL, sitemap)
-        self.assertIn(ONCHAIN_PROOFS_PAGE_URL, sitemap)
-        self.assertIn(ONCHAIN_PROOFS_URL, sitemap)
-        self.assertIn("https://gcagochina.com/project.json", sitemap)
-        self.assertIn("https://gcagochina.com/tokenlist.json", sitemap)
-        self.assertIn("https://gcagochina.com/buy.html", sitemap)
-        self.assertIn("https://gcagochina.com/markets.html", sitemap)
-        self.assertIn(ZH_MARKET_PAGE_URL, sitemap)
-        self.assertIn("https://gcagochina.com/supply.html", sitemap)
-        self.assertIn(SUPPLY_DISCLOSURE_URL, sitemap)
-        self.assertIn("https://gcagochina.com/security.html", sitemap)
-        self.assertIn("https://gcagochina.com/risk.html", sitemap)
-        self.assertIn("https://gcagochina.com/faq.html", sitemap)
-        self.assertIn(MEMBER_ACCESS_PAGE_URL, sitemap)
-        self.assertIn("https://gcagochina.com/member-workspace.html", sitemap)
-        self.assertIn("https://gcagochina.com/risk-passport.html", sitemap)
-        self.assertIn(MEMBER_PROGRAM_URL, sitemap)
-        self.assertIn(MEMBER_LEDGER_PAGE_URL, sitemap)
-        self.assertIn(MEMBER_LEDGER_URL, sitemap)
-        self.assertIn(MEMBER_BENEFIT_PAGE_URL, sitemap)
-        self.assertIn(MEMBER_BENEFIT_URL, sitemap)
-        self.assertIn(MEMBER_BENEFIT_TRANSFER_PAGE_URL, sitemap)
-        self.assertIn(MEMBER_BENEFIT_TRANSFER_URL, sitemap)
-        self.assertNotIn(OPERATOR_PAGE_URL, sitemap)
-        self.assertIn(SUPPORT_PAGE_URL, sitemap)
-        self.assertIn(SUPPORT_URL, sitemap)
-        self.assertIn(ROADMAP_PAGE_URL, sitemap)
-        self.assertIn(ROADMAP_URL, sitemap)
-        self.assertIn(COMMUNITY_PAGE_URL, sitemap)
-        self.assertIn(COMMUNITY_URL, sitemap)
-        self.assertIn(ANNOUNCEMENTS_PAGE_URL, sitemap)
-        self.assertIn(ANNOUNCEMENTS_URL, sitemap)
-        self.assertIn(CAMPAIGN_PAGE_URL, sitemap)
-        self.assertIn(CAMPAIGN_URL, sitemap)
-        self.assertIn(CONTENT_LIBRARY_PAGE_URL, sitemap)
-        self.assertIn(CONTENT_LIBRARY_URL, sitemap)
-        self.assertIn(PUBLISHING_DESK_PAGE_URL, sitemap)
-        self.assertIn(PUBLISHING_DESK_URL, sitemap)
-        self.assertIn(NARRATIVE_PAGE_URL, sitemap)
-        self.assertIn(NARRATIVE_URL, sitemap)
-        self.assertIn(RADAR_PAGE_URL, sitemap)
-        self.assertIn(RADAR_URL, sitemap)
-        self.assertIn(RADAR_ISSUE_006_PAGE_URL, sitemap)
-        self.assertIn(RADAR_ISSUE_006_URL, sitemap)
-        self.assertIn(RADAR_ISSUE_005_PAGE_URL, sitemap)
-        self.assertIn(RADAR_ISSUE_005_URL, sitemap)
-        self.assertIn(RADAR_ISSUE_004_PAGE_URL, sitemap)
-        self.assertIn(RADAR_ISSUE_004_URL, sitemap)
-        self.assertIn(LIQUIDATION_REPLAY_001_PAGE_URL, sitemap)
-        self.assertIn(LIQUIDATION_REPLAY_001_URL, sitemap)
-        self.assertIn(SERVICE_DELIVERY_PLAYBOOK_PAGE_URL, sitemap)
-        self.assertIn(SERVICE_DELIVERY_PLAYBOOK_URL, sitemap)
-        self.assertIn(WORKER_ROUTES_HANDOFF_PAGE_URL, sitemap)
-        self.assertIn(WORKER_ROUTES_HANDOFF_URL, sitemap)
-        self.assertIn(MEMBER_ACCESS_BRIEF_001_PAGE_URL, sitemap)
-        self.assertIn(MEMBER_ACCESS_BRIEF_001_URL, sitemap)
-        self.assertIn(PRIVACY_NOTICE_PAGE_URL, sitemap)
-        self.assertIn(PRIVACY_NOTICE_URL, sitemap)
-        self.assertIn(PARTICIPATION_TERMS_PAGE_URL, sitemap)
-        self.assertIn(PARTICIPATION_TERMS_URL, sitemap)
-        self.assertIn(UTILITY_PAGE_URL, sitemap)
-        self.assertIn(UTILITY_URL, sitemap)
-        self.assertIn(PRODUCT_PAGE_URL, sitemap)
-        self.assertIn(PRODUCT_URL, sitemap)
-        self.assertIn(ACCESS_PAGE_URL, sitemap)
-        self.assertIn(ACCESS_URL, sitemap)
-        self.assertIn(OPERATIONS_PAGE_URL, sitemap)
-        self.assertIn(OPERATIONS_URL, sitemap)
-        self.assertIn(ACCESS_API_PAGE_URL, sitemap)
-        self.assertIn(ACCESS_API_URL, sitemap)
-        self.assertIn(REVIEW_QUEUE_PAGE_URL, sitemap)
-        self.assertIn(REVIEW_QUEUE_URL, sitemap)
-        self.assertIn(CREDITS_PAGE_URL, sitemap)
-        self.assertIn(CREDITS_URL, sitemap)
-        self.assertIn(RELEASE_GATES_PAGE_URL, sitemap)
-        self.assertIn(RELEASE_GATES_URL, sitemap)
-        self.assertIn("https://gcagochina.com/whitepaper.html", sitemap)
-        self.assertIn(WELL_KNOWN_TOKEN_URL, sitemap)
-        self.assertIn(WALLET_SECURITY_PROFILE_URL, sitemap)
-        self.assertIn(SECURITY_CONTACT_URL, sitemap)
+        module.validate_sitemap(sitemap)
+        module.validate_robots(robots)
 
-        def sitemap_url(path: Path) -> str:
-            rel = str(path.relative_to(ROOT / "site"))
-            if rel == "index.html":
-                return "https://gcagochina.com/"
-            if rel.endswith("/index.html"):
-                return "https://gcagochina.com/" + rel.removesuffix("index.html")
-            return "https://gcagochina.com/" + rel
+        namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        root = ET.fromstring(sitemap)
+        indexed_urls = {
+            item.findtext("sm:loc", namespaces=namespace)
+            for item in root.findall("sm:url", namespace)
+        }
+        expected_urls = {
+            "https://gcagochina.com/" if path == "/" else f"https://gcagochina.com{path}"
+            for path in module.PUBLIC_INDEXABLE_PATHS
+        }
+        self.assertEqual(indexed_urls, expected_urls)
+        self.assertEqual(len(indexed_urls), 56)
 
-        def robots_allow(path: Path) -> str:
-            rel = str(path.relative_to(ROOT / "site"))
-            if rel == "index.html":
-                return "Allow: /"
-            if rel.endswith("/index.html"):
-                return "Allow: /" + rel.removesuffix("index.html")
-            return "Allow: /" + rel
+        for excluded in (
+            DATA_PAGE_URL,
+            ZH_DATA_PAGE_URL,
+            OPERATOR_PAGE_URL,
+            TIM_CHEN_PROFILE_URL,
+            PROJECT_PROFILE_PAGE_URL,
+            TECHNICAL_REPORT_PAGE_URL,
+            WALLET_WARNING_PAGE_URL,
+            BASESCAN_REMEDIATION_PAGE_URL,
+            BASESCAN_PREFLIGHT_PAGE_URL,
+            BASESCAN_HANDOFF_PAGE_URL,
+            BASESCAN_FOLLOWUP_PAGE_URL,
+            ACTION_PLAN_PAGE_URL,
+            API_STATUS_PAGE_URL,
+            DAILY_STATUS_PAGE_URL,
+            REVIEWER_KIT_PAGE_URL,
+            PLATFORM_REPLIES_PAGE_URL,
+            TRUST_CENTER_PAGE_URL,
+            LISTING_READINESS_PAGE_URL,
+            COMMUNITY_PAGE_URL,
+            CAMPAIGN_PAGE_URL,
+            MEMBER_LEDGER_PAGE_URL,
+            MEMBER_BENEFIT_TRANSFER_PAGE_URL,
+        ):
+            self.assertNotIn(excluded, sitemap)
+        self.assertNotIn(".json</loc>", sitemap)
 
-        public_files = [
-            path
-            for path in (ROOT / "site").rglob("*")
-            if path.is_file() and path.suffix in {".html", ".json"}
-            and str(path.relative_to(ROOT / "site")) != "404.html"
-            and str(path.relative_to(ROOT / "site")) != "operator.html"
-            and str(path.relative_to(ROOT / "site")) != "data.html"
-            and str(path.relative_to(ROOT / "site")) != "zh-data.html"
-        ]
-        self.assertEqual(
-            [],
-            [
-                str(path.relative_to(ROOT / "site"))
-                for path in public_files
-                if sitemap_url(path) not in sitemap
-            ],
+        leaked_sitemap = sitemap.replace(
+            "</urlset>",
+            "<url><loc>https://gcagochina.com/basescan-preflight.html</loc>"
+            "<lastmod>2026-08-12</lastmod></url></urlset>",
         )
-        self.assertEqual(
-            [],
-            [
-                str(path.relative_to(ROOT / "site"))
-                for path in public_files
-                if robots_allow(path) not in robots
-            ],
-        )
+        with self.assertRaises(module.SiteCheckError):
+            module.validate_sitemap(leaked_sitemap)
+        with self.assertRaises(module.SiteCheckError):
+            module.validate_robots(robots.replace("Allow: /", "Allow: /\nAllow: /basescan-preflight.html"))
 
     def test_daily_status_page_and_json_publish_public_ops_snapshot(self):
         page = (ROOT / "site" / "daily-status.html").read_text()
