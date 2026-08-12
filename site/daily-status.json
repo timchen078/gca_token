@@ -2,16 +2,16 @@
   "schema": "https://gcagochina.com/daily-status.json",
   "pageUrl": "https://gcagochina.com/daily-status.html",
   "status": "daily-public-ops-snapshot-published",
-  "lastUpdated": "2026-08-11",
+  "lastUpdated": "2026-08-12",
   "snapshotSource": "tools/run_gca_daily_ops.py",
-  "snapshotGeneratedAt": "2026-08-11T19:25:21Z",
+  "snapshotGeneratedAt": "2026-08-12T06:37:31Z",
   "project": "GCA",
   "chainId": 8453,
   "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
   "dailyOps": {
     "packetVersion": "gca_daily_ops_summary_v1",
     "ok": true,
-    "generatedAt": "2026-08-11T19:25:21Z",
+    "generatedAt": "2026-08-12T06:37:31Z",
     "publicOnlyByDefault": true,
     "steps": [
       {
@@ -19,28 +19,28 @@
         "ok": true,
         "status": "passed",
         "blocksSummaryOk": true,
-        "command": "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20"
+        "command": "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 30"
       },
       {
         "id": "registration-api-public",
         "ok": true,
         "status": "passed",
         "blocksSummaryOk": true,
-        "command": "python3 tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 20"
+        "command": "python3 tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 30"
       },
       {
         "id": "official-pool-market-health",
         "ok": true,
         "status": "passed",
         "blocksSummaryOk": false,
-        "command": "python3 tools/check_gca_market_health.py --json --timeout 20"
+        "command": "python3 tools/check_gca_market_health.py --json --timeout 30"
       },
       {
         "id": "basescan-public-profile-status",
         "ok": true,
         "status": "passed",
         "blocksSummaryOk": false,
-        "command": "python3 tools/check_basescan_public_profile.py --json --timeout 20"
+        "command": "python3 tools/check_basescan_public_profile.py --json --timeout 30"
       },
       {
         "id": "basescan-resubmission-preflight-status",
@@ -54,7 +54,7 @@
   "publicSite": {
     "status": "ok",
     "baseUrl": "https://gcagochina.com/",
-    "checkCommand": "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20",
+    "checkCommand": "python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 30",
     "scope": [
       "canonical token identity",
       "public readable pages",
@@ -66,7 +66,7 @@
   "registrationApi": {
     "status": "ok",
     "apiBaseUrl": "https://gca-registration-api.gcagochina.workers.dev",
-    "checkCommand": "python3 tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 20",
+    "checkCommand": "python3 tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 30",
     "publicOnly": true,
     "healthEndpoint": "https://gca-registration-api.gcagochina.workers.dev/health",
     "adminReads": "token-protected",
@@ -76,8 +76,8 @@
     "status": "official-pool-observed",
     "available": true,
     "identityVerified": true,
-    "checkedAt": "2026-08-11T19:25:18Z",
-    "checkCommand": "python3 tools/check_gca_market_health.py --json --timeout 20",
+    "checkedAt": "2026-08-12T06:37:29Z",
+    "checkCommand": "python3 tools/check_gca_market_health.py --json --timeout 30",
     "sourceProvider": "GeckoTerminal Public API",
     "sourceApiUrl": "https://api.geckoterminal.com/api/v2/networks/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
     "publicPoolUrl": "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
@@ -108,7 +108,7 @@
   "baseScanPublicProfile": {
     "status": "token-profile-not-published",
     "profilePublished": false,
-    "checkedAt": "2026-08-11T19:25:21Z",
+    "checkedAt": "2026-08-12T06:37:31Z",
     "tokenRep": "Unknown",
     "holders": 10,
     "sourceVerificationObserved": true,

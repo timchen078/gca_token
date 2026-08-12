@@ -71,7 +71,10 @@ class BaseScanDailyStatusReferenceSyncTests(unittest.TestCase):
                 encoding="utf-8",
             )
             python_path.write_text(
-                f'EXPECTED_DATE = "{OLD_DATE}"\nEXPECTED_TIMESTAMP = "{OLD_TIMESTAMP}"\n'
+                f'SOURCE_BASESCAN_PROFILE_CHECKED_DATE = "{OLD_DATE}"\n'
+                f'EXPECTED_TIMESTAMP = "{OLD_TIMESTAMP}"\n'
+                f'CONTENT_DATE = "{OLD_DATE}"\n'
+                f'if payload.get("lastCheckedDate") != "{OLD_DATE}":\n    raise ValueError\n'
                 f'HISTORICAL = "passed-{OLD_DATE}"\n',
                 encoding="utf-8",
             )
@@ -98,8 +101,10 @@ class BaseScanDailyStatusReferenceSyncTests(unittest.TestCase):
         self.assertIn(f"public-page check on {NEW_DATE}", updated_html)
         self.assertIn(f"Daily status {NEW_TIMESTAMP}", updated_html)
         self.assertIn(f"Initial migration passed on {OLD_DATE} UTC", updated_html)
-        self.assertIn(f'EXPECTED_DATE = "{NEW_DATE}"', updated_python)
+        self.assertIn(f'SOURCE_BASESCAN_PROFILE_CHECKED_DATE = "{NEW_DATE}"', updated_python)
+        self.assertIn(f'payload.get("lastCheckedDate") != "{NEW_DATE}"', updated_python)
         self.assertIn(f'EXPECTED_TIMESTAMP = "{NEW_TIMESTAMP}"', updated_python)
+        self.assertIn(f'CONTENT_DATE = "{OLD_DATE}"', updated_python)
         self.assertIn(f'HISTORICAL = "passed-{OLD_DATE}"', updated_python)
 
     def test_check_mode_reports_drift_without_writing(self):

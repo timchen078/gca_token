@@ -68,6 +68,12 @@ DATE_FIELDS = {
     "baseScanTokenProfileLastCheckedDate",
 }
 
+PYTHON_PROFILE_DATE_MARKERS = (
+    "SOURCE_BASESCAN_PROFILE_CHECKED_DATE",
+    '"lastCheckedDate"',
+    '"baseScanTokenProfileLastCheckedDate"',
+)
+
 PROFILE_DATE_ONLY_TARGET_FILES = {
     "site/basescan-preflight.html",
     "site/zh-basescan-preflight.html",
@@ -166,6 +172,23 @@ def replace_profile_date_phrases(text: str, old_date: str, new_date: str) -> tup
         updated, count = pattern.subn(rf"\g<prefix>{new_date}", updated)
         replacements += count
     return updated, replacements
+
+
+def replace_python_profile_dates(text: str, old_date: str, new_date: str) -> tuple[str, int]:
+    """Update only Python assertions/constants that explicitly track BaseScan dates."""
+    if old_date == new_date:
+        return text, 0
+    quoted_old_date = f'"{old_date}"'
+    quoted_new_date = f'"{new_date}"'
+    replacements = 0
+    lines: list[str] = []
+    for line in text.splitlines(keepends=True):
+        if any(marker in line for marker in PYTHON_PROFILE_DATE_MARKERS):
+            count = line.count(quoted_old_date)
+            line = line.replace(quoted_old_date, quoted_new_date)
+            replacements += count
+        lines.append(line)
+    return "".join(lines), replacements
 
 
 def replace_json_values(
@@ -269,10 +292,12 @@ def synchronize_file(
         updated, phrase_count = replace_profile_date_phrases(updated, old_date, new_date)
         date_count += phrase_count
         if path.suffix == ".py" and old_date != new_date:
-            quoted_old_date = f'"{old_date}"'
-            exact_date_count = updated.count(quoted_old_date)
-            updated = updated.replace(quoted_old_date, f'"{new_date}"')
-            date_count += exact_date_count
+            updated, python_date_count = replace_python_profile_dates(
+                updated,
+                old_date,
+                new_date,
+            )
+            date_count += python_date_count
         changed = updated != original
 
     expected_marker = (

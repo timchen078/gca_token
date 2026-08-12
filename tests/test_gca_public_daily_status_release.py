@@ -10,6 +10,8 @@ from tools.prepare_gca_public_daily_status_release import (
     prepare_release,
 )
 from tools.check_public_site import (
+    SOURCE_BASESCAN_PROFILE_CHECKED_DATE,
+    SOURCE_DAILY_STATUS_GENERATED_AT,
     extract_daily_reference,
     normalize_dynamic_daily_reference,
 )
@@ -185,17 +187,17 @@ class GcaPublicDailyStatusReleaseTests(unittest.TestCase):
 
     def test_public_checker_normalizes_dynamic_reviewer_references(self):
         reference = extract_daily_reference(json.dumps({
-            "snapshotGeneratedAt": "2026-08-12T08:00:00Z",
-            "baseScanPublicProfile": {"checkedAt": "2026-08-12T07:59:00Z"},
+            "snapshotGeneratedAt": "2026-08-13T08:00:00Z",
+            "baseScanPublicProfile": {"checkedAt": "2026-08-13T07:59:00Z"},
         }))
         payload = {
-            "dailyStatusGeneratedAt": "2026-08-12T08:00:00Z",
-            "lastCheckedDate": "2026-08-12",
+            "dailyStatusGeneratedAt": "2026-08-13T08:00:00Z",
+            "lastCheckedDate": "2026-08-13",
             "evidence": (
-                "Read-only public BaseScan check on 2026-08-12; "
-                "daily status 2026-08-12T08:00:00Z."
+                "Read-only public BaseScan check on 2026-08-13; "
+                "daily status 2026-08-13T08:00:00Z."
             ),
-            "unrelatedDate": "2026-08-12",
+            "unrelatedDate": "2026-08-13",
         }
 
         normalized = json.loads(normalize_dynamic_daily_reference(
@@ -204,11 +206,14 @@ class GcaPublicDailyStatusReleaseTests(unittest.TestCase):
             reference,
         ))
 
-        self.assertEqual(normalized["dailyStatusGeneratedAt"], "2026-08-11T19:25:21Z")
-        self.assertEqual(normalized["lastCheckedDate"], "2026-08-11")
-        self.assertIn("check on 2026-08-11", normalized["evidence"])
-        self.assertIn("2026-08-11T19:25:21Z", normalized["evidence"])
-        self.assertEqual(normalized["unrelatedDate"], "2026-08-12")
+        self.assertEqual(normalized["dailyStatusGeneratedAt"], SOURCE_DAILY_STATUS_GENERATED_AT)
+        self.assertEqual(normalized["lastCheckedDate"], SOURCE_BASESCAN_PROFILE_CHECKED_DATE)
+        self.assertIn(
+            f"check on {SOURCE_BASESCAN_PROFILE_CHECKED_DATE}",
+            normalized["evidence"],
+        )
+        self.assertIn(SOURCE_DAILY_STATUS_GENERATED_AT, normalized["evidence"])
+        self.assertEqual(normalized["unrelatedDate"], "2026-08-13")
 
     def test_daily_status_endpoint_is_not_normalized(self):
         body = json.dumps({
