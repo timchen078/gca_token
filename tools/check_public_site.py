@@ -962,16 +962,27 @@ def validate_team_page(text: str) -> None:
         "Founder, CEO, and Project Lead for GCA",
         "team.html#tim-chen",
         TIM_CHEN_PROFILE_PAGE_URL,
-        "official-domain professional profile",
+        "Official-domain professional profile",
         GITHUB_REPO_URL,
         X_URL,
         "https://t.me/gcagochinaofficial",
-        "BaseScan Remediation",
-        "No Hidden Claims",
-        "GCA does not claim BaseScan token profile approval",
-        "GCA does not ask users for private keys",
+        "Leadership scope",
+        "Public accountability",
+        "Official channels",
+        "support@gcagochina.com",
+        "product.html",
+        "verify.html",
     ):
         assert_contains(text, expected, label)
+    for forbidden in (
+        "BaseScan Remediation",
+        "BaseScan token profile is not approved yet",
+        "Review Note",
+        "Reviewer",
+        "No Hidden Claims",
+        "add LinkedIn",
+    ):
+        assert_not_contains(text, forbidden, label)
     assert_no_forbidden_public_claims(text, label)
 
 
@@ -979,13 +990,15 @@ def validate_tim_chen_profile_page(text: str) -> None:
     label = "/tim-chen.html"
     assert_social_preview_meta(text, label, TIM_CHEN_PROFILE_PAGE_URL)
     for expected in (
-        "Tim Chen | GCA Public Professional Profile",
+        "Tim Chen | GCA Founder and CEO",
         "Public Professional Profile",
         "Founder / CEO / Project Lead",
         "Founder, CEO, and Project Lead for GCA | Go China Access",
-        "official-domain equivalent public professional profile",
-        "BaseScan use",
-        "No Hidden Claims",
+        "Professional overview",
+        "Leadership scope",
+        "Professional principles",
+        "Official channels",
+        "support@gcagochina.com",
         TIM_CHEN_PROFILE_PAGE_URL,
         TEAM_PAGE_URL,
         "team.html#tim-chen",
@@ -996,6 +1009,15 @@ def validate_tim_chen_profile_page(text: str) -> None:
     assert_no_public_data_room_terms(text, label)
     assert_not_contains(text, 'href="tim-chen.json"', label)
     assert_not_contains(text, 'href="project.json"', label)
+    for forbidden in (
+        "BaseScan use",
+        "BaseScan Evidence Packet",
+        "Reviewer",
+        "add LinkedIn",
+        "No Hidden Claims",
+        "remain staged",
+    ):
+        assert_not_contains(text, forbidden, label)
     assert_no_forbidden_public_claims(text, label)
 
 
