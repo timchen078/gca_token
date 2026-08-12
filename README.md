@@ -144,8 +144,10 @@ The command requires explicit confirmations that the manual transfer is complete
 - Daily public health, optional member ops check, optional digest build, and `--update-public-status` snapshot refresh: `tools/run_gca_daily_ops.py`
 - Public daily status snapshot builder for `site/daily-status.html` and `site/daily-status.json`: `tools/build_gca_daily_status_snapshot.py`
 - BaseScan reviewer snapshot reference synchronizer: `tools/sync_basescan_daily_status_references.py`
+- Isolated public daily-status release preparer with file and data boundary checks: `tools/prepare_gca_public_daily_status_release.py`
 - Local redacted operator digest builder: `tools/build_gca_operator_digest.py`
 - GitHub Actions public daily ops check: `.github/workflows/check-gca-daily-ops.yml`
+- GitHub Actions verified daily-status publication to `gh-pages`: `.github/workflows/publish-gca-daily-status.yml`
 - Read-only live registration API check: `tools/check_gca_registration_api.py`
 - Read-only official GCA/USDT pool identity and aggregate market check: `tools/check_gca_market_health.py`
 - GitHub Actions public registration API check: `.github/workflows/check-gca-registration-api.yml`

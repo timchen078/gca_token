@@ -1,0 +1,139 @@
+name: Publish GCA Daily Status
+
+on:
+  workflow_run:
+    workflows:
+      - "Check GCA Daily Ops"
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: gca-site-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    name: Publish verified public daily status
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out trusted main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download successful public daily ops summary
+        uses: actions/download-artifact@v4
+        with:
+          name: gca-public-daily-ops
+          path: /tmp/gca-daily-ops-artifact
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Prepare, validate, and publish public status files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          SUMMARY=/tmp/gca-daily-ops-artifact/gca_daily_ops_summary.json
+          REPORT=/tmp/gca-public-daily-status-release.json
+          RELEASE_ROOT="$(mktemp -d)"
+          export RELEASE_ROOT REPORT
+
+          test -f "$SUMMARY"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin gh-pages
+          git worktree add ../gh-pages origin/gh-pages
+
+          mkdir -p "$RELEASE_ROOT/site"
+          rsync -a --exclude .git ../gh-pages/ "$RELEASE_ROOT/site/"
+          python tools/prepare_gca_public_daily_status_release.py \
+            --summary-input "$SUMMARY" \
+            --release-root "$RELEASE_ROOT" \
+            --report-output "$REPORT"
+
+          if [[ "$(python -c 'import json, os; print(str(json.load(open(os.environ["REPORT"]))["publishRequired"]).lower())')" != "true" ]]; then
+            echo "The successful summary is not newer than the published snapshot; nothing to publish."
+            exit 0
+          fi
+
+          python tools/check_site_links.py \
+            --site-root "$RELEASE_ROOT/site" \
+            --base-url https://gcagochina.com/
+
+          python -m http.server 8787 \
+            --bind 127.0.0.1 \
+            --directory "$RELEASE_ROOT/site" \
+            >/tmp/gca-public-daily-status-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for attempt in {1..20}; do
+            if python -c 'from urllib.request import urlopen; urlopen("http://127.0.0.1:8787/daily-status.json", timeout=2).read()'; then
+              break
+            fi
+            if [[ "$attempt" == "20" ]]; then
+              cat /tmp/gca-public-daily-status-server.log
+              exit 1
+            fi
+            sleep 1
+          done
+          python tools/check_public_site.py --base-url http://127.0.0.1:8787/ --timeout 10
+          kill "$SERVER_PID"
+          trap - EXIT
+
+          python - <<'PY'
+          import json
+          import os
+          import shutil
+          from pathlib import Path
+
+          release_root = Path(os.environ["RELEASE_ROOT"])
+          report = json.loads(Path(os.environ["REPORT"]).read_text(encoding="utf-8"))
+          destination = Path("../gh-pages").resolve()
+          for relative in report["changedFiles"]:
+              if not relative.startswith("site/"):
+                  raise SystemExit(f"refusing non-site release path: {relative}")
+              source = (release_root / relative).resolve()
+              target = (destination / relative.removeprefix("site/")).resolve()
+              target.relative_to(destination)
+              shutil.copy2(source, target)
+          PY
+
+          cd ../gh-pages
+          python - "$REPORT" <<'PY'
+          import json
+          import subprocess
+          import sys
+
+          report = json.load(open(sys.argv[1], encoding="utf-8"))
+          expected = sorted(path.removeprefix("site/") for path in report["changedFiles"])
+          subprocess.run(["git", "add", "--", *expected], check=True)
+          actual = sorted(
+              line for line in subprocess.check_output(
+                  ["git", "diff", "--cached", "--name-only"], text=True
+              ).splitlines() if line
+          )
+          if actual != expected:
+              raise SystemExit(f"staged public file set differs from release manifest: {actual!r}")
+          PY
+
+          git commit -m "Refresh verified public daily status [skip ci]"
+          git push origin HEAD:gh-pages

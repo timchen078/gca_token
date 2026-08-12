@@ -26,6 +26,7 @@ on:
       - "tools/check_gca_registration_api.py"
       - "tools/check_gca_market_health.py"
       - "tools/build_gca_daily_status_snapshot.py"
+      - "tools/prepare_gca_public_daily_status_release.py"
       - "launch/basescan_resubmission_values.json"
       - "launch/basescan_final_submission_package.json"
       - "site/basescan-remediation.json"
@@ -38,6 +39,7 @@ on:
       - "site/market-quality.html"
       - "site/market-quality.json"
       - ".github/workflows/check-gca-daily-ops.yml"
+      - ".github/workflows/publish-gca-daily-status.yml"
 
 permissions:
   contents: read
@@ -76,12 +78,13 @@ jobs:
           export SSL_CERT_FILE="$(python -c 'import certifi; print(certifi.where())')"
           python tools/sync_basescan_daily_status_references.py --check
           python tools/sync_basescan_final_package_references.py --check
+          mkdir -p /tmp/gca-public-daily-ops
           DAILY_OPS_ARGS=(
             --timeout 30
-            --summary-output /tmp/gca_daily_ops_summary.json
+            --summary-output /tmp/gca-public-daily-ops/gca_daily_ops_summary.json
             --build-digest
-            --digest-output /tmp/gca_operator_digest.md
-            --digest-json-output /tmp/gca_operator_digest.json
+            --digest-output /tmp/gca-public-daily-ops/gca_operator_digest.md
+            --digest-json-output /tmp/gca-public-daily-ops/gca_operator_digest.json
           )
 
           for attempt in {1..20}; do
@@ -102,7 +105,4 @@ jobs:
           name: gca-public-daily-ops
           if-no-files-found: ignore
           retention-days: 14
-          path: |
-            /tmp/gca_daily_ops_summary.json
-            /tmp/gca_operator_digest.md
-            /tmp/gca_operator_digest.json
+          path: /tmp/gca-public-daily-ops/

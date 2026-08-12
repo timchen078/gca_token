@@ -5,7 +5,9 @@ from pathlib import Path
 
 from tools.sync_basescan_daily_status_references import (
     DailyStatusReferenceSyncError,
+    PUBLIC_SITE_TARGET_FILES,
     canonical_reference,
+    parse_args,
     synchronize_references,
 )
 
@@ -163,6 +165,14 @@ class BaseScanDailyStatusReferenceSyncTests(unittest.TestCase):
                 "snapshotGeneratedAt": "2026-08-11",
                 "baseScanPublicProfile": {"checkedAt": NEW_TIMESTAMP},
             })
+
+    def test_site_only_cli_selects_public_targets(self):
+        args = parse_args(["--site-only", "--check"])
+
+        self.assertTrue(args.site_only)
+        self.assertTrue(args.check)
+        self.assertTrue(PUBLIC_SITE_TARGET_FILES)
+        self.assertTrue(all(path.startswith("site/") for path in PUBLIC_SITE_TARGET_FILES))
 
 
 if __name__ == "__main__":

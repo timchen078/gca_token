@@ -15,6 +15,12 @@ from urllib.request import Request, urlopen
 
 
 DEFAULT_BASE_URL = "https://gcagochina.com/"
+SOURCE_DAILY_STATUS_GENERATED_AT = "2026-08-11T19:25:21Z"
+SOURCE_BASESCAN_PROFILE_CHECKED_DATE = "2026-08-11"
+DAILY_REFERENCE_DATE_FIELDS = {
+    "lastCheckedDate",
+    "baseScanTokenProfileLastCheckedDate",
+}
 MAINNET_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
 X_URL = "https://x.com/GCAAIGoChina"
 FIRST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2054660559124255151"
@@ -12278,6 +12284,9 @@ def validate_daily_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contract address")
+    snapshot_generated_at = str(payload.get("snapshotGeneratedAt") or "")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", snapshot_generated_at):
+        raise SiteCheckError(f"{label}: invalid snapshotGeneratedAt")
     if daily_ops.get("packetVersion") != "gca_daily_ops_summary_v1":
         raise SiteCheckError(f"{label}: wrong daily ops packet version")
     if daily_ops.get("ok") is not True:
@@ -12411,25 +12420,32 @@ def validate_daily_status_json(text: str) -> None:
     if not isinstance(basescan.get("missingTargetEmailFilePaths"), list):
         raise SiteCheckError(f"{label}: missing target-email queue should be a list")
     action_queue = payload.get("ownerActionQueue", [])
-    if not isinstance(action_queue, list) or len(action_queue) < 3:
+    minimum_action_count = 2 if profile_status == "profile-published" else 3
+    if not isinstance(action_queue, list) or len(action_queue) < minimum_action_count:
         raise SiteCheckError(f"{label}: missing owner action queue")
     action_ids = {item.get("id") for item in action_queue if isinstance(item, dict)}
-    for action_id in (
-        "maintain-domain-mailbox",
-        "retain-domain-email-evidence",
-        "confirm-project-profile-map",
-        "final-basescan-preflight",
-    ):
+    expected_action_ids = (
+        ("monitor-basescan-profile", "retain-domain-email-evidence")
+        if profile_status == "profile-published"
+        else (
+            "maintain-domain-mailbox",
+            "retain-domain-email-evidence",
+            "confirm-project-profile-map",
+            "final-basescan-preflight",
+        )
+    )
+    for action_id in expected_action_ids:
         if action_id not in action_ids:
             raise SiteCheckError(f"{label}: missing owner action {action_id}")
-    project_profile_actions = [
-        item for item in action_queue
-        if isinstance(item, dict) and item.get("id") == "confirm-project-profile-map"
-    ]
-    if not project_profile_actions:
-        raise SiteCheckError(f"{label}: missing project profile action")
-    if project_profile_actions[0].get("publicEvidenceUrl") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
-        raise SiteCheckError(f"{label}: wrong project profile action URL")
+    if profile_status != "profile-published":
+        project_profile_actions = [
+            item for item in action_queue
+            if isinstance(item, dict) and item.get("id") == "confirm-project-profile-map"
+        ]
+        if not project_profile_actions:
+            raise SiteCheckError(f"{label}: missing project profile action")
+        if project_profile_actions[0].get("publicEvidenceUrl") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
+            raise SiteCheckError(f"{label}: wrong project profile action URL")
     if links.get("projectProfileBaseScanMap") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
         raise SiteCheckError(f"{label}: wrong projectProfileBaseScanMap link")
     if "The Project Profile BaseScan reviewer map is published at https://gcagochina.com/project-profile.html#basescanMapTitle." not in payload.get("safePublicSummary", []):
@@ -18546,13 +18562,129 @@ def fetch_text(
     return url, body
 
 
+def extract_daily_reference(text: str) -> dict[str, str] | None:
+    try:
+        payload = json.loads(text)
+    except (json.JSONDecodeError, TypeError):
+        return None
+    if not isinstance(payload, dict):
+        return None
+    snapshot_generated_at = str(payload.get("snapshotGeneratedAt") or "")
+    profile = payload.get("baseScanPublicProfile")
+    profile_checked_at = str(profile.get("checkedAt") or "") if isinstance(profile, dict) else ""
+    timestamp_pattern = r"20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z"
+    if not re.fullmatch(timestamp_pattern, snapshot_generated_at):
+        return None
+    if not re.fullmatch(timestamp_pattern, profile_checked_at):
+        return None
+    return {
+        "dailyStatusGeneratedAt": snapshot_generated_at,
+        "baseScanProfileCheckedDate": profile_checked_at.split("T", 1)[0],
+    }
+
+
+def normalize_profile_date_phrases(text: str, old_date: str, new_date: str) -> str:
+    if old_date == new_date:
+        return text
+    patterns = (
+        re.compile(
+            rf"(?P<prefix>read-only\s+public(?:-page)?(?:\s+BaseScan)?\s+check\s+on\s+){re.escape(old_date)}",
+            re.I,
+        ),
+        re.compile(rf"(?P<prefix>Read-only\s+check\s+){re.escape(old_date)}(?=\s+still\s+shows)"),
+        re.compile(
+            rf"(?P<prefix><span class=\"label\">Preflight Refresh</span>\s*<span class=\"value\">){re.escape(old_date)}"
+        ),
+        re.compile(
+            rf"(?P<prefix><span class=\"label\">最终包刷新</span>\s*<span class=\"value\">){re.escape(old_date)}"
+        ),
+    )
+    updated = text
+    for pattern in patterns:
+        updated = pattern.sub(rf"\g<prefix>{new_date}", updated)
+    return updated
+
+
+def normalize_json_daily_reference(
+    value: object,
+    *,
+    dynamic_timestamp: str,
+    dynamic_date: str,
+    key: str = "",
+) -> object:
+    if isinstance(value, dict):
+        return {
+            child_key: normalize_json_daily_reference(
+                child_value,
+                dynamic_timestamp=dynamic_timestamp,
+                dynamic_date=dynamic_date,
+                key=str(child_key),
+            )
+            for child_key, child_value in value.items()
+        }
+    if isinstance(value, list):
+        return [
+            normalize_json_daily_reference(
+                child_value,
+                dynamic_timestamp=dynamic_timestamp,
+                dynamic_date=dynamic_date,
+            )
+            for child_value in value
+        ]
+    if isinstance(value, str):
+        updated = value.replace(dynamic_timestamp, SOURCE_DAILY_STATUS_GENERATED_AT)
+        updated = normalize_profile_date_phrases(
+            updated,
+            dynamic_date,
+            SOURCE_BASESCAN_PROFILE_CHECKED_DATE,
+        )
+        if key in DAILY_REFERENCE_DATE_FIELDS and updated == dynamic_date:
+            updated = SOURCE_BASESCAN_PROFILE_CHECKED_DATE
+        return updated
+    return value
+
+
+def normalize_dynamic_daily_reference(
+    text: str,
+    path: str,
+    reference: dict[str, str] | None,
+) -> str:
+    if not reference or path in {"/daily-status.html", "/daily-status.json"}:
+        return text
+    dynamic_timestamp = reference["dailyStatusGeneratedAt"]
+    dynamic_date = reference["baseScanProfileCheckedDate"]
+    if path.endswith(".json"):
+        try:
+            payload = json.loads(text)
+        except json.JSONDecodeError:
+            return text
+        normalized = normalize_json_daily_reference(
+            payload,
+            dynamic_timestamp=dynamic_timestamp,
+            dynamic_date=dynamic_date,
+        )
+        return json.dumps(normalized, ensure_ascii=False)
+    updated = text.replace(dynamic_timestamp, SOURCE_DAILY_STATUS_GENERATED_AT)
+    return normalize_profile_date_phrases(
+        updated,
+        dynamic_date,
+        SOURCE_BASESCAN_PROFILE_CHECKED_DATE,
+    )
+
+
 def run_checks(base_url: str, timeout: float, allow_insecure_tls: bool = False) -> int:
     failures: list[str] = []
     context = build_ssl_context(allow_insecure_tls)
+    daily_reference: dict[str, str] | None = None
+    try:
+        _, daily_status_body = fetch_text(base_url, "/daily-status.json", timeout, context)
+        daily_reference = extract_daily_reference(daily_status_body)
+    except SiteCheckError:
+        pass
     for path, validator in CHECKS:
         try:
             url, body = fetch_text(base_url, path, timeout, context)
-            validator(body)
+            validator(normalize_dynamic_daily_reference(body, path, daily_reference))
             assert_no_public_raw_data_links(body, path)
             assert_no_public_operator_links(body, path)
             assert_no_forbidden_public_claims(body, path)

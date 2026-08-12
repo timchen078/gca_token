@@ -21,15 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DAILY_STATUS_PATH = ROOT / "site" / "daily-status.json"
 DEFAULT_VALUES_PATH = ROOT / "launch" / "basescan_resubmission_values.json"
 
-DEFAULT_TARGET_FILES = [
-    "launch/basescan_form_values.json",
-    "launch/basescan_resubmission_package.md",
-    "launch/basescan_resubmission_values.json",
-    "launch/basescan_review_followup.md",
-    "launch/basescan_reviewer_checklist.json",
-    "launch/basescan_reviewer_checklist.md",
-    "launch/basescan_token_submission.md",
-    "launch/external_review_followup_tracker.json",
+PUBLIC_SITE_TARGET_FILES = [
     "site/basescan-followup.html",
     "site/basescan-followup.json",
     "site/basescan-preflight.html",
@@ -54,6 +46,18 @@ DEFAULT_TARGET_FILES = [
     "site/zh-basescan-followup.html",
     "site/zh-basescan-preflight.html",
     "site/zh-release-gates.html",
+]
+
+DEFAULT_TARGET_FILES = [
+    "launch/basescan_form_values.json",
+    "launch/basescan_resubmission_package.md",
+    "launch/basescan_resubmission_values.json",
+    "launch/basescan_review_followup.md",
+    "launch/basescan_reviewer_checklist.json",
+    "launch/basescan_reviewer_checklist.md",
+    "launch/basescan_token_submission.md",
+    "launch/external_review_followup_tracker.json",
+    *PUBLIC_SITE_TARGET_FILES,
     "tests/test_basescan_reviewer_checklist.py",
     "tests/test_launch_package.py",
     "tools/check_public_site.py",
@@ -305,7 +309,7 @@ def synchronize_references(
     values = read_json(values_path)
     canonical = canonical_reference(daily_status)
     previous = previous_reference(values)
-    files = target_files or DEFAULT_TARGET_FILES
+    files = DEFAULT_TARGET_FILES if target_files is None else target_files
     records = [
         synchronize_file(
             root=root,
@@ -370,6 +374,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default="launch/basescan_resubmission_values.json",
         help="BaseScan values JSON path containing the previous reference.",
     )
+    parser.add_argument(
+        "--site-only",
+        action="store_true",
+        help="Synchronize only public site files, leaving launch, test, and tool sources unchanged.",
+    )
     parser.add_argument("--check", action="store_true", help="Report required changes without writing files.")
     parser.add_argument("--json", action="store_true", help="Print the complete JSON report.")
     return parser.parse_args(argv)
@@ -388,6 +397,7 @@ def main(argv: list[str] | None = None) -> int:
             root=root,
             daily_status_path=resolve_under_root(root, args.daily_status),
             values_path=resolve_under_root(root, args.values),
+            target_files=PUBLIC_SITE_TARGET_FILES if args.site_only else None,
             write=not args.check,
         )
     except DailyStatusReferenceSyncError as exc:
