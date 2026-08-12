@@ -954,6 +954,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("github-token: ${{ github.token }}", workflow)
         self.assertIn("run-id: ${{ github.event.workflow_run.id }}", workflow)
         self.assertIn("python tools/prepare_gca_public_daily_status_release.py", workflow)
+        self.assertIn("Public daily-status release skipped safely", workflow)
         self.assertIn("python tools/check_site_links.py", workflow)
         self.assertIn("python tools/check_public_site.py --base-url http://127.0.0.1:8787/", workflow)
         self.assertIn("staged public file set differs from release manifest", workflow)

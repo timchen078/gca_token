@@ -148,6 +148,29 @@ class GcaPublicDailyStatusReleaseTests(unittest.TestCase):
             with self.assertRaises(PublicDailyStatusReleaseError):
                 prepare_release(summary_input=summary_path, release_root=root)
 
+    def test_nonblocking_observation_failure_skips_without_writing(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            self.stage_public_files(root)
+            before = (root / "site" / "daily-status.json").read_text(encoding="utf-8")
+            summary = self.build_summary()
+            market_step = next(
+                step for step in summary["steps"]
+                if step["id"] == "official-pool-market-health"
+            )
+            market_step["ok"] = False
+            summary_path = self.write_summary(root, summary)
+
+            report = prepare_release(summary_input=summary_path, release_root=root)
+            after = (root / "site" / "daily-status.json").read_text(encoding="utf-8")
+
+        self.assertTrue(report["ok"])
+        self.assertFalse(report["publishRequired"])
+        self.assertEqual(report["status"], "incomplete-public-observation-skipped")
+        self.assertEqual(report["failedObservations"], ["official-pool-market-health"])
+        self.assertEqual(report["changedFiles"], [])
+        self.assertEqual(before, after)
+
     def test_profile_state_change_requires_main_package_update(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

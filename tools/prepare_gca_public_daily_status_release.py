@@ -84,7 +84,7 @@ def snapshot_site_tree(site_root: Path) -> dict[str, str]:
     return snapshot
 
 
-def validate_summary(summary: dict[str, Any]) -> str:
+def validate_summary(summary: dict[str, Any]) -> tuple[str, list[str]]:
     generated_at = str(summary.get("generatedAt") or "")
     if not re.fullmatch(r"20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", generated_at):
         raise PublicDailyStatusReleaseError("daily summary generatedAt is not an ISO UTC timestamp")
@@ -137,11 +137,36 @@ def validate_summary(summary: dict[str, Any]) -> str:
     if set(step_map) != REQUIRED_STEP_IDS:
         raise PublicDailyStatusReleaseError("daily summary contains an unexpected public step set")
     failed = sorted(step_id for step_id, step in step_map.items() if step.get("ok") is not True)
-    if failed:
-        raise PublicDailyStatusReleaseError(
-            "all public observations must pass before publication: " + ", ".join(failed)
-        )
-    return generated_at
+    return generated_at, failed
+
+
+def skipped_release_report(
+    *,
+    status: str,
+    generated_at: str,
+    previous_snapshot_generated_at: str,
+    failed_observations: list[str] | None = None,
+) -> dict[str, Any]:
+    return {
+        "schema": "gca-public-daily-status-release-v1",
+        "ok": True,
+        "status": status,
+        "publishRequired": False,
+        "previousSnapshotGeneratedAt": previous_snapshot_generated_at,
+        "snapshotGeneratedAt": generated_at,
+        "failedObservations": failed_observations or [],
+        "changedFiles": [],
+        "boundaries": {
+            "publicSiteFilesOnly": True,
+            "writesMainBranch": False,
+            "publishesOperatorDigest": False,
+            "readsProductionUserData": False,
+            "touchesWalletsOrContracts": False,
+            "submitsBaseScanRequest": False,
+            "requiresSignature": False,
+            "requiresTransaction": False,
+        },
+    }
 
 
 def validate_public_payload(payload: dict[str, Any]) -> None:
@@ -249,13 +274,7 @@ def prepare_release(
     site_root = release_root / "site"
     before = snapshot_site_tree(site_root)
     summary = load_summary(summary_input)
-    generated_at = validate_summary(summary)
-
-    sanitized_summary_path = release_root / "gca_public_daily_ops_summary.json"
-    sanitized_summary_path.write_text(
-        json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
+    generated_at, failed_observations = validate_summary(summary)
 
     daily_json = site_root / "daily-status.json"
     daily_html = site_root / "daily-status.html"
@@ -265,23 +284,25 @@ def prepare_release(
 
     old_payload = json.loads(daily_json.read_text(encoding="utf-8"))
     old_reference = canonical_reference(old_payload)
+    if failed_observations:
+        return skipped_release_report(
+            status="incomplete-public-observation-skipped",
+            generated_at=generated_at,
+            previous_snapshot_generated_at=old_reference["dailyStatusGeneratedAt"],
+            failed_observations=failed_observations,
+        )
     if generated_at <= old_reference["dailyStatusGeneratedAt"]:
-        return {
-            "schema": "gca-public-daily-status-release-v1",
-            "ok": True,
-            "status": "stale-or-duplicate-summary-skipped",
-            "publishRequired": False,
-            "previousSnapshotGeneratedAt": old_reference["dailyStatusGeneratedAt"],
-            "snapshotGeneratedAt": generated_at,
-            "changedFiles": [],
-            "boundaries": {
-                "publicSiteFilesOnly": True,
-                "writesMainBranch": False,
-                "publishesOperatorDigest": False,
-                "readsProductionUserData": False,
-                "touchesWalletsOrContracts": False,
-            },
-        }
+        return skipped_release_report(
+            status="stale-or-duplicate-summary-skipped",
+            generated_at=generated_at,
+            previous_snapshot_generated_at=old_reference["dailyStatusGeneratedAt"],
+        )
+
+    sanitized_summary_path = release_root / "gca_public_daily_ops_summary.json"
+    sanitized_summary_path.write_text(
+        json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
     values_path = release_root / "launch" / "basescan_resubmission_values.json"
     values_path.parent.mkdir(parents=True, exist_ok=True)

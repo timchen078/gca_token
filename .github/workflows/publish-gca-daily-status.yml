@@ -71,7 +71,7 @@ jobs:
             --report-output "$REPORT"
 
           if [[ "$(python -c 'import json, os; print(str(json.load(open(os.environ["REPORT"]))["publishRequired"]).lower())')" != "true" ]]; then
-            echo "The successful summary is not newer than the published snapshot; nothing to publish."
+            python -c 'import json, os; p=json.load(open(os.environ["REPORT"])); print("Public daily-status release skipped safely: {}; failed observations: {}".format(p["status"], p.get("failedObservations", [])))'
             exit 0
           fi
 
