@@ -12,11 +12,11 @@
         top: "返回顶部",
         links: [
           ["首页", "zh-cn.html"],
-          ["验证", "verify.html"],
-          ["购买", "zh-buy.html"],
-          ["市场", "zh-markets.html"],
+          ["产品", "product.html"],
+          ["工具", "tools.html"],
           ["会员", "gca/member-access/"],
-          ["进度", "zh-status.html"],
+          ["市场", "zh-markets.html"],
+          ["验证", "verify.html"],
           ["支持", "zh-support.html"],
           ["EN", "index.html"]
         ]
@@ -28,13 +28,12 @@
         top: "Back to top",
         links: [
           ["Home", "index.html"],
-          ["Verify", "verify.html"],
-          ["Buy", "buy.html"],
-          ["Markets", "markets.html"],
-          ["Tools", "tools.html"],
           ["Product", "product.html"],
+          ["Tools", "tools.html"],
           ["Members", "gca/member-access/"],
-          ["Trust", "trust.html"],
+          ["Markets", "markets.html"],
+          ["Verify", "verify.html"],
+          ["About", "about.html"],
           ["中文", "zh-cn.html"]
         ]
       };
