@@ -201,8 +201,10 @@ header .nav-links > a[aria-current="page"] {
     right: 0;
     left: 0;
     display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
     max-height: 0;
     align-items: stretch !important;
+    justify-content: stretch !important;
     gap: 4px !important;
     overflow: hidden;
     border: 0 solid var(--gca-line);
@@ -227,6 +229,7 @@ header .nav-links > a[aria-current="page"] {
   }
 
   header .nav-links > a {
+    width: 100%;
     min-height: 44px;
     justify-content: space-between;
     padding: 10px 12px;
