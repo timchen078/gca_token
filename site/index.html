@@ -20,8 +20,44 @@
     <meta name="twitter:title" content="GCA | Go China Access">
     <meta name="twitter:description" content="Go China narrative research, browser-based quant risk tools, member access, and a fixed-supply token on Base Mainnet.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
-    <link rel="stylesheet" href="assets/gca-home.css?v=20260812">
-    <link rel="stylesheet" href="assets/gca-site.css?v=20260812-2">
+    <link rel="alternate" hreflang="en" href="https://gcagochina.com/">
+    <link rel="alternate" hreflang="zh-CN" href="https://gcagochina.com/zh-cn.html">
+    <link rel="alternate" hreflang="x-default" href="https://gcagochina.com/">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://gcagochina.com/#organization",
+            "name": "GCA | Go China Access",
+            "url": "https://gcagochina.com/",
+            "logo": "https://gcagochina.com/assets/gca-logo.png",
+            "email": "mailto:support@gcagochina.com",
+            "founder": {
+              "@type": "Person",
+              "name": "Tim Chen",
+              "url": "https://gcagochina.com/tim-chen.html"
+            },
+            "sameAs": [
+              "https://x.com/GCAAIGoChina",
+              "https://t.me/gcagochinaofficial",
+              "https://github.com/timchen078/gca_token"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://gcagochina.com/#website",
+            "name": "GCA | Go China Access",
+            "url": "https://gcagochina.com/",
+            "publisher": { "@id": "https://gcagochina.com/#organization" },
+            "inLanguage": ["en", "zh-CN"]
+          }
+        ]
+      }
+    </script>
+    <link rel="stylesheet" href="assets/gca-home.css?v=20260812-2">
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260812-3">
     <script src="assets/gca-site.js?v=20260812-2" defer></script>
   </head>
   <body>
@@ -42,11 +78,16 @@
           <div class="hero-content">
             <p class="eyebrow">Go China Access · Base Mainnet</p>
             <h1 id="title">GCA</h1>
-            <p class="lead hero-copy">A focused access ecosystem for bilingual Web3 research, browser-based quant risk tools, and member workflows, anchored by a fixed-supply token on Base Mainnet.</p>
+            <p class="lead hero-copy">A bilingual Web3 research and risk-control platform connecting the Go China narrative, browser-based quant tools, structured member workflows, and a fixed-supply Base token under one verifiable identity.</p>
             <div class="actions">
-              <a class="button primary" href="product.html">Explore Product</a>
-              <a class="button accent" href="verify.html">Verify GCA</a>
+              <a class="button primary" href="product.html">Open Risk Tools</a>
+              <a class="button accent" href="verify.html">Verify Token</a>
               <a class="button" href="gca/member-access/">Member Access</a>
+            </div>
+            <div class="hero-proof" aria-label="Product characteristics">
+              <span><strong>10 browser tools</strong> ready to use</span>
+              <span><strong>Local-first</strong> private workspace</span>
+              <span><strong>Read-only</strong> wallet verification</span>
             </div>
           </div>
         </div>
@@ -267,6 +308,8 @@
             <a href="team.html">Team</a>
             <a href="whitepaper.html">Whitepaper</a>
             <a href="support.html">Support</a>
+            <a href="https://x.com/GCAAIGoChina">X / Twitter</a>
+            <a href="https://t.me/gcagochinaofficial">Telegram</a>
             <a href="zh-cn.html">中文</a>
           </div>
         </div>

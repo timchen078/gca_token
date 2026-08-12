@@ -171,6 +171,35 @@ h3 {
   margin-bottom: 28px;
 }
 
+.hero-proof {
+  width: min(680px, 100%);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 1px solid var(--home-line);
+  color: var(--home-muted);
+  font-size: 13px;
+}
+
+.hero-proof span {
+  min-width: 0;
+  padding: 0 16px;
+  border-left: 1px solid var(--home-line);
+}
+
+.hero-proof span:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.hero-proof strong {
+  display: block;
+  color: var(--home-ink);
+  font-size: 14px;
+}
+
 .actions,
 .inline-links {
   display: flex;
@@ -516,7 +545,7 @@ footer {
   }
 
   .hero {
-    min-height: 610px;
+    min-height: 650px;
   }
 
   .hero-art {
@@ -526,7 +555,7 @@ footer {
 
   .hero-content {
     width: 100%;
-    padding: 62px 0 70px;
+    padding: 46px 0 54px;
   }
 
   h1 {
@@ -545,7 +574,6 @@ footer {
     width: 100%;
   }
 
-  .facts,
   .tool-grid,
   .steps,
   .split,
@@ -553,20 +581,56 @@ footer {
     grid-template-columns: 1fr;
   }
 
+  .hero-proof {
+    margin-top: 24px;
+    padding-top: 16px;
+    font-size: 11px;
+  }
+
+  .hero-proof span {
+    padding: 0 9px;
+  }
+
+  .hero-proof strong {
+    font-size: 12px;
+  }
+
+  .facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .fact,
   .fact:first-child,
   .fact:nth-child(3) {
-    padding: 20px 0;
+    padding: 18px 10px;
     border-top: 1px solid #3a403d;
     border-right: 0;
   }
 
-  .fact:first-child {
+  .fact:nth-child(-n + 2) {
     border-top: 0;
   }
 
+  .fact:nth-child(odd) {
+    padding-left: 0;
+    border-right: 1px solid #3a403d;
+  }
+
+  .fact:nth-child(even) {
+    padding-right: 0;
+  }
+
+  .fact-value {
+    font-size: 14px;
+  }
+
+  .tool-card {
+    min-height: 0;
+    padding: 20px;
+  }
+
   .section {
-    padding: 64px 0;
+    padding: 56px 0;
   }
 
   .step,

@@ -20,8 +20,44 @@
     <meta name="twitter:title" content="GCA 中文官网 | Go China Access">
     <meta name="twitter:description" content="Go China 叙事研究、浏览器量化风控工具、会员体系与 Base Mainnet 固定总量代币。">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
-    <link rel="stylesheet" href="assets/gca-home.css?v=20260812">
-    <link rel="stylesheet" href="assets/gca-site.css?v=20260812-2">
+    <link rel="alternate" hreflang="en" href="https://gcagochina.com/">
+    <link rel="alternate" hreflang="zh-CN" href="https://gcagochina.com/zh-cn.html">
+    <link rel="alternate" hreflang="x-default" href="https://gcagochina.com/">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://gcagochina.com/#organization",
+            "name": "GCA | Go China Access",
+            "url": "https://gcagochina.com/",
+            "logo": "https://gcagochina.com/assets/gca-logo.png",
+            "email": "mailto:support@gcagochina.com",
+            "founder": {
+              "@type": "Person",
+              "name": "Tim Chen",
+              "url": "https://gcagochina.com/tim-chen.html"
+            },
+            "sameAs": [
+              "https://x.com/GCAAIGoChina",
+              "https://t.me/gcagochinaofficial",
+              "https://github.com/timchen078/gca_token"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://gcagochina.com/#website",
+            "name": "GCA | Go China Access",
+            "url": "https://gcagochina.com/",
+            "publisher": { "@id": "https://gcagochina.com/#organization" },
+            "inLanguage": ["en", "zh-CN"]
+          }
+        ]
+      }
+    </script>
+    <link rel="stylesheet" href="assets/gca-home.css?v=20260812-2">
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260812-3">
     <script src="assets/gca-site.js?v=20260812-2" defer></script>
   </head>
   <body lang="zh-CN">
@@ -42,11 +78,16 @@
           <div class="hero-content">
             <p class="eyebrow">Go China Access · Base Mainnet</p>
             <h1 id="title">GCA</h1>
-            <p class="lead hero-copy">连接 Go China 宏观叙事、中文 Web3 研究、浏览器量化风控工具和会员工作流，并以 Base Mainnet 固定总量代币作为访问生态的一部分。</p>
+            <p class="lead hero-copy">面向中英文用户的 Web3 研究与量化风控平台，连接 Go China 宏观叙事、浏览器风险工具、会员工作流和 Base 固定总量代币，并统一在一个可验证的品牌体系中。</p>
             <div class="actions">
-              <a class="button primary" href="zh-product.html">查看产品</a>
-              <a class="button accent" href="zh-wallet-verify.html">验证 GCA</a>
+              <a class="button primary" href="zh-product.html">打开风控工具</a>
+              <a class="button accent" href="zh-wallet-verify.html">验证代币</a>
               <a class="button" href="gca/member-access/">会员账户</a>
+            </div>
+            <div class="hero-proof" aria-label="产品特征">
+              <span><strong>10 项浏览器工具</strong>即开即用</span>
+              <span><strong>本地优先</strong>私密工作区</span>
+              <span><strong>只读</strong>钱包验证</span>
             </div>
           </div>
         </div>
@@ -267,6 +308,8 @@
             <a href="team.html">团队</a>
             <a href="whitepaper.html">白皮书</a>
             <a href="zh-support.html">支持</a>
+            <a href="https://x.com/GCAAIGoChina">X / Twitter</a>
+            <a href="https://t.me/gcagochinaofficial">Telegram</a>
             <a href="index.html">English</a>
           </div>
         </div>

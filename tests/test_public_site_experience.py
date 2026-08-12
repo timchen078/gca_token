@@ -18,6 +18,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn(".gca-menu-button", stylesheet)
         self.assertIn(".gca-back-to-top", stylesheet)
         self.assertIn("prefers-reduced-motion", stylesheet)
+        self.assertIn("grid-template-columns: minmax(0, 1fr);", stylesheet)
+        self.assertIn("justify-content: stretch !important;", stylesheet)
+        self.assertIn("width: 100%;", stylesheet)
         self.assertIn("Skip to main content", script)
         self.assertIn("跳到主要内容", script)
         self.assertIn('viewer.searchParams.set("source", target.href)', script)
@@ -33,7 +36,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             depth = len(relative.parts) - 1
             prefix = "../" * depth
             page = path.read_text()
-            expected_css = f'href="{prefix}assets/gca-site.css?v=20260812-2"'
+            expected_css = f'href="{prefix}assets/gca-site.css?v=20260812-3"'
             expected_js = f'src="{prefix}assets/gca-site.js?v=20260812-2" defer'
             if expected_css not in page or expected_js not in page:
                 missing.append(relative.as_posix())
@@ -75,6 +78,33 @@ class PublicSiteExperienceTests(unittest.TestCase):
 
         self.assertIn('navLinks.replaceChildren()', script)
         self.assertIn('aria-current", "page"', script)
+
+    def test_homepages_publish_professional_identity_and_product_signals(self):
+        english = (SITE / "index.html").read_text()
+        chinese = (SITE / "zh-cn.html").read_text()
+        stylesheet = (SITE / "assets" / "gca-home.css").read_text()
+
+        for page in (english, chinese):
+            self.assertIn('<script type="application/ld+json">', page)
+            self.assertIn('"@type": "Organization"', page)
+            self.assertIn('"@type": "WebSite"', page)
+            self.assertIn('"name": "Tim Chen"', page)
+            self.assertIn('mailto:support@gcagochina.com', page)
+            self.assertIn('https://x.com/GCAAIGoChina', page)
+            self.assertIn('https://t.me/gcagochinaofficial', page)
+            self.assertIn('rel="alternate" hreflang="en"', page)
+            self.assertIn('rel="alternate" hreflang="zh-CN"', page)
+            self.assertIn('class="hero-proof"', page)
+
+        self.assertIn("10 browser tools", english)
+        self.assertIn("Local-first", english)
+        self.assertIn("Read-only", english)
+        self.assertIn("10 项浏览器工具", chinese)
+        self.assertIn("本地优先", chinese)
+        self.assertIn("只读", chinese)
+        self.assertIn(".hero-proof", stylesheet)
+        self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr));", stylesheet)
+        self.assertIn(".tool-card {\n    min-height: 0;", stylesheet)
 
     def test_whitepaper_uses_shared_mobile_navigation_and_wraps_long_links(self):
         page = (SITE / "whitepaper.html").read_text()
