@@ -15,6 +15,69 @@ from urllib.request import Request, urlopen
 
 
 DEFAULT_BASE_URL = "https://gcagochina.com/"
+PUBLIC_INDEXABLE_PATHS = frozenset(
+    {
+        "/",
+        "/zh-cn.html",
+        "/product.html",
+        "/zh-product.html",
+        "/tools.html",
+        "/risk-calculator.html",
+        "/entry-ready.html",
+        "/risk-training.html",
+        "/liquidation-replay.html",
+        "/backtest-lab.html",
+        "/risk-warning.html",
+        "/trade-journal.html",
+        "/research-notes.html",
+        "/trade-plans.html",
+        "/portfolio-risk.html",
+        "/member-workspace.html",
+        "/risk-passport.html",
+        "/workspace-vault.html",
+        "/start.html",
+        "/register.html",
+        "/gca/member-access/",
+        "/markets.html",
+        "/zh-markets.html",
+        "/buy.html",
+        "/zh-buy.html",
+        "/liquidity.html",
+        "/zh-liquidity.html",
+        "/supply.html",
+        "/zh-supply.html",
+        "/holder-distribution.html",
+        "/verify.html",
+        "/zh-wallet-verify.html",
+        "/security.html",
+        "/zh-security.html",
+        "/token-safety.html",
+        "/onchain-proofs.html",
+        "/risk.html",
+        "/faq.html",
+        "/zh-faq.html",
+        "/wallet-warning.html",
+        "/about.html",
+        "/team.html",
+        "/tim-chen.html",
+        "/whitepaper.html",
+        "/project-profile.html",
+        "/brand-kit.html",
+        "/technical-report.html",
+        "/reserve-statement.html",
+        "/tokenlist.html",
+        "/radar.html",
+        "/radar-issue-006.html",
+        "/radar-issue-005.html",
+        "/radar-issue-004.html",
+        "/support.html",
+        "/zh-support.html",
+        "/privacy.html",
+        "/terms.html",
+        "/site-map.html",
+        "/zh-site-map.html",
+    }
+)
 SOURCE_DAILY_STATUS_GENERATED_AT = "2026-08-12T06:37:31Z"
 SOURCE_BASESCAN_PROFILE_CHECKED_DATE = "2026-08-12"
 DAILY_REFERENCE_DATE_FIELDS = {
@@ -311,6 +374,25 @@ def assert_contains_any(text: str, expected_options: tuple[str, ...], label: str
 def assert_not_contains(text: str, forbidden: str, label: str) -> None:
     if forbidden in text:
         raise SiteCheckError(f"{label}: found forbidden {forbidden!r}")
+
+
+def assert_search_index_policy(text: str, path: str) -> None:
+    """Keep visitor pages indexable and reviewer/operations pages out of search."""
+    is_html = path == "/" or path.endswith(".html") or path.endswith("/")
+    if not is_html:
+        return
+
+    has_noindex = bool(
+        re.search(
+            r'<meta\s+name=["\']robots["\']\s+content=["\'][^"\']*\bnoindex\b[^"\']*["\']\s*/?>',
+            text,
+            re.I,
+        )
+    )
+    if path in PUBLIC_INDEXABLE_PATHS and has_noindex:
+        raise SiteCheckError(f"{path}: visitor page must remain indexable")
+    if path not in PUBLIC_INDEXABLE_PATHS and not has_noindex:
+        raise SiteCheckError(f"{path}: internal or reviewer page must publish a noindex directive")
 
 
 def assert_no_forbidden_public_claims(text: str, label: str) -> None:
@@ -4437,7 +4519,8 @@ def validate_zh_site_map_page(text: str) -> None:
         "tim-chen.html",
         "whitepaper.html",
         "brand-kit.html",
-        "community.html",
+        X_URL,
+        TELEGRAM_URL,
         "radar.html",
         "site-map.html",
     ):
@@ -4699,7 +4782,8 @@ def validate_site_map_page(text: str) -> None:
         "whitepaper.html",
         "support.html",
         "brand-kit.html",
-        "community.html",
+        X_URL,
+        TELEGRAM_URL,
         "radar.html",
         "faq.html",
     ):
@@ -18453,6 +18537,7 @@ def run_checks(base_url: str, timeout: float, allow_insecure_tls: bool = False) 
             assert_no_public_raw_data_links(body, path)
             assert_no_public_operator_links(body, path)
             assert_no_forbidden_public_claims(body, path)
+            assert_search_index_policy(body, path)
             assert_not_contains(body, LEGACY_PERSONAL_GMAIL, path)
         except SiteCheckError as exc:
             failures.append(str(exc))

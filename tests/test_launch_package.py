@@ -786,6 +786,30 @@ class LaunchPackageTests(unittest.TestCase):
         with self.assertRaises(module.SiteCheckError):
             module.assert_no_forbidden_public_claims("GCA 可以保本", "/bad")
 
+    def test_search_index_policy_separates_visitor_pages_from_internal_materials(self):
+        script_path = ROOT / "tools" / "check_public_site.py"
+        spec = importlib.util.spec_from_file_location("check_public_site_index_policy", script_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        sitemap = (ROOT / "site" / "sitemap.xml").read_text()
+
+        def public_path(path: Path) -> str:
+            relative = str(path.relative_to(ROOT / "site"))
+            if relative == "index.html":
+                return "/"
+            if relative.endswith("/index.html"):
+                return "/" + relative.removesuffix("index.html")
+            return "/" + relative
+
+        self.assertEqual(59, len(module.PUBLIC_INDEXABLE_PATHS))
+        for path in (ROOT / "site").rglob("*.html"):
+            route = public_path(path)
+            page = path.read_text()
+            module.assert_search_index_policy(page, route)
+            if route in module.PUBLIC_INDEXABLE_PATHS:
+                canonical = "https://gcagochina.com/" if route == "/" else f"https://gcagochina.com{route}"
+                self.assertIn(f"<loc>{canonical}</loc>", sitemap, route)
+
     def test_pages_publish_workflow_syncs_site_to_gh_pages(self):
         workflow = (ROOT / ".github" / "workflows" / "publish-site.yml").read_text()
 
