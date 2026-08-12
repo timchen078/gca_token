@@ -329,8 +329,8 @@
         }
       }
     </style>
-      <link rel="stylesheet" href="assets/gca-site.css?v=20260711">
-    <script src="assets/gca-site.js?v=20260711" defer></script>
+      <link rel="stylesheet" href="assets/gca-site.css?v=20260812">
+    <script src="assets/gca-site.js?v=20260812" defer></script>
     <script src="assets/market-snapshot.js?v=20260811-1" defer></script>
   </head>
   <body>
@@ -374,7 +374,6 @@
           <a class="button" href="risk.html">Risk</a>
           <a class="button" href="liquidity.html">Liquidity Statement</a>
           <a class="button" href="market-quality.html">Market Quality</a>
-          <a class="button" href="daily-status.html#marketHealth">Daily Market Evidence</a>
           <a class="button" href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener</a>
           <a class="button" href="https://app.uniswap.org/explore/pools/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">Uniswap Pool</a>
           <button class="button" type="button" id="copyPool">Copy Pool</button>
@@ -409,14 +408,14 @@
           </div>
           <button class="button" type="button" data-market-action>Refresh snapshot</button>
         </div>
-        <p class="market-snapshot-summary pending" role="status" aria-live="polite" data-market-summary>Waiting for live snapshot</p>
+        <p class="market-snapshot-summary" role="status" aria-live="polite" data-market-summary>Loading official pool data</p>
         <div class="market-snapshot-grid" aria-label="Live official pool snapshot">
-          <div class="fact"><span class="label">GCA Price</span><span class="value" data-market-field="price">Waiting</span></div>
-          <div class="fact"><span class="label">Pool Reserve</span><span class="value" data-market-field="reserve">Waiting</span></div>
-          <div class="fact"><span class="label">24h Volume</span><span class="value" data-market-field="volume">Waiting</span></div>
-          <div class="fact"><span class="label">24h Trades</span><span class="value" data-market-field="trades">Waiting</span></div>
-          <div class="fact"><span class="label">24h Price Change</span><span class="value" data-market-field="change">Waiting</span></div>
-          <div class="fact"><span class="label">Observed At</span><span class="value" data-market-field="source">Waiting</span></div>
+          <div class="fact"><span class="label">GCA Price</span><span class="value" data-market-field="price">Loading</span></div>
+          <div class="fact"><span class="label">Pool Reserve</span><span class="value" data-market-field="reserve">Loading</span></div>
+          <div class="fact"><span class="label">24h Volume</span><span class="value" data-market-field="volume">Loading</span></div>
+          <div class="fact"><span class="label">24h Trades</span><span class="value" data-market-field="trades">Loading</span></div>
+          <div class="fact"><span class="label">24h Price Change</span><span class="value" data-market-field="change">Loading</span></div>
+          <div class="fact"><span class="label">Observed At</span><span class="value" data-market-field="source">Loading</span></div>
         </div>
         <p class="note" style="margin-top:14px">This aggregate snapshot can be delayed or unavailable and is not a wallet quote, executable price, trading signal, or guarantee. Confirm current values and price impact on the <a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">official GeckoTerminal pool page</a>.</p>
       </section>
@@ -441,7 +440,7 @@
             <div class="row"><span><a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal pool</a></span><strong>Token info approved</strong></div>
             <div class="row"><span><a href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener pair</a></span><strong>GCA/USDT</strong></div>
             <div class="row"><span><a href="https://basescan.org/token/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan token</a></span><strong>ERC-20</strong></div>
-            <div class="row"><span><a href="daily-status.html#marketHealth">Timestamped daily market evidence</a></span><strong>Read-only aggregate snapshot</strong></div>
+            <div class="row"><span><a href="security.html">Security disclosures</a></span><strong>Contract and operating boundaries</strong></div>
           </div>
         </div>
       </section>
@@ -461,7 +460,7 @@
         </div>
       </section>
 
-      <section class="section two" aria-label="Wallet and review status">
+      <section class="section two" aria-label="Wallet import and verification links">
         <div class="panel">
           <h2>Wallet Import</h2>
           <p class="note">If GCA does not appear automatically, import the token manually on Base Mainnet.</p>
@@ -474,13 +473,13 @@
         </div>
 
         <div class="panel">
-          <h2>Review Status</h2>
+          <h2>Verification Links</h2>
           <div class="list">
-            <div class="row"><span>BaseScan source verification</span><strong class="good">Done</strong></div>
-            <div class="row"><span>BaseScan token profile</span><strong class="pending">Awaiting review</strong></div>
-            <div class="row"><span>GeckoTerminal token info</span><strong class="good">Approved</strong></div>
-            <div class="row"><span>Blockaid / wallet warning state</span><strong class="good">Owner observed no warning visible</strong></div>
-            <div class="row"><span>Third-party audit</span><strong class="pending">Pending independent report</strong></div>
+            <div class="row"><span><a href="verify.html">GCA identity</a></span><strong>Network and contract</strong></div>
+            <div class="row"><span><a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6#code" target="_blank" rel="noreferrer">BaseScan source</a></span><strong class="good">Verified</strong></div>
+            <div class="row"><span><a href="supply.html">Supply and reserve</a></span><strong>Fixed supply disclosure</strong></div>
+            <div class="row"><span><a href="liquidity.html">Liquidity statement</a></span><strong>Pool custody boundaries</strong></div>
+            <div class="row"><span><a href="security.html">Security page</a></span><strong>Technical disclosures</strong></div>
           </div>
         </div>
       </section>

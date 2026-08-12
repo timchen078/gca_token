@@ -3055,124 +3055,66 @@ class LaunchPackageTests(unittest.TestCase):
 
     def test_public_site_discloses_current_operational_status(self):
         site = (ROOT / "site" / "index.html").read_text()
-        self.assertIn("Official Trust And Listing Materials", site)
-        self.assertIn("Identity And Contact", site)
-        self.assertIn("Safety And Proofs", site)
-        self.assertIn("Listing And Brand", site)
-        self.assertNotIn("BaseScan token profile update was returned again as information-insufficient on 2026-05-23", site)
-        self.assertNotIn("one clean owner resubmission", site)
-        self.assertIn('href="verify.html"', site)
-        self.assertIn('href="tim-chen.html"', site)
-        self.assertIn('href="domain-email.html"', site)
-        self.assertIn('href="domain-email-evidence.html"', site)
-        self.assertIn('href="buy.html"', site)
-        self.assertIn('href="markets.html"', site)
-        self.assertIn('href="liquidity.html"', site)
-        self.assertIn('href="audit-readiness.html"', site)
-        self.assertIn('href="supply.html"', site)
-        self.assertIn('href="security.html"', site)
-        self.assertIn('href="token-safety.html"', site)
-        self.assertIn('href="risk.html"', site)
-        self.assertIn('href="faq.html"', site)
-        self.assertIn('href="status.html"', site)
-        self.assertIn('href="trust.html"', site)
-        self.assertIn('href="listing-kit.html"', site)
-        self.assertIn('href="wallet-warning.html"', site)
-        self.assertIn('href="external-reviews.html"', site)
-        self.assertIn('href="blockaid-followup.html"', site)
-        self.assertIn('href="onchain-proofs.html"', site)
-        self.assertIn('href="brand-kit.html"', site)
-        self.assertNotIn('href="data.html"', site)
-        self.assertNotIn("Reviewer Data Room", site)
-        self.assertIn('href="member-ledger.html"', site)
-        self.assertIn('href="support.html"', site)
-        self.assertNotIn('href="operator.html"', site)
-        self.assertIn('href="roadmap.html"', site)
-        self.assertIn('href="community.html"', site)
-        self.assertIn('href="announcements.html"', site)
-        self.assertIn('href="campaign.html"', site)
-        self.assertIn('href="content-library.html"', site)
-        self.assertIn('href="publishing-desk.html"', site)
-        self.assertIn('href="narrative.html"', site)
-        self.assertIn('href="radar.html"', site)
-        self.assertIn('href="radar-issue-006.html"', site)
-        self.assertIn('href="radar-issue-005.html"', site)
-        self.assertIn('href="radar-issue-004.html"', site)
-        self.assertIn('href="liquidation-replay-001.html"', site)
-        self.assertIn('href="service-delivery-playbook.html"', site)
-        self.assertIn('href="worker-routes-handoff.html"', site)
-        self.assertIn('href="member-access-brief-001.html"', site)
-        self.assertIn('href="release-gates.html"', site)
-        self.assertIn('href="privacy.html"', site)
-        self.assertIn('href="terms.html"', site)
-        self.assertIn("Go China Access", site)
-        self.assertIn("Go China AI Quant Access", site)
-        self.assertIn("Narrative meets risk control", site)
-        self.assertIn("Narrative System", site)
-        self.assertIn("China Narrative Radar", site)
-        self.assertIn("Weekly Go China Radar", site)
-        self.assertIn("Issue 005 Access Foundation", site)
-        self.assertIn("Issue 004 Ready Brief", site)
-        self.assertIn("Member Access Brief", site)
-        self.assertIn("Weekly Radar", site)
-        self.assertIn("Liquidation Replay", site)
-        self.assertIn("ENTRY_READY Review", site)
-        self.assertIn("GCA Member Club", site)
-        self.assertIn("Risk First Trading", site)
-        self.assertIn("Go China macro narrative", site)
-        self.assertIn("GCA AI Quant Access quant research", site)
-        self.assertIn("live browser-only previews for liquidation replay, backtesting, risk alerts, ENTRY_READY review, position sizing, research, planning, portfolio risk, training, and journaling", site)
-        self.assertIn("connected trading and market-data modules remain staged behind release gates", site)
-        self.assertIn("controlled HTTPS member access page", site)
-        self.assertIn("Verified Utility: GCA AI Quant Access Layer", site)
-        self.assertIn("Product Release Gates", site)
-        self.assertIn("release-gates.html", site)
-        self.assertIn("Project Evidence", site)
-        self.assertIn("中文站点地图", site)
-        self.assertIn("public account UI, read-only wallet balance verification, and D1 ledger writes", site)
-        self.assertIn("live account intake and ledger-recording path", site)
-        self.assertIn("Account Path Pipeline", site)
-        self.assertIn("Users submit email, Telegram, Base wallet, declared GCA balance, and program intent", site)
-        self.assertIn("verified balances create service-access ledger records only", site)
-        self.assertIn("each registered user may verify one wallet holding at least 10,000 GCA", site)
-        self.assertIn("one-time 100 GCA AI Quant Access credits ledger record", site)
-        self.assertIn("one wallet buying and continuously holding at least 1,000,000 GCA for 30 days", site)
-        self.assertIn("one-time 10,000 GCA member benefit review", site)
-        self.assertIn("Benefit Transfer Runbook", site)
-        self.assertIn("member-benefit-transfer.html", site)
-        self.assertNotIn("Operator Console", site)
-        self.assertIn("GCA Member status", site)
-        self.assertIn("member benefit review. Trading-related modules follow staged release gates", site)
-        self.assertIn("400,000,000 GCA / 40%", site)
-        self.assertIn("600,000,000 GCA / 60%", site)
-        self.assertIn("exact circulating supply should still be verified", site)
-        self.assertIn(RESERVE_WALLET, site)
-        self.assertIn(RESERVE_TX, site)
-        self.assertIn(SECOND_RESERVE_TX, site)
-        self.assertIn("mailto:support@gcagochina.com", site)
-        self.assertIn(TELEGRAM_URL, site)
-        self.assertIn(X_URL, site)
-        self.assertIn("Project contact email", site)
-        self.assertNotIn("https://x.com/GCAgochina", site)
-        self.assertIn("Official X", site)
-        self.assertIn("Security &amp; Transparency", site)
-        self.assertIn("Audit-readiness materials remain available for future independent review", site)
-        self.assertIn("Internal review, technical report materials, and audit-readiness files are published", site)
-        self.assertIn("no post-deployment mint function", site)
-        self.assertIn("no owner/admin role", site)
-        self.assertIn("no owner/admin role, proxy or upgrade path, pause switch, blacklist, transfer tax, hidden fee, custody, or withdrawal path", site)
-        self.assertIn("DEX tools available for checking quoted output, pool details, and market references", site)
-        self.assertIn("review the pool details, quoted output, and wallet confirmation screen", site)
-        self.assertIn(OFFICIAL_POOL_ADDRESS, site)
-        self.assertIn(OFFICIAL_UNISWAP_POOL_URL, site)
-        self.assertIn("Market References", site)
-        self.assertIn("GCA/USDT", site)
-        self.assertIn(OFFICIAL_DEXSCREENER_URL, site)
-        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, site)
-        self.assertIn(OFFICIAL_SWAP_URL_HTML, site)
-        self.assertIn("GeckoTerminal token information was approved on 2026-05-11", site)
-        self.assertNotIn(OLD_WETH_POOL_ADDRESS, site)
-        self.assertIn("official GCA/USDT route", site)
+
+        for expected in (
+            "GCA | Go China Access",
+            "GCA AI Quant Access",
+            "Research the narrative. Control the risk.",
+            "Position Size Calculator",
+            "ENTRY_READY Review",
+            "Liquidation Replay",
+            "Backtest Lab",
+            "Portfolio Risk Map",
+            "Trade Journal",
+            "Risk Passport",
+            "Workspace Vault",
+            "From research to review",
+            "GCA Member",
+            "100 credits after eligibility review",
+            "1,000,000 GCA held for 30 days",
+            "GCA/USDT on Base",
+            "Fixed at 1 billion GCA",
+            "Tim Chen public profile",
+            "support@gcagochina.com",
+            MAINNET_ADDRESS,
+            OFFICIAL_POOL_ADDRESS,
+            OFFICIAL_GECKOTERMINAL_URL,
+        ):
+            self.assertIn(expected, site)
+        for href in (
+            "tools.html",
+            "product.html",
+            "gca/member-access/",
+            "register.html",
+            "verify.html",
+            "buy.html",
+            "markets.html",
+            "supply.html",
+            "security.html",
+            "tim-chen.html",
+            "about.html",
+            "support.html",
+            "zh-cn.html",
+        ):
+            self.assertIn(f'href="{href}"', site)
+        for forbidden in (
+            "Action Plan",
+            "Release Gates",
+            "Buildout Sequence",
+            "Roadmap",
+            "Review Status",
+            "BaseScan Remediation",
+            "Listing Readiness",
+            "Publishing Desk",
+            "Campaign Calendar",
+            "Reviewer Data Room",
+            'href="data.html"',
+            'href="operator.html"',
+            "remain staged",
+            "concept-stage",
+            OLD_WETH_POOL_ADDRESS,
+        ):
+            self.assertNotIn(forbidden, site)
 
     def test_members_page_supports_local_pre_registration_safely(self):
         members = (ROOT / "site" / "members.html").read_text()
@@ -5720,10 +5662,10 @@ class LaunchPackageTests(unittest.TestCase):
             'href="utility.json"',
         ):
             self.assertNotIn(forbidden, page)
-        self.assertIn("Release Gates", page)
-        self.assertIn("public product spec only", page)
-        self.assertIn("not a live trading terminal", page)
-        self.assertIn("not financial advice", page)
+        self.assertNotIn("Release Gates", page)
+        self.assertNotIn("public product spec only", page)
+        self.assertNotIn("not a live trading terminal", page)
+        self.assertNotIn("not financial advice", page)
         self.assertIn("Public Account UI", page)
         self.assertIn("China Narrative Radar", page)
         self.assertIn("Liquidation Replay", page)
@@ -5740,7 +5682,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("GCA Member Workspace", page)
         self.assertIn("GCA Risk Passport", page)
         self.assertIn('href="risk-passport.html"', page)
-        self.assertIn("simulation or testnet first", page)
+        self.assertIn("Simulation first", page)
+        self.assertIn("simulated or testnet validation", page)
         self.assertIn("No custody", page)
         self.assertIn("no withdrawal permission", page)
         self.assertIn("exchange API secret collection", page)
@@ -5872,6 +5815,10 @@ class LaunchPackageTests(unittest.TestCase):
             (ROOT / "site" / name).read_text()
             for name in ("index.html", "about.html", "product.html", "roadmap.html", "basescan-handoff.html", "zh-basescan-handoff.html")
         )
+        primary_pages = "\n".join(
+            (ROOT / "site" / name).read_text()
+            for name in ("index.html", "about.html", "product.html")
+        )
 
         stages = {
             product["positioning"]["currentStage"],
@@ -5885,8 +5832,10 @@ class LaunchPackageTests(unittest.TestCase):
         live_previews = [item for item in product["productModules"] if item.get("status") == "public-client-side-preview-live"]
         self.assertEqual(len(live_previews), product["positioning"]["publicRiskToolPreviewsLive"])
         self.assertEqual(len(live_previews), 10)
-        self.assertIn("ten browser-only risk and research tools", canonical_pages)
+        self.assertIn("Ten browser-based risk and research tools", canonical_pages)
         self.assertIn("connected market-data and trading modules remain staged", canonical_pages.lower())
+        self.assertNotIn("connected market-data and trading modules remain staged", primary_pages.lower())
+        self.assertNotIn("release gates", primary_pages.lower())
         self.assertNotIn("account-ledger-path-live-product-tools-planned", canonical_pages)
 
         description = basescan_values["descriptionLong"]
@@ -7628,19 +7577,18 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("starter-depth liquidity only", markets)
         self.assertIn("not proof of organic demand", markets)
         self.assertIn("Do not use artificial volume", markets)
-        self.assertIn("BaseScan token profile", markets)
-        self.assertIn("Awaiting review", markets)
-        self.assertIn("Third-party audit", markets)
-        self.assertIn("Pending independent report", markets)
+        self.assertIn("Verification Links", markets)
+        self.assertIn("Security disclosures", markets)
+        self.assertIn("Supply and reserve", markets)
+        self.assertNotIn("Awaiting review", markets)
+        self.assertNotIn("Pending independent report", markets)
         self.assertIn("Live Read-Only Pool Snapshot", markets)
         self.assertIn('data-gca-market-snapshot', markets)
         self.assertIn('assets/market-snapshot.js?v=20260811-1', markets)
         self.assertIn("not a wallet quote, executable price, trading signal, or guarantee", markets)
-        self.assertIn('href="daily-status.html#marketHealth"', markets)
-        self.assertIn("Daily Market Evidence", markets)
+        self.assertIn("Loading official pool data", markets)
         self.assertIn('href="buy.html"', markets)
-        self.assertIn('href="status.html"', markets)
-        self.assertIn('href="listing-kit.html"', markets)
+        self.assertIn('href="security.html"', markets)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, markets)
 
     def test_market_snapshot_is_identity_pinned_and_read_only(self):
@@ -7797,8 +7745,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('data-gca-market-snapshot', markets)
         self.assertIn('assets/market-snapshot.js?v=20260811-1', markets)
         self.assertIn("不是钱包报价、可执行价格、交易信号或保证", markets)
-        self.assertIn("等待复审", markets)
-        self.assertIn("尚无独立审计报告", markets)
+        self.assertIn("正在读取官方池数据", markets)
+        self.assertIn("验证入口", markets)
+        self.assertIn("安全和技术披露", markets)
+        self.assertNotIn("等待复审", markets)
+        self.assertNotIn("尚无独立审计报告", markets)
         self.assertIn("不得制造虚假成交、安排关联账户互相成交或伪造市场活动", markets)
         self.assertIn("@media (max-width: 860px)", markets)
         self.assertIn("font-size: 38px;", markets)
@@ -8091,27 +8042,27 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="reserve-statement.html"', status)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, status)
 
-        self.assertIn('href="listing-readiness.html"', index)
-        self.assertIn('href="market-quality.html"', index)
-        self.assertIn('href="wallet-warning.html"', index)
-        self.assertIn('href="external-reviews.html"', index)
-        self.assertIn('href="onchain-proofs.html"', index)
-        self.assertIn('href="brand-kit.html"', index)
-        self.assertIn('href="member-ledger.html"', index)
-        self.assertIn('href="member-benefit-transfer.html"', index)
+        self.assertNotIn('href="listing-readiness.html"', index)
+        self.assertNotIn('href="market-quality.html"', index)
+        self.assertNotIn('href="wallet-warning.html"', index)
+        self.assertNotIn('href="external-reviews.html"', index)
+        self.assertNotIn('href="onchain-proofs.html"', index)
+        self.assertNotIn('href="brand-kit.html"', index)
+        self.assertNotIn('href="member-ledger.html"', index)
+        self.assertNotIn('href="member-benefit-transfer.html"', index)
         self.assertIn('href="support.html"', index)
-        self.assertIn('href="roadmap.html"', index)
-        self.assertIn('href="community.html"', index)
-        self.assertIn('href="announcements.html"', index)
-        self.assertIn('href="campaign.html"', index)
-        self.assertIn('href="privacy.html"', index)
-        self.assertIn('href="terms.html"', index)
+        self.assertNotIn('href="roadmap.html"', index)
+        self.assertNotIn('href="announcements.html"', index)
+        self.assertNotIn('href="campaign.html"', index)
         self.assertIn('href="product.html"', index)
+        self.assertIn('href="tools.html"', index)
+        self.assertIn('href="verify.html"', index)
+        self.assertIn('href="whitepaper.html"', index)
 
         wallet_warning = (ROOT / "site" / "wallet-warning.html").read_text()
         external = (ROOT / "site" / "external-reviews.html").read_text()
         brand = (ROOT / "site" / "brand-kit.html").read_text()
-        for page in (index, buy, markets, supply, security, risk, faq, members, utility, product, whitepaper, verify, readiness, quality, wallet_warning, external, onchain, brand, member_ledger, support, roadmap, community, privacy, terms):
+        for page in (buy, markets, supply, security, risk, faq, members, utility, whitepaper, verify, readiness, quality, wallet_warning, external, onchain, brand, member_ledger, support, roadmap, community, privacy, terms):
             self.assertIn('href="status.html"', page)
             self.assertIn('href="listing-kit.html"', page)
             self.assertIn('href="markets.html"', page)
@@ -8119,6 +8070,10 @@ class LaunchPackageTests(unittest.TestCase):
             self.assertIn('href="security.html"', page)
             self.assertIn('href="risk.html"', page)
             self.assertIn('href="faq.html"', page)
+        self.assertNotIn('href="status.html"', product)
+        self.assertNotIn('href="listing-kit.html"', product)
+        self.assertIn('href="tools.html"', product)
+        self.assertIn('href="access.html"', product)
 
     def test_listing_readiness_page_gates_tracked_listing_submissions(self):
         page = (ROOT / "site" / "listing-readiness.html").read_text()
