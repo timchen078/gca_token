@@ -141,7 +141,7 @@ The command requires explicit confirmations that the manual transfer is complete
 - Production GCA Member review operator tool: `tools/review_cloudflare_member.py`
 - Production member-benefit transfer evidence tool: `tools/record_cloudflare_member_benefit_transfer.py`
 - One-command member access ops pipeline: `tools/run_gca_member_access_ops.py`
-- Daily public health, optional member ops check, optional digest build, and `--update-public-status` snapshot refresh: `tools/run_gca_daily_ops.py`
+- Daily public health, optional member ops check, strict `--require-complete-public-observations` release gate, optional digest build, and `--update-public-status` snapshot refresh: `tools/run_gca_daily_ops.py`
 - Public daily status snapshot builder for `site/daily-status.html` and `site/daily-status.json`: `tools/build_gca_daily_status_snapshot.py`
 - BaseScan reviewer snapshot reference synchronizer: `tools/sync_basescan_daily_status_references.py`
 - Isolated public daily-status release preparer with file and data boundary checks: `tools/prepare_gca_public_daily_status_release.py`

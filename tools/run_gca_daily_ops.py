@@ -64,6 +64,13 @@ CommandRunner = Callable[[Sequence[str], Path, float], subprocess.CompletedProce
 BASESCAN_PUBLIC_PROFILE_STEP_ID = "basescan-public-profile-status"
 BASESCAN_PREFLIGHT_STEP_ID = "basescan-resubmission-preflight-status"
 MARKET_HEALTH_STEP_ID = "official-pool-market-health"
+PUBLIC_OBSERVATION_STEP_IDS = frozenset({
+    "public-site",
+    "registration-api-public",
+    MARKET_HEALTH_STEP_ID,
+    BASESCAN_PUBLIC_PROFILE_STEP_ID,
+    BASESCAN_PREFLIGHT_STEP_ID,
+})
 
 
 def utc_now() -> str:
@@ -542,6 +549,7 @@ def run_daily_ops(
     include_basescan_public_profile_status: bool = True,
     include_basescan_preflight_status: bool = True,
     include_market_health: bool = True,
+    require_complete_public_observations: bool = False,
     summary_output: Path = DEFAULT_SUMMARY_OUTPUT,
     build_digest: bool = False,
     digest_output: Path = DEFAULT_DIGEST_OUTPUT,
@@ -551,6 +559,15 @@ def run_daily_ops(
     daily_status_html_output: Path = DEFAULT_DAILY_STATUS_HTML_OUTPUT,
     runner: CommandRunner = default_runner,
 ) -> dict[str, Any]:
+    if require_complete_public_observations and not all((
+        include_basescan_public_profile_status,
+        include_basescan_preflight_status,
+        include_market_health,
+    )):
+        raise ValueError(
+            "complete public observations require the BaseScan profile, "
+            "BaseScan preflight, and market health checks"
+        )
     steps = [
         run_step(
             step_id=step_id,
@@ -575,6 +592,19 @@ def run_daily_ops(
             include_market_health=include_market_health,
         )
     ]
+    observed_public_step_ids = {
+        str(step.get("id")) for step in steps if step.get("id") in PUBLIC_OBSERVATION_STEP_IDS
+    }
+    missing_public_observations = sorted(PUBLIC_OBSERVATION_STEP_IDS - observed_public_step_ids)
+    failed_public_observations = sorted(
+        str(step.get("id"))
+        for step in steps
+        if step.get("id") in PUBLIC_OBSERVATION_STEP_IDS and step.get("ok") is not True
+    )
+    public_observations_complete = not missing_public_observations and not failed_public_observations
+    blocking_steps_ok = all(
+        step["ok"] for step in steps if step.get("blocksSummaryOk", True)
+    )
     market_health = next(
         (
             step.get("statusSummary")
@@ -617,7 +647,13 @@ def run_daily_ops(
         },
     )
     summary = {
-        "ok": all(step["ok"] for step in steps if step.get("blocksSummaryOk", True)),
+        "ok": bool(
+            blocking_steps_ok
+            and (
+                not require_complete_public_observations
+                or public_observations_complete
+            )
+        ),
         "packetVersion": "gca_daily_ops_summary_v1",
         "generatedAt": utc_now(),
         "siteBaseUrl": site_base_url,
@@ -630,6 +666,10 @@ def run_daily_ops(
         "includeBaseScanPublicProfileStatus": include_basescan_public_profile_status,
         "includeBaseScanPreflightStatus": include_basescan_preflight_status,
         "includeMarketHealth": include_market_health,
+        "requireCompletePublicObservations": require_complete_public_observations,
+        "publicObservationsComplete": public_observations_complete,
+        "failedPublicObservations": failed_public_observations,
+        "missingPublicObservations": missing_public_observations,
         "marketHealth": market_health,
         "baseScanPublicProfile": basescan_public_profile,
         "baseScanPreflight": basescan_preflight,
@@ -679,6 +719,7 @@ def run_daily_ops(
             "baseScanPreflightBlocksDailyOps": False,
             "marketHealthReadOnly": True,
             "marketHealthBlocksDailyOps": False,
+            "completePublicObservationsBlockDailyOpsOnlyWhenRequested": True,
             "marketHealthBuildsExecutableQuote": False,
             "marketHealthSubmitsTrade": False,
             "submitsBaseScanRequest": False,
@@ -778,6 +819,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--skip-basescan-public-profile-status", action="store_true", help="Skip the non-blocking read-only BaseScan public profile check.")
     parser.add_argument("--skip-basescan-preflight-status", action="store_true", help="Skip the non-blocking BaseScan resubmission preflight status step.")
     parser.add_argument("--skip-market-health", action="store_true", help="Skip the non-blocking read-only official GCA/USDT market check.")
+    parser.add_argument(
+        "--require-complete-public-observations",
+        action="store_true",
+        help=(
+            "Return a failed daily summary unless all five public observations pass. "
+            "Intended for the verified public status publication workflow."
+        ),
+    )
     parser.add_argument("--summary-output", type=Path, default=DEFAULT_SUMMARY_OUTPUT, help="Daily summary JSON output.")
     parser.add_argument("--build-digest", action="store_true", help="Also build the redacted local operator digest from summary files.")
     parser.add_argument("--digest-output", type=Path, default=DEFAULT_DIGEST_OUTPUT, help="Markdown operator digest output path.")
@@ -797,6 +846,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         parser.error("--include-holding-report requires --include-member-ops")
     if args.include_service_routes and not args.include_member_ops:
         parser.error("--include-service-routes requires --include-member-ops")
+    if args.require_complete_public_observations and any((
+        args.skip_basescan_public_profile_status,
+        args.skip_basescan_preflight_status,
+        args.skip_market_health,
+    )):
+        parser.error(
+            "--require-complete-public-observations cannot be combined with public observation skip flags"
+        )
     return args
 
 
@@ -815,6 +872,7 @@ def main(argv: list[str] | None = None) -> int:
         include_basescan_public_profile_status=not args.skip_basescan_public_profile_status,
         include_basescan_preflight_status=not args.skip_basescan_preflight_status,
         include_market_health=not args.skip_market_health,
+        require_complete_public_observations=args.require_complete_public_observations,
         summary_output=args.summary_output,
         build_digest=args.build_digest,
         digest_output=args.digest_output,

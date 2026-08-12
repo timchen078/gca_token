@@ -231,7 +231,7 @@ For public CI or environments without `ADMIN_READ_TOKEN`, run only the public su
 
 The GitHub Actions workflow at `.github/workflows/check-gca-registration-api.yml` uses `--public-only`, so it does not require secrets and does not read token-protected user records.
 
-The consolidated public daily ops workflow at `.github/workflows/check-gca-daily-ops.yml` runs `tools/run_gca_daily_ops.py` in default public-only mode. It checks the public website and public registration API together, and it does not pass `--include-member-ops` or `--include-holding-report`.
+The consolidated public daily ops workflow at `.github/workflows/check-gca-daily-ops.yml` runs `tools/run_gca_daily_ops.py` in public-only mode with `--require-complete-public-observations`. It checks the website, registration API, official GCA/USDT market route, BaseScan public profile, and local BaseScan preflight together. A transient public observation failure returns a failed run so the workflow's bounded retry can collect a complete publication artifact. It does not pass `--include-member-ops` or `--include-holding-report`, and it never reads token-protected user records.
 
 To refresh the public daily status page after a local daily ops run:
 

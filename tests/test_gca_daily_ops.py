@@ -213,6 +213,10 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertTrue(summary["includeBaseScanPublicProfileStatus"])
         self.assertTrue(summary["includeBaseScanPreflightStatus"])
         self.assertTrue(summary["includeMarketHealth"])
+        self.assertFalse(summary["requireCompletePublicObservations"])
+        self.assertTrue(summary["publicObservationsComplete"])
+        self.assertEqual(summary["failedPublicObservations"], [])
+        self.assertEqual(summary["missingPublicObservations"], [])
         self.assertEqual(summary["marketHealth"]["status"], "official-pool-observed")
         self.assertTrue(summary["marketHealth"]["identityVerified"])
         self.assertEqual(summary["marketHealth"]["reserveInUsd"], "41.8349")
@@ -260,6 +264,60 @@ class GcaDailyOpsTests(unittest.TestCase):
         self.assertTrue(any("tools/check_gca_market_health.py" in command and "--json" in command for command in commands))
         self.assertTrue(any("tools/check_basescan_public_profile.py" in command and "--json" in command for command in commands))
         self.assertTrue(any("tools/check_basescan_resubmission_readiness.py" in command and "--skip-url-checks" in command for command in commands))
+
+    def test_daily_ops_strict_public_observations_fail_for_retry(self):
+        def runner(command, cwd, timeout):
+            if any("check_gca_market_health.py" in part for part in command):
+                return subprocess.CompletedProcess(
+                    command,
+                    1,
+                    stdout='{"ok": false, "status": "market-api-unavailable"}',
+                    stderr="temporary public API failure",
+                )
+            if any("check_basescan_public_profile.py" in part for part in command):
+                return subprocess.CompletedProcess(
+                    command,
+                    0,
+                    stdout=BASESCAN_PUBLIC_PROFILE_OUTPUT,
+                    stderr="",
+                )
+            if any("check_basescan_resubmission_readiness.py" in part for part in command):
+                return subprocess.CompletedProcess(
+                    command,
+                    0,
+                    stdout=BASESCAN_BLOCKED_OUTPUT,
+                    stderr="",
+                )
+            return subprocess.CompletedProcess(command, 0, stdout='{"ok": true}', stderr="")
+
+        with tempfile.TemporaryDirectory() as temp:
+            summary = run_daily_ops(
+                require_complete_public_observations=True,
+                summary_output=Path(temp) / "summary.json",
+                runner=runner,
+            )
+
+        self.assertFalse(summary["ok"])
+        self.assertTrue(summary["requireCompletePublicObservations"])
+        self.assertFalse(summary["publicObservationsComplete"])
+        self.assertEqual(summary["failedPublicObservations"], ["official-pool-market-health"])
+        self.assertEqual(summary["missingPublicObservations"], [])
+        market_step = next(
+            step for step in summary["steps"] if step["id"] == "official-pool-market-health"
+        )
+        self.assertFalse(market_step["blocksSummaryOk"])
+
+    def test_strict_public_observations_reject_skipped_checks(self):
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaisesRegex(ValueError, "complete public observations require"):
+                run_daily_ops(
+                    include_market_health=False,
+                    require_complete_public_observations=True,
+                    summary_output=Path(temp) / "summary.json",
+                    runner=lambda command, cwd, timeout: subprocess.CompletedProcess(
+                        command, 0, stdout='{"ok": true}', stderr=""
+                    ),
+                )
 
     def test_daily_ops_can_skip_basescan_status_explicitly(self):
         def runner(command, cwd, timeout):
