@@ -199,22 +199,27 @@ class PublicStatusConsistencyTests(unittest.TestCase):
         zh_members = (SITE / "zh-members.html").read_text()
 
         for marker in (
-            "GCA Members | Live Account Access",
+            "GCA Membership | Access, Credits and Eligibility",
+            "One verified account. Clear member access.",
             "Live account intake",
             "One controlled account per email and verified wallet",
-            "The current holder benefit",
-            "The current GCA Member review",
-            "/gca/member-reviews",
+            "100 Credit Rules",
+            "Member Rules",
+            "gca/member-access/",
         ):
             self.assertIn(marker, members)
         for marker in (
             "GCA Members | Pre-Registration",
+            "GCA Members | Live Account Access",
             "Planned holder programs",
             "The planned holder bonus",
             "The planned GCA Member tier",
             "When a reviewed HTTPS endpoint is connected",
             "After controlled HTTPS intake is live",
             "<strong>Planned</strong>",
+            "Legacy Packet Builder",
+            "tools/gca_member_backend.py",
+            "eth_requestAccounts",
         ):
             self.assertNotIn(marker, members)
 
@@ -312,10 +317,14 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             url = f"https://gcagochina.com/{path}"
             self.assertEqual(sitemap.get(url), CORE_PAGE_LAST_UPDATED, url)
 
+        self.assertEqual(
+            sitemap.get("https://gcagochina.com/members.html"),
+            CORE_PAGE_LAST_UPDATED,
+        )
+
         for path in (
             "access.html",
             "project.json",
-            "members.html",
             "zh-members.html",
             "tim-chen.json",
             "roadmap.html",

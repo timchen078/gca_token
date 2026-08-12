@@ -32,7 +32,7 @@ class SiteLinkIntegrityTests(unittest.TestCase):
         self.assertTrue(report.ok, "\n".join(report.errors))
         self.assertGreaterEqual(report.page_count, 120)
         self.assertGreaterEqual(report.reference_count, 5000)
-        self.assertGreaterEqual(report.internal_reference_count, 5000)
+        self.assertGreaterEqual(report.internal_reference_count, 4950)
         self.assertGreaterEqual(report.fragment_reference_count, 100)
         self.assertGreaterEqual(len(report.internal_urls), 200)
         self.assertIn("/", report.internal_urls)

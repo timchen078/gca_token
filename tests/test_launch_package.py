@@ -802,7 +802,7 @@ class LaunchPackageTests(unittest.TestCase):
                 return "/" + relative.removesuffix("index.html")
             return "/" + relative
 
-        self.assertEqual(56, len(module.PUBLIC_INDEXABLE_PATHS))
+        self.assertEqual(57, len(module.PUBLIC_INDEXABLE_PATHS))
         for path in (ROOT / "site").rglob("*.html"):
             route = public_path(path)
             page = path.read_text()
@@ -1133,7 +1133,7 @@ class LaunchPackageTests(unittest.TestCase):
             for path in module.PUBLIC_INDEXABLE_PATHS
         }
         self.assertEqual(indexed_urls, expected_urls)
-        self.assertEqual(len(indexed_urls), 56)
+        self.assertEqual(len(indexed_urls), 57)
 
         for excluded in (
             DATA_PAGE_URL,
@@ -1273,27 +1273,25 @@ class LaunchPackageTests(unittest.TestCase):
     def test_start_page_guides_normal_users_away_from_raw_json(self):
         page = (ROOT / "site" / "start.html").read_text()
 
-        self.assertIn("Start Here", page)
-        self.assertIn("Readable User Entry", page)
-        self.assertIn("普通用户优先打开这些页面", page)
-        self.assertIn("Start with readable official pages", page)
-        self.assertIn("普通用户优先打开 HTML 页面和官网入口", page)
+        self.assertIn("GCA Quick Start | Verify, Access and Support", page)
+        self.assertIn("GCA Quick Start / GCA 快速开始", page)
+        self.assertIn("Start with GCA.", page)
+        self.assertIn("Four steps from verification to access.", page)
+        self.assertIn("中文快速入口", page)
+        self.assertIn("从验证到会员账户。", page)
         self.assertIn("Need Help", page)
-        self.assertIn("Use Readable Support Pages", page)
+        self.assertIn("Use official GCA support.", page)
         self.assertIn("Base Mainnet / chainId 8453", page)
         self.assertIn(MAINNET_ADDRESS, page)
         self.assertIn("GCA/USDT", page)
         self.assertIn(OFFICIAL_POOL_ADDRESS, page)
-        self.assertIn("Email Register", page)
         self.assertIn("Member Access", page)
         self.assertIn("中文入口", page)
         self.assertIn("中文购买说明", page)
         self.assertIn("中文会员规则", page)
-        self.assertIn("中文用户中心", page)
-        self.assertIn("中文支持入口", page)
         self.assertIn("No third-party audit has been completed", page)
         self.assertIn("10,000 GCA member benefit remains manual reserve-wallet review only", page)
-        self.assertIn("start with support, the site map, or the listing kit instead of technical files", page)
+        self.assertIn("support@gcagochina.com", page)
         self.assertNotIn("Raw JSON 主要给 BaseScan", page)
         self.assertNotIn("Reviewer Data Room", page)
         self.assertNotIn("Only If A Platform Requests Files", page)
@@ -1305,9 +1303,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("zh-buy.html", page)
         self.assertIn("register.html", page)
         self.assertIn("gca/member-access/", page)
-        self.assertIn("site-map.html", page)
         self.assertNotIn('href="data.html"', page)
-        self.assertIn("listing-kit.html", page)
+        self.assertIn("product.html", page)
         self.assertNotIn('href="project.json"', page)
         self.assertNotIn('href="tokenlist.json"', page)
         self.assertNotIn('href="member-ledger.json"', page)
@@ -2843,96 +2840,40 @@ class LaunchPackageTests(unittest.TestCase):
         ):
             self.assertNotIn(forbidden, site)
 
-    def test_members_page_supports_local_pre_registration_safely(self):
+    def test_members_page_publishes_rules_without_legacy_local_tools(self):
         members = (ROOT / "site" / "members.html").read_text()
-        self.assertIn("GCA Member Access", members)
-        self.assertIn("GCA Members | Live Account Access", members)
-        self.assertIn("Open Live Member Access", members)
-        self.assertIn("The legacy packet builder remains below only for local operator testing", members)
-        self.assertIn("10,000 GCA", members)
-        self.assertIn("100 GCA AI Quant Access credits", members)
-        self.assertIn("1,000,000 GCA", members)
-        self.assertIn("GCA Member", members)
-        self.assertIn("live account path", members)
-        self.assertIn("gca/member-access/", members)
-        self.assertIn("Connect Wallet", members)
-        self.assertIn("Check On-chain Balance", members)
-        self.assertIn("GCA Member Holding Start Date", members)
-        self.assertIn("Public Purchase or Transfer Tx Hash", members)
-        self.assertIn("Member Evidence Note", members)
-        self.assertIn("memberBenefitReviewEvidence", members)
-        self.assertIn("evidenceTxHashFormatOk", members)
-        self.assertIn("holdingPeriodPreviewEligible", members)
-        self.assertIn("gca_member_preregistration_v2", members)
-        self.assertIn("Generate Packet", members)
-        self.assertIn("Submit Packet", members)
-        self.assertIn("Copy Packet", members)
-        self.assertIn("Download JSON", members)
-        self.assertIn("Email Packet", members)
-        self.assertIn("tools/gca_member_backend.py", members)
-        self.assertIn('const LOCAL_BACKEND_HOSTS = new Set(["127.0.0.1", "localhost"]);', members)
-        self.assertIn('const SUBMISSION_ENDPOINT = LOCAL_BACKEND_HOSTS.has(window.location.hostname) ? REVIEWED_WEB3_RADAR_ENDPOINT_PATH : "";', members)
-        self.assertIn('const REVIEWED_WEB3_RADAR_ENDPOINT_PATH = "/gca/pre-registrations";', members)
-        self.assertIn('const WALLET_VERIFICATION_ENDPOINT_PATH = "/gca/wallet-verifications";', members)
-        self.assertIn('const CREDIT_LEDGER_ENDPOINT_PATH = "/gca/credit-ledger";', members)
-        self.assertIn('const MEMBER_LEDGER_ENDPOINT_PATH = "/gca/member-ledger";', members)
-        self.assertIn("Local operator backend is connected", members)
-        self.assertIn("local JSONL records", members)
-        self.assertIn("fetch(SUBMISSION_ENDPOINT", members)
-        self.assertIn("Use the live public member access page", members)
-        self.assertIn("/gca/wallet-verifications", members)
-        self.assertIn("/gca/credit-ledger", members)
-        self.assertIn("/gca/member-ledger", members)
-        self.assertIn("/gca/member-review", members)
-        self.assertIn("/gca/member-reviews", members)
-        self.assertIn("Current public submission mode", members)
-        self.assertIn("legacy-local-packet-live-member-access-available", members)
-        self.assertIn("No private key, seed phrase, exchange API secret, withdrawal permission, or custody request", members)
-        self.assertIn("No cash, income, reimbursement, trading permission, or risk-control bypass", members)
-        self.assertIn("30 consecutive days", members)
-        self.assertIn("10,000 GCA member benefit", members)
-        self.assertIn("Public transaction hash + holding start date", members)
-        self.assertIn("walletAddressFormatOk", members)
-        self.assertIn("eth_requestAccounts", members)
-        self.assertIn('method: "eth_call"', members)
-        self.assertIn('method: "wallet_switchEthereumChain"', members)
-        self.assertIn('method: "wallet_addEthereumChain"', members)
-        self.assertIn("BALANCE_OF_SELECTOR", members)
-        self.assertIn("doesNotCreateLedgerRecord", members)
-        self.assertIn("browser MetaMask eth_call ERC-20 balanceOf preview", members)
-        self.assertIn("Final eligibility still requires controlled HTTPS account UI", members)
-        self.assertNotIn("eth_sendTransaction", members)
-        self.assertNotIn("personal_sign", members)
-        self.assertIn("support@gcagochina.com", members)
-        self.assertIn("180 days", members)
-        self.assertIn("30 days", members)
-        self.assertIn("5-10 business days", members)
-        self.assertIn("Member References", members)
-        self.assertIn("gca/member-access/", members)
-        self.assertNotIn("Platform-Only Evidence Path", members)
-        self.assertNotIn("Data Room", members)
-        self.assertNotIn('href="data.html"', members)
-        self.assertIn("JSON", members)
-        self.assertIn("member-ledger.html", members)
-        for forbidden in (
-            'href="member-program.json"',
-            'href="member-ledger.json"',
-            'href="member-benefit.json"',
-            'href="support.json"',
+        for marker in (
+            "GCA Membership | Access, Credits and Eligibility",
+            "One verified account. Clear member access.",
+            "Open GCA Member Access",
+            "Access Levels",
+            "Member Journey",
+            "Create Account",
+            "Verify Wallet",
+            "Complete Review",
+            "Use Services",
+            "10,000 GCA",
+            "one-time 100-credit ledger record",
+            "1,000,000 GCA",
+            "No wallet signature",
+            "No custody",
+            "No automatic token transfer",
+            "No cash, income, reimbursement, trading permission, or risk-control bypass",
+            "30 consecutive days",
+            "10,000 GCA member benefit",
+            "Public transaction hash + holding start date",
+            "180 days",
+            "5-10 business days",
+            "gca/member-access/",
+            "member-ledger.html",
+            "support.html",
+            "privacy.html",
+            "terms.html",
         ):
-            self.assertNotIn(forbidden, members)
-        self.assertIn("support.html", members)
-        self.assertIn("Support and intake", members)
-        self.assertIn("privacy.html", members)
-        self.assertIn("terms.html", members)
-        self.assertIn("Privacy Notice", members)
-        self.assertIn("Participation Terms", members)
-        self.assertIn("CREDIT_EXPIRY_DAYS = 180", members)
-        self.assertIn("MEMBER_REFRESH_DAYS = 30", members)
-        self.assertIn("reviewStatuses", members)
-        self.assertIn("ledger_recorded", members)
+            self.assertIn(marker, members)
         for stale in (
             "GCA Members | Pre-Registration",
+            "GCA Members | Live Account Access",
             "Planned holder programs",
             "preview the planned holder tier",
             "The planned holder bonus",
@@ -2940,6 +2881,16 @@ class LaunchPackageTests(unittest.TestCase):
             "When a reviewed HTTPS endpoint is connected",
             "After controlled HTTPS intake is live",
             "<strong>Planned</strong>",
+            "Legacy Packet Builder",
+            "Generate Packet",
+            "Download JSON",
+            "LOCAL_BACKEND_HOSTS",
+            "tools/gca_member_backend.py",
+            "/gca/pre-registrations",
+            "eth_requestAccounts",
+            "wallet_switchEthereumChain",
+            "WEB3_RADAR",
+            'href="data.html"',
         ):
             self.assertNotIn(stale, members)
 
@@ -3297,7 +3248,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn("Platform-Only Evidence Path", privacy_page)
         self.assertNotIn("Data Room", privacy_page)
         self.assertNotIn('href="data.html"', privacy_page)
-        self.assertIn("live email registration", privacy_page)
+        self.assertIn("email registration", privacy_page)
         self.assertIn("contact suppression", privacy_page)
         self.assertIn("Workers + D1 account services live", privacy_page)
         self.assertIn("Email Registration", privacy_page)
@@ -3306,7 +3257,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("unsubscribe.html", privacy_page)
         self.assertIn("Cloudflare Workers + D1", privacy_page)
         self.assertIn("https://gca-registration-api.gcagochina.workers.dev", privacy_page)
-        self.assertIn("local pre-registration packet", privacy_page)
+        self.assertIn("membership page", privacy_page)
+        self.assertIn("does not collect or store account data itself", privacy_page)
+        self.assertNotIn("local pre-registration packet", privacy_page)
         self.assertIn("No private key, seed phrase, exchange API secret, withdrawal permission, or custody request", privacy_page)
         self.assertIn("read-only ERC-20", privacy_page)
         self.assertIn("support@gcagochina.com", privacy_page)
@@ -3350,7 +3303,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn("Platform-Only Evidence Path", terms_page)
         self.assertNotIn("Data Room", terms_page)
         self.assertNotIn('href="data.html"', terms_page)
-        self.assertIn("Legacy Pre-Registration", terms_page)
+        self.assertIn("Membership Rules", terms_page)
+        self.assertNotIn("Legacy Pre-Registration", terms_page)
         self.assertIn("Live with manual review", terms_page)
         self.assertIn("Eligible ledger records live", terms_page)
         self.assertIn("Email Registration", terms_page)
@@ -7772,7 +7726,7 @@ class LaunchPackageTests(unittest.TestCase):
         wallet_warning = (ROOT / "site" / "wallet-warning.html").read_text()
         external = (ROOT / "site" / "external-reviews.html").read_text()
         brand = (ROOT / "site" / "brand-kit.html").read_text()
-        for page in (buy, markets, supply, security, risk, faq, members, utility, whitepaper, readiness, quality, wallet_warning, external, onchain, brand, member_ledger, roadmap, community, privacy, terms):
+        for page in (buy, markets, supply, security, risk, faq, utility, whitepaper, readiness, quality, wallet_warning, external, onchain, brand, member_ledger, roadmap, community, privacy, terms):
             self.assertIn('href="status.html"', page)
             self.assertIn('href="listing-kit.html"', page)
             self.assertIn('href="markets.html"', page)
@@ -7785,6 +7739,10 @@ class LaunchPackageTests(unittest.TestCase):
             self.assertNotIn('href="listing-kit.html"', page)
             self.assertIn('href="markets.html"', page)
             self.assertIn('href="security.html"', page)
+        self.assertNotIn('href="status.html"', members)
+        self.assertNotIn('href="listing-kit.html"', members)
+        self.assertIn('href="markets.html"', members)
+        self.assertIn('href="security.html"', members)
         self.assertNotIn('href="status.html"', product)
         self.assertNotIn('href="listing-kit.html"', product)
         self.assertIn('href="tools.html"', product)

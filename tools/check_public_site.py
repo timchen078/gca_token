@@ -35,9 +35,10 @@ PUBLIC_INDEXABLE_LASTMOD = {
     "/member-workspace.html": "2026-07-19",
     "/risk-passport.html": "2026-07-19",
     "/workspace-vault.html": "2026-07-19",
-    "/start.html": "2026-05-21",
+    "/start.html": "2026-08-12",
     "/register.html": "2026-05-19",
     "/gca/member-access/": "2026-07-24",
+    "/members.html": "2026-08-12",
     "/markets.html": "2026-08-11",
     "/zh-markets.html": "2026-08-11",
     "/buy.html": "2026-05-11",
@@ -552,33 +553,29 @@ def validate_start_page(text: str) -> None:
     label = "/start.html"
     assert_social_preview_meta(text, label, START_PAGE_URL)
     for expected in (
-        "Start Here",
-        "Readable User Entry",
-        "normal user entry for GCA / Go China Access",
-        "Start with readable official pages",
-        "普通用户优先打开 HTML 页面和官网入口",
+        "GCA Quick Start | Verify, Access and Support",
+        "GCA Quick Start / GCA 快速开始",
+        "Start with GCA.",
+        "Verify the Base Mainnet contract",
         "Four-Step User Path",
-        "What To Open First",
+        "Four steps from verification to access.",
         "Verify Identity",
         "Use Official Market Route",
         "Register or Check Access",
         "Ask Support Safely",
-        "普通用户优先打开这些页面",
-        "Use Readable Support Pages",
+        "中文快速入口",
+        "从验证到会员账户。",
+        "Use official GCA support.",
         "Current Project Boundaries",
         "Base Mainnet / chainId 8453",
         MAINNET_ADDRESS,
         "GCA/USDT",
         OFFICIAL_POOL_ADDRESS,
-        "Email Register",
         "Member Access",
         "中文入口",
         "中文购买说明",
         "中文会员规则",
         "中文会员审核资料清单",
-        "中文用户中心",
-        "中文 API 状态",
-        "中文支持入口",
         "private keys",
         "seed phrases",
         "exchange API secrets",
@@ -592,9 +589,8 @@ def validate_start_page(text: str) -> None:
         "zh-buy.html",
         "register.html",
         "gca/member-access/",
-        "site-map.html",
         "support.html",
-        "listing-kit.html",
+        "product.html",
     ):
         assert_contains(text, expected, label)
     assert_not_contains(text, "Reviewer Data Room", label)
@@ -5429,49 +5425,42 @@ def validate_reserve_statement_json(text: str) -> None:
 
 def validate_members(text: str) -> None:
     label = "/members.html"
-    assert_contains(text, "GCA Member Access", label)
-    assert_contains(text, "GCA Members | Live Account Access", label)
-    assert_contains(text, "Open Live Member Access", label)
-    assert_contains(text, "Live account intake", label)
-    assert_contains(text, "One controlled account per email and verified wallet", label)
-    assert_contains(text, "The current holder benefit", label)
-    assert_contains(text, "The current GCA Member review", label)
-    assert_contains(text, "live account path", label)
-    assert_contains(text, "gca/member-access/", label)
-    assert_contains(text, "100 Credit Rules", label)
-    assert_contains(text, "Member Rules", label)
-    assert_contains(text, "Support Workflow", label)
-    assert_contains(text, "Check On-chain Balance", label)
-    assert_contains(text, "GCA Member Holding Start Date", label)
-    assert_contains(text, "Public Purchase or Transfer Tx Hash", label)
-    assert_contains(text, "memberBenefitReviewEvidence", label)
-    assert_contains(text, "evidenceTxHashFormatOk", label)
-    assert_contains(text, "holdingPeriodPreviewEligible", label)
-    assert_contains(text, "browser-only preview reads GCA balance", label)
-    assert_contains(text, "eth_call", label)
-    assert_contains(text, "wallet_switchEthereumChain", label)
-    assert_contains(text, "doesNotCreateLedgerRecord", label)
-    assert_contains(text, "Member References", label)
-    assert_contains(text, "gca/member-access/", label)
-    for forbidden in ("Platform-Only Evidence Path", "Data Room", 'href="data.html"'):
-        assert_not_contains(text, forbidden, label)
-    assert_contains(text, "member-ledger.html", label)
-    assert_contains(text, "tools/gca_member_backend.py", label)
-    assert_contains(text, "LOCAL_BACKEND_HOSTS", label)
-    assert_contains(text, "local JSONL records", label)
-    assert_contains(text, "support.html", label)
-    assert_contains(text, "privacy.html", label)
-    assert_contains(text, "terms.html", label)
-    assert_contains(text, "180 days", label)
-    assert_contains(text, "30 days", label)
-    assert_contains(text, "5-10 business days", label)
-    assert_contains(text, "Use the live public member access page", label)
-    assert_contains(text, "No cash, income, reimbursement, trading permission, or risk-control bypass", label)
-    assert_contains(text, "10,000 GCA member benefit", label)
-    assert_contains(text, "Public transaction hash + holding start date", label)
-    assert_contains(text, "/gca/member-reviews", label)
+    assert_social_preview_meta(text, label, "https://gcagochina.com/members.html")
+    for expected in (
+        "GCA Membership | Access, Credits and Eligibility",
+        "One verified account. Clear member access.",
+        "Open GCA Member Access",
+        "Live account intake",
+        "Access Levels",
+        "Member Journey",
+        "Create Account",
+        "Verify Wallet",
+        "Complete Review",
+        "Use Services",
+        "One controlled account per email and verified wallet",
+        "Read-only Base Mainnet balanceOf check",
+        "100 Credit Rules",
+        "Member Rules",
+        "Support Workflow",
+        "No wallet signature",
+        "No custody",
+        "No automatic token transfer",
+        "No cash, income, reimbursement, trading permission, or risk-control bypass",
+        "Public transaction hash + holding start date",
+        "180 days",
+        "30 days",
+        "5-10 business days",
+        "gca/member-access/",
+        "member-ledger.html",
+        "member-benefit.html",
+        "support.html",
+        "privacy.html",
+        "terms.html",
+    ):
+        assert_contains(text, expected, label)
     for stale in (
         "GCA Members | Pre-Registration",
+        "GCA Members | Live Account Access",
         "Planned holder programs",
         "preview the planned holder tier",
         "The planned holder bonus",
@@ -5479,10 +5468,20 @@ def validate_members(text: str) -> None:
         "When a reviewed HTTPS endpoint is connected",
         "After controlled HTTPS intake is live",
         "<strong>Planned</strong>",
+        "Legacy Packet Builder",
+        "Generate Packet",
+        "Download JSON",
+        "LOCAL_BACKEND_HOSTS",
+        "tools/gca_member_backend.py",
+        "/gca/pre-registrations",
+        "eth_requestAccounts",
+        "wallet_switchEthereumChain",
+        "eth_sendTransaction",
+        "personal_sign",
+        "WEB3_RADAR",
+        'href="data.html"',
     ):
         assert_not_contains(text, stale, label)
-    assert_not_contains(text, "eth_sendTransaction", label)
-    assert_not_contains(text, "personal_sign", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
 
 
@@ -13377,7 +13376,7 @@ def validate_privacy_page(text: str) -> None:
     assert_contains(text, "GCA Privacy Notice", label)
     assert_contains(text, "Privacy References", label)
     assert_no_public_data_room_terms(text, label)
-    assert_contains(text, "live email registration", label)
+    assert_contains(text, "email registration", label)
     assert_contains(text, "contact suppression", label)
     assert_contains(text, "Workers + D1 account services live", label)
     assert_contains(text, "Email Registration", label)
@@ -13386,7 +13385,8 @@ def validate_privacy_page(text: str) -> None:
     assert_contains(text, "unsubscribe.html", label)
     assert_contains(text, "Cloudflare Workers + D1", label)
     assert_contains(text, "https://gca-registration-api.gcagochina.workers.dev", label)
-    assert_contains(text, "local pre-registration packet", label)
+    assert_contains(text, "membership page", label)
+    assert_contains(text, "does not collect or store account data itself", label)
     assert_contains(text, "No private key, seed phrase, exchange API secret, withdrawal permission, or custody request", label)
     assert_contains(text, "read-only ERC-20", label)
     assert_contains(text, "support@gcagochina.com", label)
@@ -13474,7 +13474,7 @@ def validate_terms_page(text: str) -> None:
     assert_contains(text, "GCA Participation Terms", label)
     assert_contains(text, "Participation References", label)
     assert_no_public_data_room_terms(text, label)
-    assert_contains(text, "Legacy Pre-Registration", label)
+    assert_contains(text, "Membership Rules", label)
     assert_contains(text, "Live with manual review", label)
     assert_contains(text, "Eligible ledger records live", label)
     assert_contains(text, "Email Registration", label)

@@ -3,7 +3,7 @@
   "pageUrl": "https://gcagochina.com/privacy.html",
   "lastUpdated": "2026-08-10",
   "status": "public-privacy-notice-published",
-  "scope": "GCA public website, live email registration and contact suppression, legacy local member packets, controlled HTTPS account intake, read-only wallet verification, account status, reviewed service requests, and member/credit ledgers",
+  "scope": "GCA public website, live email registration and contact suppression, controlled HTTPS account intake, read-only wallet verification, account status, reviewed service requests, and member/credit ledgers",
   "contactEmail": "support@gcagochina.com",
   "currentStaticSiteBehavior": {
     "mode": "live-workers-d1-email-account-wallet-ledger-and-reviewed-service-workflows",
@@ -25,9 +25,6 @@
     "packetLeavesBrowserWhen": [
       "user submits email registration through register.html",
       "user submits email unsubscribe through unsubscribe.html",
-      "user copies member pre-registration packet",
-      "user downloads member pre-registration packet",
-      "user emails member pre-registration packet",
       "the user submits through the controlled HTTPS account UI",
       "the device-key account creates or reads a reviewed service request",
       "the device-key account submits additional information or acknowledges delivery"
@@ -36,16 +33,14 @@
   "dataFields": [
     "email",
     "optional display name for email registration",
+    "optional display name for controlled member access",
     "email registration source, language, and interest tags",
     "email contact consent acknowledgement",
     "contact suppression reason and source",
     "contact suppression acknowledgement",
-    "Telegram handle",
     "Base wallet address",
-    "declared GCA balance",
-    "program intent",
+    "GCA program intent",
     "consent flags",
-    "generated registration ID",
     "timestamp",
     "read-only wallet verification result",
     "device status key SHA-256 hash and expiry metadata",
@@ -101,7 +96,7 @@
       "withdrawal permission",
       "custody of funds"
     ],
-    "notCreatedByLegacyPreRegistration": [
+    "notCreatedByMembershipRulesPage": [
       "live GCA AI Quant Access account",
       "self-service credit claim",
       "automatic GCA Member activation",
@@ -134,7 +129,7 @@
     "participationTerms": "https://gcagochina.com/terms.html",
     "emailRegistration": "https://gcagochina.com/register.html",
     "emailUnsubscribe": "https://gcagochina.com/unsubscribe.html",
-    "memberPreRegistration": "https://gcagochina.com/members.html",
+    "membershipRules": "https://gcagochina.com/members.html",
     "controlledMemberAccess": "https://gcagochina.com/gca/member-access/",
     "memberProgramRules": "https://gcagochina.com/member-program.json",
     "memberLedgerPage": "https://gcagochina.com/member-ledger.html",
