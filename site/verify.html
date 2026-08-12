@@ -3,517 +3,162 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Verify GCA | Official Links and Identity</title>
-    <meta name="description" content="Official GCA verification page with live read-only Base contract identity checks, canonical contract, chain ID, GCA/USDT pool, official links, and anti-scam guidance.">
+    <title>Verify GCA | Contract, Pool and Official Links</title>
+    <meta name="description" content="Verify the official GCA contract, Base Mainnet network, GCA/USDT pool, website, social channels, and read-only contract identity before interacting.">
     <link rel="canonical" href="https://gcagochina.com/verify.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="Verify GCA | Official Links and Identity">
-    <meta property="og:description" content="Official GCA verification page with live read-only Base contract identity checks, canonical contract, chain ID, GCA/USDT pool, official links, and anti-scam guidance.">
+    <meta property="og:title" content="Verify GCA | Contract, Pool and Official Links">
+    <meta property="og:description" content="Official GCA verification for Base Mainnet contract identity, market route, website, and social channels.">
     <meta property="og:url" content="https://gcagochina.com/verify.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Verify GCA | Official Links and Identity">
-    <meta name="twitter:description" content="Official GCA verification page with live read-only Base contract identity checks, canonical contract, chain ID, GCA/USDT pool, official links, and anti-scam guidance.">
+    <meta name="twitter:title" content="Verify GCA | Contract, Pool and Official Links">
+    <meta name="twitter:description" content="Official GCA verification for Base Mainnet contract identity, market route, website, and social channels.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
-    <style>
-      :root {
-        color-scheme: light;
-        --ink: #111318;
-        --muted: #5f6773;
-        --line: #dfe3ea;
-        --panel: #ffffff;
-        --soft: #f6f7f9;
-        --red: #d71920;
-        --blue: #0052ff;
-        --green: #087f5b;
-        --gold: #8a650d;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        color: var(--ink);
-        background: #fbfbfc;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        line-height: 1.5;
-      }
-
-      a {
-        color: var(--blue);
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-      .shell {
-        width: min(1080px, calc(100% - 32px));
-        margin: 0 auto;
-      }
-
-      header {
-        border-bottom: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.94);
-        position: sticky;
-        top: 0;
-        z-index: 2;
-      }
-
-      nav {
-        min-height: 64px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--ink);
-        font-weight: 850;
-      }
-
-      .brand img {
-        width: 32px;
-        height: 32px;
-      }
-
-      .nav-links {
-        display: flex;
-        gap: 18px;
-        align-items: center;
-        font-size: 14px;
-      }
-
-      main {
-        padding: 42px 0 56px;
-      }
-
-      h1 {
-        margin: 0;
-        max-width: 900px;
-        font-size: clamp(40px, 6vw, 72px);
-        line-height: 1;
-        letter-spacing: 0;
-      }
-
-      h2 {
-        margin: 0 0 14px;
-        font-size: 24px;
-      }
-
-      h3 {
-        margin: 0 0 8px;
-        font-size: 17px;
-      }
-
-      .lead {
-        max-width: 840px;
-        margin: 18px 0 0;
-        color: var(--muted);
-        font-size: 18px;
-      }
-
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 24px;
-      }
-
-      .button {
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel);
-        color: var(--ink);
-        min-height: 42px;
-        padding: 10px 14px;
-        font: inherit;
-        font-weight: 750;
-        cursor: pointer;
-      }
-
-      .button.primary {
-        border-color: var(--red);
-        background: var(--red);
-        color: #fff;
-      }
-
-      .section {
-        margin-top: 30px;
-      }
-
-      .panel,
-      .fact {
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel);
-      }
-
-      .panel {
-        padding: 24px;
-      }
-
-      .facts,
-      .grid,
-      .two {
-        display: grid;
-        gap: 14px;
-      }
-
-      .facts {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        margin-top: 22px;
-      }
-
-      .grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .two {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .fact {
-        min-height: 104px;
-        padding: 15px;
-      }
-
-      .label {
-        display: block;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 750;
-        text-transform: uppercase;
-      }
-
-      .value {
-        display: block;
-        margin-top: 8px;
-        font-size: 16px;
-        font-weight: 850;
-        overflow-wrap: anywhere;
-      }
-
-      .good {
-        color: var(--green);
-      }
-
-      .pending {
-        color: var(--gold);
-      }
-
-      .bad {
-        color: #b42318;
-      }
-
-      .contract-live-header {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 18px;
-      }
-
-      .contract-live-summary {
-        margin: 18px 0 0;
-        padding: 12px 14px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--soft);
-        font-weight: 800;
-      }
-
-      .contract-live-summary.good {
-        border-color: #a9dbc9;
-        background: #f0faf6;
-      }
-
-      .contract-live-summary.bad {
-        border-color: #f0b5ae;
-        background: #fff4f2;
-      }
-
-      .note,
-      li {
-        color: var(--muted);
-      }
-
-      .note {
-        margin: 0;
-      }
-
-      .list {
-        display: grid;
-        gap: 10px;
-        margin-top: 12px;
-      }
-
-      .row {
-        display: grid;
-        grid-template-columns: minmax(112px, 0.75fr) minmax(0, 1.35fr);
-        gap: 12px;
-        align-items: start;
-        border-top: 1px solid var(--line);
-        padding-top: 10px;
-      }
-
-      .row strong {
-        min-width: 0;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-        text-align: right;
-      }
-
-      .warning {
-        border-color: #ecd28c;
-        background: #fff9e8;
-      }
-
-      code {
-        padding: 2px 5px;
-        border-radius: 6px;
-        background: var(--soft);
-        overflow-wrap: anywhere;
-      }
-
-      footer {
-        border-top: 1px solid var(--line);
-        padding: 24px 0;
-        color: var(--muted);
-        font-size: 14px;
-      }
-
-      @media (max-width: 860px) {
-        .facts,
-        .grid,
-        .two {
-          grid-template-columns: 1fr;
-        }
-
-        nav {
-          align-items: flex-start;
-          flex-direction: column;
-          padding: 14px 0;
-        }
-
-        .nav-links {
-          flex-wrap: wrap;
-        }
-
-        .row {
-          grid-template-columns: 1fr;
-        }
-
-        .row strong {
-          white-space: normal;
-        }
-
-        .contract-live-header {
-          align-items: stretch;
-          flex-direction: column;
-        }
-
-        .contract-live-header .button {
-          width: 100%;
-        }
-      }
-    </style>
-      <link rel="stylesheet" href="assets/gca-site.css?v=20260812">
-    <script src="assets/gca-site.js?v=20260812" defer></script>
+    <link rel="stylesheet" href="assets/gca-core.css?v=20260812-2">
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260812-2">
+    <script src="assets/gca-site.js?v=20260812-2" defer></script>
     <script src="assets/contract-identity.js?v=20260811-2" defer></script>
   </head>
   <body>
     <header>
       <nav class="shell" aria-label="Primary">
-        <a class="brand" href="index.html" aria-label="GCA home">
-          <img src="assets/gca-logo.svg" alt="GCA logo">
-          <span>GCA</span>
-        </a>
-        <div class="nav-links">
-          <a href="index.html">Home</a>
-          <a href="verify.html">Verify</a>
-          <a href="buy.html">Buy Guide</a>
-          <a href="markets.html">Markets</a>
-          <a href="supply.html">Supply</a>
-          <a href="security.html">Security</a>
-          <a href="risk.html">Risk</a>
-          <a href="faq.html">FAQ</a>
-          <a href="listing-kit.html">Listing Kit</a>
-        </div>
+        <a class="brand" href="index.html" aria-label="GCA home"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a>
+        <div class="nav-links"></div>
       </nav>
     </header>
 
-    <main class="shell">
-      <section aria-labelledby="title">
-        <h1 id="title">Verify GCA</h1>
-        <p class="lead">Use this page before interacting with GCA links, pools, or social channels. The safest workflow is to verify the chain, contract, official pool, website domain, and current status from this page.</p>
-        <div class="actions">
-          <a class="button primary" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan Contract</a>
-          <a class="button" href="zh-wallet-verify.html">中文验证</a>
-          <a class="button" href="markets.html">Markets</a>
-          <a class="button" href="security.html">Security</a>
-          <a class="button" href="risk.html">Risk</a>
-          <a class="button" href="listing-kit.html">Listing Kit</a>
-          <a class="button" href="brand-kit.html">Brand Kit</a>
-          <a class="button" href="onchain-proofs.html">On-chain Proofs</a>
-          <a class="button" href="wallet-warning.html">Wallet Warning</a>
-          <a class="button" href="external-reviews.html">External Reviews</a>
-          <a class="button" href="trust.html">Trust Center</a>
-          <button class="button" type="button" id="copyContract">Copy Contract</button>
+    <main id="main-content">
+      <section class="core-hero" aria-labelledby="title">
+        <img class="core-hero-art" src="assets/gca-logo.svg" alt="" aria-hidden="true">
+        <div class="shell">
+          <div class="core-hero-content">
+            <p class="eyebrow">Official identity</p>
+            <h1 id="title">Verify GCA</h1>
+            <p class="lead hero-copy">Confirm the network, contract, official GCA/USDT pool, domain, and social channels before using any GCA link or wallet prompt.</p>
+            <div class="actions">
+              <a class="button primary" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6#code">View BaseScan Source</a>
+              <button class="button accent" type="button" id="copyContract">Copy Contract</button>
+              <a class="button" href="zh-wallet-verify.html">中文验证</a>
+            </div>
+            <p class="command-status" id="copyStatus" aria-live="polite"></p>
+          </div>
         </div>
       </section>
 
-      <section class="facts" aria-label="Verification facts">
-        <div class="fact">
-          <span class="label">Network</span>
-          <span class="value">Base Mainnet / 8453</span>
-        </div>
-        <div class="fact">
-          <span class="label">Contract</span>
-          <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
-        </div>
-        <div class="fact">
-          <span class="label">Official Pool</span>
-          <span class="value">GCA/USDT</span>
-        </div>
-        <div class="fact">
-          <span class="label">Website</span>
-          <span class="value">gcagochina.com</span>
+      <section class="fact-band" aria-label="Canonical GCA identity">
+        <div class="shell facts">
+          <div class="fact"><span class="fact-label">Network</span><span class="fact-value">Base Mainnet · 8453</span></div>
+          <div class="fact"><span class="fact-label">Token</span><span class="fact-value">GCA · 18 decimals</span></div>
+          <div class="fact"><span class="fact-label">Supply</span><span class="fact-value">1,000,000,000 · fixed</span></div>
+          <div class="fact"><span class="fact-label">Official Market</span><span class="fact-value">GCA/USDT · Uniswap v4</span></div>
         </div>
       </section>
 
-      <section class="section panel" data-gca-contract-identity aria-labelledby="liveContractTitle">
-        <div class="contract-live-header">
+      <section class="section" aria-labelledby="identityTitle">
+        <div class="shell split">
           <div>
-            <h2 id="liveContractTitle">Live Read-Only Contract Identity</h2>
-            <p class="note">This browser check reads the contract pinned below from the official Base public RPC. It verifies the network, deployed code, ERC-20 name, symbol, decimals, and fixed total supply.</p>
+            <p class="eyebrow">Canonical token</p>
+            <h2 id="identityTitle">Match every character.</h2>
+            <p class="lead">A token symbol or logo is not enough. The contract address and network are the canonical identity.</p>
           </div>
-          <button class="button" type="button" data-contract-action>Run check again</button>
-        </div>
-        <p class="contract-live-summary pending" data-contract-summary data-state="pending" aria-live="polite">Waiting for the live Base Mainnet check...</p>
-        <div class="list">
-          <div class="row"><span>Network response</span><strong data-contract-field="network">Checking...</strong></div>
-          <div class="row"><span>Contract code</span><strong data-contract-field="code">Checking...</strong></div>
-          <div class="row"><span>Token name</span><strong data-contract-field="name">Checking...</strong></div>
-          <div class="row"><span>Token symbol</span><strong data-contract-field="symbol">Checking...</strong></div>
-          <div class="row"><span>Decimals</span><strong data-contract-field="decimals">Checking...</strong></div>
-          <div class="row"><span>Total supply</span><strong data-contract-field="supply">Checking...</strong></div>
-          <div class="row"><span>Read source</span><strong data-contract-field="source">Checking...</strong></div>
-        </div>
-        <p class="note" style="margin-top: 14px;"><strong>Read-only boundary:</strong> this check does not connect a wallet, request permissions or signatures, or submit a transaction. The official Base public RPC is rate-limited, so a temporary read failure does not change the canonical identity; use the BaseScan Contract link above as the fallback.</p>
-      </section>
-
-      <section class="section two" aria-label="Canonical identity">
-        <div class="panel">
-          <h2>Canonical Token Identity</h2>
-          <div class="list">
-            <div class="row"><span>Token name</span><strong>GCA</strong></div>
-            <div class="row"><span>Token symbol</span><strong>GCA</strong></div>
-            <div class="row"><span>Network</span><strong>Base Mainnet</strong></div>
-            <div class="row"><span>Chain ID</span><strong>8453</strong></div>
-            <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
-            <div class="row"><span>Decimals</span><strong>18</strong></div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <h2>Official Market Identity</h2>
-          <div class="list">
-            <div class="row"><span>Pair</span><strong>GCA/USDT</strong></div>
-            <div class="row"><span>DEX</span><strong>Uniswap v4</strong></div>
-            <div class="row"><span>Pool</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
-            <div class="row"><span>USDT on Base</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
-            <div class="row"><span>Fee tier</span><strong>0.01%</strong></div>
+          <div class="identity-list">
+            <div class="identity-row"><span>Network</span><strong>Base Mainnet</strong></div>
+            <div class="identity-row"><span>Chain ID</span><strong>8453</strong></div>
+            <div class="identity-row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+            <div class="identity-row"><span>Symbol</span><strong>GCA</strong></div>
+            <div class="identity-row"><span>Decimals</span><strong>18</strong></div>
           </div>
         </div>
       </section>
 
-      <section class="section panel" aria-labelledby="officialLinksTitle">
-        <h2 id="officialLinksTitle">Official Links</h2>
-        <div class="list">
-          <div class="row"><span><a href="https://gcagochina.com/" target="_blank" rel="noreferrer">Website</a></span><strong>gcagochina.com</strong></div>
-          <div class="row"><span><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">Telegram</a></span><strong>Official channel</strong></div>
-          <div class="row"><span><a href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">X</a></span><strong>Official profile</strong></div>
-          <div class="row"><span><a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">BaseScan contract</a></span><strong>Source verified</strong></div>
-          <div class="row"><span><a href="https://gcagochina.com/trust.html" target="_blank" rel="noreferrer">Trust Center</a></span><strong>Verification hub</strong></div>
-          <div class="row"><span><a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">GeckoTerminal pool</a></span><strong>Approved token info</strong></div>
-          <div class="row"><span><a href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0" target="_blank" rel="noreferrer">DEX Screener pair</a></span><strong>GCA/USDT</strong></div>
-          <div class="row"><span><a href="https://app.uniswap.org/swap?chain=base&amp;inputCurrency=0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2&amp;outputCurrency=0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">Uniswap swap route</a></span><strong>USDT to GCA</strong></div>
+      <section class="section soft" data-gca-contract-identity aria-labelledby="liveContractTitle">
+        <div class="shell live-check">
+          <div class="live-header">
+            <div>
+              <p class="eyebrow">Read-only chain check</p>
+              <h2 id="liveContractTitle">Live Read-Only Contract Identity</h2>
+              <p class="note">This browser check reads the pinned GCA contract through the official Base public RPC and compares its deployed code, name, symbol, decimals, and total supply.</p>
+            </div>
+            <button class="button" type="button" data-contract-action>Run Check Again</button>
+          </div>
+          <p class="live-summary" data-contract-summary data-state="pending" aria-live="polite">Checking Base Mainnet contract identity...</p>
+          <div>
+            <div class="live-row"><span>Network response</span><strong data-contract-field="network">Checking...</strong></div>
+            <div class="live-row"><span>Contract code</span><strong data-contract-field="code">Checking...</strong></div>
+            <div class="live-row"><span>Token name</span><strong data-contract-field="name">Checking...</strong></div>
+            <div class="live-row"><span>Token symbol</span><strong data-contract-field="symbol">Checking...</strong></div>
+            <div class="live-row"><span>Decimals</span><strong data-contract-field="decimals">Checking...</strong></div>
+            <div class="live-row"><span>Total supply</span><strong data-contract-field="supply">Checking...</strong></div>
+            <div class="live-row"><span>Read source</span><strong data-contract-field="source">Checking...</strong></div>
+          </div>
+          <p class="note" style="margin-top:16px"><strong>Read-only boundary:</strong> this check does not connect a wallet, request permissions or signatures, or submit a transaction. The official Base public RPC is rate-limited; use the BaseScan source link if a temporary read fails.</p>
         </div>
       </section>
 
-      <section class="section grid" aria-label="Verification pages">
-        <div class="panel">
-          <h3>Status</h3>
-          <p class="note"><a href="trust.html">Trust Center</a>, <a href="status.html">Project status</a>, <a href="onchain-proofs.html">On-chain Proofs</a>, <a href="wallet-warning.html">Wallet Warning Evidence</a>, and <a href="external-reviews.html">External Reviews</a> track deployment, reserve transfers, BaseScan, GeckoTerminal, Blockaid, audit, liquidity, and listing readiness.</p>
-        </div>
-        <div class="panel">
-          <h3>Supply</h3>
-          <p class="note"><a href="supply.html">Supply and reserve</a> explains total supply, target public allocation, and the owner reserve wallet.</p>
-        </div>
-        <div class="panel">
-          <h3>Security</h3>
-          <p class="note"><a href="security.html">Security</a> summarizes source verification, no mint, no tax, no blacklist, no admin role, and audit status.</p>
-        </div>
-        <div class="panel">
-          <h3>Risk</h3>
-          <p class="note"><a href="risk.html">Risk disclosures</a> list early-stage, liquidity, warning, reserve, utility, and listing limitations.</p>
-        </div>
-        <div class="panel">
-          <h3>Listing Kit</h3>
-          <p class="note"><a href="listing-kit.html">Listing Kit</a> and <a href="brand-kit.html">Brand Kit</a> provide copyable facts, logo assets, and metadata for data platforms, wallets, moderators, and community posts.</p>
-        </div>
-        <div class="panel">
-          <h3>Project References</h3>
-          <p class="note"><a href="brand-kit.html">Brand Kit</a>, <a href="listing-kit.html">Listing Kit</a>, <a href="trust.html">Trust Center</a>, and <a href="onchain-proofs.html">On-chain Proofs</a> provide readable metadata, well-known token identity context, and verification guidance for wallets, explorers, reviewers, and community posts.</p>
+      <section class="section warm" aria-labelledby="poolTitle">
+        <div class="shell split">
+          <div>
+            <p class="eyebrow">Official market route</p>
+            <h2 id="poolTitle">GCA/USDT on Base</h2>
+            <p class="lead">Confirm both assets and the pool address before opening a swap. Earlier pools should not be treated as the primary public route.</p>
+            <div class="actions"><a class="button primary" href="markets.html">Open Market Page</a><a class="button" href="buy.html">Buy Guide</a></div>
+          </div>
+          <div class="identity-list">
+            <div class="identity-row"><span>DEX</span><strong>Uniswap v4</strong></div>
+            <div class="identity-row"><span>Pair</span><strong>GCA/USDT</strong></div>
+            <div class="identity-row"><span>Pool</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
+            <div class="identity-row"><span>Base USDT</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
+            <div class="identity-row"><span>Fee tier</span><strong>0.01%</strong></div>
+          </div>
         </div>
       </section>
 
-      <section class="section panel" aria-labelledby="reviewStatusTitle">
-        <h2 id="reviewStatusTitle">Current Review Status</h2>
-        <div class="list">
-          <div class="row"><span>BaseScan source code</span><strong class="good">Verified</strong></div>
-            <div class="row"><span>BaseScan token profile</span><strong class="pending">Returned 2026-05-23; final package refreshed 2026-08-11; Handoff and Chinese owner flow ready for one support@gcagochina.com submission</strong></div>
-            <div class="row"><span>Latest reviewer package</span><strong class="good">Final package 2026-08-11T18:56:43Z; daily status 2026-08-12T06:37:31Z</strong></div>
-          <div class="row"><span>GeckoTerminal token information</span><strong class="good">Approved 2026-05-11</strong></div>
-          <div class="row"><span>Blockaid / wallet warning feedback</span><strong class="good">Owner observed no warning visible 2026-05-14</strong></div>
-          <div class="row"><span>Third-party audit</span><strong class="pending">Pending independent report</strong></div>
-          <div class="row"><span>Liquidity status</span><strong class="pending">Starter-depth only; high slippage possible</strong></div>
+      <section class="section" aria-labelledby="channelsTitle">
+        <div class="shell">
+          <div class="section-heading"><p class="eyebrow">Official channels</p><h2 id="channelsTitle">Use links published here.</h2><p>Direct messages, look-alike domains, and copied token logos are not official verification.</p></div>
+          <div class="channel-grid">
+            <div class="channel"><strong>Website</strong><a href="https://gcagochina.com/">gcagochina.com</a></div>
+            <div class="channel"><strong>X</strong><a href="https://x.com/GCAAIGoChina">@GCAAIGoChina</a></div>
+            <div class="channel"><strong>Telegram</strong><a href="https://t.me/gcagochinaofficial">gcagochinaofficial</a></div>
+            <div class="channel"><strong>Support</strong><a href="mailto:support@gcagochina.com">support@gcagochina.com</a></div>
+            <div class="channel"><strong>GeckoTerminal</strong><a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0">Official pool</a></div>
+            <div class="channel"><strong>DEX Screener</strong><a href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0">GCA/USDT pair</a></div>
+            <div class="channel"><strong>Supply</strong><a href="supply.html">Supply and reserve</a></div>
+            <div class="channel"><strong>Security</strong><a href="security.html">Technical disclosures</a></div>
+          </div>
         </div>
-        <p class="note" style="margin-top: 14px;">Do not describe GCA as externally audited, BaseScan-profile approved, permanently warning-free, deeply liquid, or supported by guaranteed price/liquidity.</p>
       </section>
 
-      <section class="section panel warning" aria-labelledby="avoidTitle">
-        <h2 id="avoidTitle">Avoid Unverified Links</h2>
-        <ul>
-          <li>Do not trust direct messages, private support chats, or links asking for private keys, seed phrases, exchange API secrets, withdrawal permission, or custody of funds.</li>
-          <li>Only trust the official X profile published on this page: <a href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">https://x.com/GCAAIGoChina</a>.</li>
-          <li>Do not trust listing agents, paid callers, or third parties claiming guaranteed exchange, CoinGecko, or CoinMarketCap listing.</li>
-          <li>Do not use artificial volume, self-trading, or fake activity as a trust signal.</li>
-        </ul>
+      <section class="section dark" aria-labelledby="avoidTitle">
+        <div class="shell">
+          <div class="section-heading"><p class="eyebrow">Anti-scam checklist</p><h2 id="avoidTitle">Stop when a request crosses these lines.</h2><p>Official GCA support will not ask for wallet or exchange secrets.</p></div>
+          <ul class="safety-list">
+            <li><h3>Never share secrets</h3><p class="note">Do not send private keys, seed phrases, wallet passwords, verification codes, or exchange API secrets.</p></li>
+            <li><h3>Never enable withdrawals</h3><p class="note">Do not grant exchange withdrawal permission or transfer assets to a support, verification, or unlock address.</p></li>
+            <li><h3>Never trust artificial proof</h3><p class="note">Paid callers, fake volume, self-trading, and guaranteed listings are not trust signals.</p></li>
+          </ul>
+        </div>
       </section>
     </main>
 
-    <footer>
-      <div class="shell">GCA verification page. Always confirm Base Mainnet chain ID 8453, the contract, the pool, and official domain before interacting.</div>
-    </footer>
+    <footer><div class="shell footer-line"><strong>GCA · Official Verification</strong><div class="footer-links"><a href="index.html">Home</a><a href="product.html">Product</a><a href="markets.html">Markets</a><a href="support.html">Support</a></div></div></footer>
 
     <script>
       const CONTRACT = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
-
+      const copyStatus = document.getElementById("copyStatus");
       document.getElementById("copyContract").addEventListener("click", async () => {
-        await navigator.clipboard.writeText(CONTRACT);
+        try {
+          await navigator.clipboard.writeText(CONTRACT);
+          copyStatus.textContent = "Contract address copied.";
+        } catch {
+          copyStatus.textContent = "Copy unavailable. Select the contract address below.";
+        }
       });
     </script>
   </body>

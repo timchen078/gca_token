@@ -3,469 +3,130 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA Support & Intake</title>
-    <meta name="description" content="Official GCA support and intake page for member pre-registration packets, wallet verification questions, data platform corrections, wallet-warning reports, and security boundaries.">
+    <title>GCA Support | Official Help Center</title>
+    <meta name="description" content="Official GCA help for accounts, member access, product tools, wallet verification, markets, and security reports.">
     <link rel="canonical" href="https://gcagochina.com/support.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="GCA Support &amp; Intake">
-    <meta property="og:description" content="Official GCA support and intake page for member pre-registration packets, wallet verification questions, data platform corrections, wallet-warning reports, and security boundaries.">
+    <meta property="og:title" content="GCA Support | Official Help Center">
+    <meta property="og:description" content="Official help for GCA accounts, products, wallet verification, markets, and security.">
     <meta property="og:url" content="https://gcagochina.com/support.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="GCA Support &amp; Intake">
-    <meta name="twitter:description" content="Official GCA support and intake page for member pre-registration packets, wallet verification questions, data platform corrections, wallet-warning reports, and security boundaries.">
+    <meta name="twitter:title" content="GCA Support | Official Help Center">
+    <meta name="twitter:description" content="Official help for GCA accounts, products, wallet verification, markets, and security.">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
-    <style>
-      :root {
-        color-scheme: light;
-        --ink: #111318;
-        --muted: #5f6773;
-        --line: #dfe3ea;
-        --panel: #ffffff;
-        --soft: #f6f7f9;
-        --red: #d71920;
-        --blue: #0052ff;
-        --green: #087f5b;
-        --gold: #8a650d;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        color: var(--ink);
-        background: #fbfbfc;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        line-height: 1.5;
-      }
-
-      a {
-        color: var(--blue);
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-      .shell {
-        width: min(1080px, calc(100% - 32px));
-        margin: 0 auto;
-      }
-
-      header {
-        border-bottom: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.94);
-        position: sticky;
-        top: 0;
-        z-index: 2;
-      }
-
-      nav {
-        min-height: 64px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--ink);
-        font-weight: 850;
-      }
-
-      .brand img {
-        width: 32px;
-        height: 32px;
-      }
-
-      .nav-links {
-        display: flex;
-        gap: 18px;
-        align-items: center;
-        font-size: 14px;
-      }
-
-      main {
-        padding: 42px 0 56px;
-      }
-
-      h1 {
-        margin: 0;
-        max-width: 900px;
-        font-size: clamp(40px, 6vw, 72px);
-        line-height: 1;
-        letter-spacing: 0;
-      }
-
-      h2 {
-        margin: 0 0 14px;
-        font-size: 24px;
-      }
-
-      h3 {
-        margin: 0 0 8px;
-        font-size: 17px;
-      }
-
-      .lead {
-        max-width: 840px;
-        margin: 18px 0 0;
-        color: var(--muted);
-        font-size: 18px;
-      }
-
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 24px;
-      }
-
-      .button {
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel);
-        color: var(--ink);
-        min-height: 42px;
-        padding: 10px 14px;
-        font: inherit;
-        font-weight: 750;
-      }
-
-      .button.primary {
-        border-color: var(--red);
-        background: var(--red);
-        color: #fff;
-      }
-
-      .section {
-        margin-top: 30px;
-      }
-
-      .panel,
-      .fact {
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel);
-      }
-
-      .panel {
-        padding: 24px;
-      }
-
-      .facts,
-      .two,
-      .three {
-        display: grid;
-        gap: 14px;
-      }
-
-      .facts {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        margin-top: 22px;
-      }
-
-      .two {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .three {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .fact {
-        min-height: 104px;
-        padding: 15px;
-      }
-
-      .label {
-        display: block;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 750;
-        text-transform: uppercase;
-      }
-
-      .value {
-        display: block;
-        margin-top: 8px;
-        font-size: 16px;
-        font-weight: 850;
-        overflow-wrap: anywhere;
-      }
-
-      .good {
-        color: var(--green);
-      }
-
-      .pending {
-        color: var(--gold);
-      }
-
-      .note,
-      li {
-        color: var(--muted);
-      }
-
-      .note {
-        margin: 0;
-      }
-
-      .list {
-        display: grid;
-        gap: 10px;
-        margin-top: 12px;
-      }
-
-      .row {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        border-top: 1px solid var(--line);
-        padding-top: 10px;
-      }
-
-      .row:first-child {
-        border-top: 0;
-        padding-top: 0;
-      }
-
-      .row > * {
-        min-width: 0;
-        max-width: 100%;
-      }
-
-      .row strong {
-        overflow-wrap: anywhere;
-        word-break: break-word;
-        text-align: right;
-      }
-
-      code {
-        border: 1px solid var(--line);
-        border-radius: 6px;
-        background: var(--soft);
-        padding: 2px 5px;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        font-size: 0.92em;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-      }
-
-      footer {
-        border-top: 1px solid var(--line);
-        color: var(--muted);
-        padding: 22px 0;
-        font-size: 13px;
-      }
-
-      @media (max-width: 760px) {
-        nav,
-        .row {
-          align-items: flex-start;
-          flex-direction: column;
-        }
-
-        .row strong {
-          text-align: left;
-          width: 100%;
-        }
-
-        .nav-links {
-          flex-wrap: wrap;
-        }
-
-        .facts,
-        .two,
-        .three {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
-      <link rel="stylesheet" href="assets/gca-site.css?v=20260812">
-    <script src="assets/gca-site.js?v=20260812" defer></script>
+    <link rel="stylesheet" href="assets/gca-core.css?v=20260812-2">
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260812-2">
+    <script src="assets/gca-site.js?v=20260812-2" defer></script>
   </head>
   <body>
     <header>
       <nav class="shell" aria-label="Primary">
-        <a class="brand" href="index.html" aria-label="GCA home">
-          <img src="assets/gca-logo.svg" alt="GCA logo">
-          <span>GCA</span>
-        </a>
-        <div class="nav-links">
-          <a href="index.html">Home</a>
-          <a href="verify.html">Verify</a>
-          <a href="markets.html">Markets</a>
-          <a href="supply.html">Supply</a>
-          <a href="security.html">Security</a>
-          <a href="risk.html">Risk</a>
-          <a href="faq.html">FAQ</a>
-          <a href="status.html">Status</a>
-          <a href="listing-kit.html">Listing Kit</a>
-          <a href="operations.html">Operations</a>
-          <a href="roadmap.html">Roadmap</a>
-          <a href="community.html">Community</a>
-          <a href="members.html">Members</a>
-          <a href="member-ledger.html">Member Ledger</a>
-          <a href="privacy.html">Privacy</a>
-          <a href="terms.html">Terms</a>
-        </div>
+        <a class="brand" href="index.html" aria-label="GCA home"><img src="assets/gca-logo.svg" alt="GCA logo"><span>GCA</span></a>
+        <div class="nav-links"></div>
       </nav>
     </header>
 
-    <main class="shell">
-      <section aria-labelledby="title">
-        <h1 id="title">GCA Support & Intake</h1>
-        <p class="lead">Use this page for official GCA support routing, member pre-registration packet handling, wallet-verification questions, wallet-warning evidence, and data-platform correction context.</p>
-        <div class="actions">
-          <a class="button primary" href="mailto:support@gcagochina.com?subject=GCA%20Support%20Request">Email GCA Support</a>
-          <a class="button primary" href="gca/member-access/">Member Access & Service Requests</a>
-          <a class="button primary" href="register.html">Email Registration</a>
-          <a class="button" href="zh-support.html">中文支持和资料提交</a>
-          <a class="button" href="team.html">Team Profile</a>
-          <a class="button" href="basescan-remediation.html">BaseScan Remediation</a>
-          <a class="button" href="basescan-handoff.html">BaseScan Handoff</a>
-          <a class="button" href="operations.html">Operations Runbook</a>
-          <a class="button" href="reviewer-kit.html">Reviewer Kit</a>
-          <a class="button" href="platform-replies.html">Platform Replies</a>
-          <a class="button" href="review-queue.html">Review Queue Contract</a>
-          <a class="button" href="member-benefit.html">Member Benefit Review</a>
-          <a class="button" href="member-benefit-transfer.html">Transfer Runbook</a>
-          <a class="button" href="roadmap.html">Roadmap</a>
-          <a class="button" href="community.html">Community Kit</a>
-          <a class="button" href="members.html">Member Pre-Registration</a>
-          <a class="button" href="privacy.html">Privacy Notice</a>
-          <a class="button" href="terms.html">Participation Terms</a>
-          <a class="button" href="verify.html">Verify GCA</a>
-          <a class="button" href="#supportReferences">Technical Evidence</a>
-        </div>
-      </section>
-
-      <section class="facts" aria-label="Support facts">
-        <div class="fact">
-          <span class="label">Official Email</span>
-          <span class="value">support@gcagochina.com</span>
-        </div>
-        <div class="fact">
-          <span class="label">Domain Email</span>
-          <span class="value pending">Domain email ready for BaseScan resubmission</span>
-        </div>
-        <div class="fact">
-          <span class="label">Current Intake</span>
-          <span class="value good">Member Access + official email</span>
-        </div>
-        <div class="fact">
-          <span class="label">Sensitive Data</span>
-          <span class="value good">Never required</span>
-        </div>
-      </section>
-
-      <section class="section three" aria-label="Request types">
-        <div class="panel">
-          <h2>Member Packet</h2>
-          <p class="note">Use live <a href="gca/member-access/">Member Access</a> for controlled account intake, read-only wallet verification, ledger eligibility, and reviewed service requests. The legacy <a href="members.html">members.html</a> page only generates a local <code>gca_member_preregistration_v2</code> packet and does not approve an account or transfer tokens.</p>
-        </div>
-        <div class="panel">
-          <h2>Wallet Questions</h2>
-          <p class="note">Support can review public Base wallet addresses and transaction hashes. Wallet verification is live as a read-only ERC-20 <code>balanceOf</code> check and never requires a signature, private key, custody, or transaction.</p>
-        </div>
-        <div class="panel">
-          <h2>Platform Corrections</h2>
-          <p class="note">Wallets, data platforms, and moderators should use <a href="listing-kit.html">Listing Kit</a>, <a href="brand-kit.html">Brand Kit</a>, <a href="onchain-proofs.html">On-chain Proofs</a>, <a href="external-reviews.html">External Reviews</a>, <a href="reviewer-kit.html">Reviewer Kit</a>, <a href="basescan-handoff.html">BaseScan Handoff</a>, and <a href="platform-replies.html">Platform Replies</a>.</p>
-        </div>
-      </section>
-
-      <section class="section two" aria-label="What to send">
-        <div class="panel">
-          <h2>What To Include</h2>
-          <div class="list">
-            <div class="row"><span>Request type</span><strong>Required</strong></div>
-            <div class="row"><span>Email and optional Telegram handle</span><strong>Useful</strong></div>
-            <div class="row"><span>Base wallet address</span><strong>For holder review</strong></div>
-            <div class="row"><span>Transaction hash or pool link</span><strong>For chain evidence</strong></div>
-            <div class="row"><span>Purchase or transfer hash</span><strong>For 30-day member holding review</strong></div>
-            <div class="row"><span>GCA Member holding start date</span><strong>For 30-day evidence review</strong></div>
-            <div class="row"><span>GCA Member evidence note</span><strong>Non-sensitive context only</strong></div>
-            <div class="row"><span>Screenshot of a wallet warning or platform issue</span><strong>If relevant</strong></div>
-            <div class="row"><span>Generated member packet JSON</span><strong>For pre-registration and <code>memberBenefitReviewEvidence</code></strong></div>
+    <main id="main-content">
+      <section class="core-hero" aria-labelledby="title">
+        <img class="core-hero-art" src="assets/gca-logo.svg" alt="" aria-hidden="true">
+        <div class="shell"><div class="core-hero-content">
+          <p class="eyebrow">Official support</p>
+          <h1 id="title">How can we help?</h1>
+          <p class="lead hero-copy">Get help with GCA accounts, member access, browser tools, wallet verification, official market links, or a security concern.</p>
+          <div class="actions">
+            <a class="button primary" href="mailto:support@gcagochina.com?subject=GCA%20Support%20Request">Email Support</a>
+            <a class="button accent" href="gca/member-access/">Open Member Account</a>
+            <a class="button" href="zh-support.html">中文支持</a>
           </div>
+        </div></div>
+      </section>
+
+      <section class="fact-band" aria-label="Support facts">
+        <div class="shell facts">
+          <div class="fact"><span class="fact-label">Official email</span><span class="fact-value">support@gcagochina.com</span></div>
+          <div class="fact"><span class="fact-label">Network</span><span class="fact-value">Base Mainnet · 8453</span></div>
+          <div class="fact"><span class="fact-label">Account</span><span class="fact-value">Email + device access</span></div>
+          <div class="fact"><span class="fact-label">Sensitive data</span><span class="fact-value">Never required</span></div>
         </div>
-        <div class="panel">
-          <h2>Do Not Send</h2>
-          <div class="list">
-            <div class="row"><span>Private key or seed phrase</span><strong class="pending">Never</strong></div>
-            <div class="row"><span>Exchange API secret or withdrawal permission</span><strong class="pending">Never</strong></div>
-            <div class="row"><span>Custody request or fund transfer request</span><strong class="pending">Never</strong></div>
-            <div class="row"><span>Password, one-time code, or recovery phrase</span><strong class="pending">Never</strong></div>
-            <div class="row"><span>Request to bypass GCA AI Quant Access risk controls</span><strong class="pending">Never</strong></div>
+      </section>
+
+      <section class="section" aria-labelledby="topicsTitle">
+        <div class="shell">
+          <div class="section-heading"><p class="eyebrow">Help topics</p><h2 id="topicsTitle">Start with the right route.</h2><p>Use the account interface for account-specific records. Use official public pages for contract, market, and product questions.</p></div>
+          <div class="tool-grid">
+            <article class="tool-card"><div><h3>Account &amp; membership</h3><p>Create or recover device access, verify a public Base wallet, and view your account record.</p></div><a class="tool-link" href="gca/member-access/">Open member account →</a></article>
+            <article class="tool-card"><div><h3>Product tools</h3><p>Learn how GCA research, planning, risk, backtesting, and review tools work together.</p></div><a class="tool-link" href="product.html">Explore the product →</a></article>
+            <article class="tool-card"><div><h3>Wallet &amp; contract</h3><p>Confirm the Base network, official contract, token identity, and wallet display details.</p></div><a class="tool-link" href="verify.html">Verify GCA →</a></article>
+            <article class="tool-card"><div><h3>Market &amp; liquidity</h3><p>Check the official GCA/USDT pool, market trackers, quote asset, and swap route.</p></div><a class="tool-link" href="markets.html">Open market details →</a></article>
+            <article class="tool-card"><div><h3>Security concern</h3><p>Report a suspicious link, impersonation, wallet prompt, contract concern, or reproducible issue.</p></div><a class="tool-link" href="mailto:support@gcagochina.com?subject=GCA%20Security%20Report">Report securely →</a></article>
+            <article class="tool-card"><div><h3>Project information</h3><p>Find the company profile, founder information, whitepaper, brand assets, and official channels.</p></div><a class="tool-link" href="about.html">About GCA →</a></article>
           </div>
         </div>
       </section>
 
-      <section class="section two" aria-label="Current review boundaries">
-        <div class="panel">
-          <h2>Support Workflow</h2>
-          <p class="note">Structured account and catalog service intake is live in Member Access. Device-key accounts can read redacted review status, answer a published more-information prompt, cancel before review, and acknowledge completed delivery. Generic support remains manual through <a href="mailto:support@gcagochina.com">support@gcagochina.com</a>; the 5-10 business day first-response target is not a promise.</p>
-        </div>
-        <div class="panel">
-          <h2>What Support Cannot Do</h2>
-          <p class="note">Support cannot make a token price, liquidity, listing, permanent wallet-warning clearance, audit approval, trading result, live trading permission, or risk-control bypass happen. Support also cannot override on-chain wallet-balance verification or the 30-day member holding-period rule.</p>
-        </div>
-      </section>
-
-      <section class="section panel" aria-labelledby="reviewPackageTitle">
-        <h2 id="reviewPackageTitle">Redacted Review Package Handoff</h2>
-        <p class="note">If a platform asks for local member-ledger evidence, operators should export only the public-redacted package from local <code>.gca_access_data/</code> records, verify the package digest, and answer with the template in <a href="platform-replies.html">Platform Replies</a>. The full-local package is internal only and must not be sent externally.</p>
-        <div class="list">
-          <div class="row"><span>External sharing mode</span><strong><code>redacted-public</code></strong></div>
-          <div class="row"><span>Export command</span><strong><code>.venv/bin/python tools/export_gca_review_package.py --redact public --output gca-public-redacted-review-package.json</code></strong></div>
-          <div class="row"><span>Verify digest</span><strong><code>.venv/bin/python tools/verify_gca_review_package.py gca-public-redacted-review-package.json</code></strong></div>
-          <div class="row"><span>Reply template</span><strong><a href="platform-replies.html">platform-replies.html</a></strong></div>
-          <div class="row"><span>Full-local package</span><strong class="pending">Internal only</strong></div>
-        </div>
-      </section>
-
-      <section class="section panel" aria-labelledby="identityTitle">
-        <h2 id="identityTitle">Official Identity For Requests</h2>
-        <div class="list">
-          <div class="row"><span>Network</span><strong>Base Mainnet / chainId 8453</strong></div>
-          <div class="row"><span>Contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
-          <div class="row"><span>Official pool</span><strong>GCA/USDT</strong></div>
-          <div class="row"><span>Official Telegram</span><strong><a href="https://t.me/gcagochinaofficial" target="_blank" rel="noreferrer">t.me/gcagochinaofficial</a></strong></div>
-          <div class="row"><span>Official X</span><strong><a href="https://x.com/GCAAIGoChina" target="_blank" rel="noreferrer">x.com/GCAAIGoChina</a></strong></div>
-          <div class="row"><span>Team profile</span><strong><a href="team.html#tim-chen">team.html#tim-chen</a></strong></div>
-          <div class="row"><span>BaseScan remediation</span><strong><a href="basescan-remediation.html">basescan-remediation.html</a></strong></div>
-          <div class="row"><span>BaseScan handoff</span><strong><a href="basescan-handoff.html">basescan-handoff.html</a></strong></div>
-          <div class="row"><span>Verify page</span><strong><a href="verify.html">verify.html</a></strong></div>
+      <section class="section soft" aria-labelledby="sendTitle">
+        <div class="shell split">
+          <div>
+            <p class="eyebrow">Support request</p>
+            <h2 id="sendTitle">Include enough context.</h2>
+            <ul class="detail-list">
+              <li><span>Subject</span><strong>Account, product, wallet, market, or security</strong></li>
+              <li><span>Public wallet address</span><strong>Only when relevant</strong></li>
+              <li><span>Transaction hash</span><strong>For an on-chain question</strong></li>
+              <li><span>Page URL and screenshot</span><strong>For a display or product issue</strong></li>
+              <li><span>Expected outcome</span><strong>Describe what you need help with</strong></li>
+            </ul>
+          </div>
+          <div>
+            <p class="eyebrow">Security boundary</p>
+            <h2>Never send secrets.</h2>
+            <ul class="detail-list">
+              <li><span>Private key or seed phrase</span><strong>Never</strong></li>
+              <li><span>Wallet password or recovery code</span><strong>Never</strong></li>
+              <li><span>Exchange API secret</span><strong>Never</strong></li>
+              <li><span>Withdrawal permission</span><strong>Never</strong></li>
+              <li><span>Remote-control access</span><strong>Never</strong></li>
+            </ul>
+          </div>
         </div>
       </section>
 
-      <section class="section panel" id="supportReferences" aria-labelledby="supportReferencesTitle">
-        <h2 id="supportReferencesTitle">Support References</h2>
-        <p class="note">Use the readable support, review queue, member benefit, operations, and platform reply pages first. Support links are not wallet approvals, payment requests, or primary user actions.</p>
-        <div class="list">
-          <div class="row"><span>Live member account</span><strong><a href="gca/member-access/">/gca/member-access</a></strong></div>
-          <div class="row"><span>Review queue</span><strong><a href="review-queue.html">review-queue.html</a></strong></div>
-          <div class="row"><span>Member benefit review</span><strong><a href="member-benefit.html">member-benefit.html</a></strong></div>
-          <div class="row"><span>Operations runbook</span><strong><a href="operations.html">operations.html</a></strong></div>
-          <div class="row"><span>Platform replies</span><strong><a href="platform-replies.html">platform-replies.html</a></strong></div>
+      <section class="section warm" aria-labelledby="identityTitle">
+        <div class="shell split">
+          <div>
+            <p class="eyebrow">Official identity</p>
+            <h2 id="identityTitle">Verify before sharing evidence.</h2>
+            <p class="lead">Support only recognizes the Base Mainnet contract and official GCA/USDT market route shown here.</p>
+            <div class="actions"><a class="button primary" href="verify.html">Open Verification</a><a class="button" href="security.html">Security Disclosures</a></div>
+          </div>
+          <div class="identity-list">
+            <div class="identity-row"><span>GCA contract</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+            <div class="identity-row"><span>Official pair</span><strong>GCA/USDT</strong></div>
+            <div class="identity-row"><span>Official pool</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
+            <div class="identity-row"><span>Base USDT</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="channelsTitle">
+        <div class="shell">
+          <div class="section-heading"><p class="eyebrow">Official channels</p><h2 id="channelsTitle">Contact GCA from a verified link.</h2><p>Official support will not contact you first to request a transfer, signature, password, or recovery phrase.</p></div>
+          <div class="channel-grid">
+            <div class="channel"><strong>Email</strong><a href="mailto:support@gcagochina.com">support@gcagochina.com</a></div>
+            <div class="channel"><strong>Website</strong><a href="https://gcagochina.com/">gcagochina.com</a></div>
+            <div class="channel"><strong>X</strong><a href="https://x.com/GCAAIGoChina">@GCAAIGoChina</a></div>
+            <div class="channel"><strong>Telegram</strong><a href="https://t.me/gcagochinaofficial">gcagochinaofficial</a></div>
+          </div>
         </div>
       </section>
     </main>
 
-    <footer>
-      <div class="shell">GCA structured account and service intake is live; generic support remains manual through the official project-domain email.</div>
-    </footer>
+    <footer><div class="shell footer-line"><strong>GCA · Official Support</strong><div class="footer-links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="site-map.html">Site Map</a></div></div></footer>
   </body>
 </html>

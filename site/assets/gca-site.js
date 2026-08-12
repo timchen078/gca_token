@@ -12,11 +12,11 @@
         top: "返回顶部",
         links: [
           ["首页", "zh-cn.html"],
-          ["产品", "product.html"],
+          ["产品", "zh-product.html"],
           ["工具", "tools.html"],
           ["会员", "gca/member-access/"],
           ["市场", "zh-markets.html"],
-          ["验证", "verify.html"],
+          ["验证", "zh-wallet-verify.html"],
           ["支持", "zh-support.html"],
           ["EN", "index.html"]
         ]

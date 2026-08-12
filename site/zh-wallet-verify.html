@@ -3,511 +3,120 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA 中文只读钱包验证 | Go China Access</title>
-    <meta name="description" content="GCA 中文只读验证：实时核对 Base Mainnet 合约身份，并说明 balanceOf 钱包余额验证、会员审核资料、100 credits、GCA Member 和安全边界。">
+    <title>验证 GCA | 合约、池与官方链接</title>
+    <meta name="description" content="在交互前核对 GCA 官方合约、Base Mainnet 网络、GCA/USDT 池、官网、社交渠道和只读合约身份。">
     <link rel="canonical" href="https://gcagochina.com/zh-wallet-verify.html">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="GCA 中文只读钱包验证 | Go China Access">
-    <meta property="og:description" content="实时核对 Base Mainnet GCA 合约身份，并说明只读余额验证、账户入口、会员审核资料和安全边界。">
+    <meta property="og:title" content="验证 GCA | 合约、池与官方链接">
+    <meta property="og:description" content="GCA 官方 Base Mainnet 合约身份、市场路线、官网与社交渠道核验。">
     <meta property="og:url" content="https://gcagochina.com/zh-wallet-verify.html">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="GCA 中文只读钱包验证 | Go China Access">
-    <meta name="twitter:description" content="实时核对 Base Mainnet GCA 合约身份，并说明只读余额验证、账户入口、会员审核资料和安全边界。">
+    <meta name="twitter:title" content="验证 GCA | 合约、池与官方链接">
+    <meta name="twitter:description" content="GCA 官方 Base Mainnet 合约身份、市场路线、官网与社交渠道核验。">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
-    <style>
-      :root {
-        color-scheme: light;
-        --bg: #f7f8f5;
-        --ink: #151817;
-        --muted: #5e6763;
-        --line: #dfe4dd;
-        --panel: #ffffff;
-        --soft: #eef3ef;
-        --red: #d71920;
-        --blue: #1557d7;
-        --green: #087f5b;
-        --gold: #a87810;
-      }
-
-      * { box-sizing: border-box; }
-
-      body {
-        margin: 0;
-        color: var(--ink);
-        background: var(--bg);
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-        line-height: 1.58;
-      }
-
-      a { color: var(--blue); text-decoration: none; }
-      a:hover { text-decoration: underline; }
-
-      .shell {
-        width: min(1080px, calc(100% - 32px));
-        margin: 0 auto;
-      }
-
-      header {
-        position: sticky;
-        top: 0;
-        z-index: 3;
-        border-bottom: 1px solid var(--line);
-        background: rgba(247, 248, 245, 0.94);
-        backdrop-filter: blur(16px);
-      }
-
-      nav {
-        min-height: 68px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 18px;
-      }
-
-      .brand,
-      .nav-links,
-      .actions,
-      .link-row {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .brand {
-        color: var(--ink);
-        font-weight: 850;
-      }
-
-      .brand img {
-        width: 34px;
-        height: 34px;
-      }
-
-      .nav-links {
-        gap: 16px;
-        font-size: 14px;
-      }
-
-      main { padding: 42px 0 64px; }
-      h1, h2, h3, p { margin-top: 0; }
-
-      h1 {
-        max-width: 920px;
-        margin-bottom: 18px;
-        font-size: clamp(42px, 6vw, 76px);
-        line-height: 1.02;
-        letter-spacing: 0;
-      }
-
-      h2 {
-        margin-bottom: 12px;
-        font-size: 25px;
-        letter-spacing: 0;
-      }
-
-      h3 {
-        margin-bottom: 8px;
-        font-size: 18px;
-        letter-spacing: 0;
-      }
-
-      .eyebrow {
-        margin: 0 0 14px;
-        color: var(--red);
-        font-size: 13px;
-        font-weight: 850;
-        letter-spacing: 0;
-        text-transform: uppercase;
-      }
-
-      .lead {
-        max-width: 860px;
-        margin-bottom: 14px;
-        color: var(--muted);
-        font-size: 18px;
-      }
-
-      .note, li { color: var(--muted); }
-      .actions { margin-top: 24px; }
-
-      .button,
-      .text-link {
-        min-height: 40px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel);
-        color: var(--ink);
-        padding: 9px 12px;
-        font-size: 14px;
-        font-weight: 760;
-      }
-
-      .button.primary {
-        border-color: var(--red);
-        background: var(--red);
-        color: #fff;
-      }
-
-      .button.secondary {
-        border-color: #cad7ec;
-        background: #eef4ff;
-        color: #123e90;
-      }
-
-      .section { margin-top: 30px; }
-
-      .panel,
-      .fact,
-      .card {
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel);
-      }
-
-      .panel { padding: 24px; }
-      .fact, .card { padding: 16px; }
-
-      .facts,
-      .grid,
-      .two {
-        display: grid;
-        gap: 14px;
-      }
-
-      .facts {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        margin-top: 26px;
-      }
-
-      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-      .label {
-        display: block;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 760;
-        text-transform: uppercase;
-      }
-
-      .value {
-        display: block;
-        margin-top: 7px;
-        font-size: 17px;
-        font-weight: 850;
-        overflow-wrap: anywhere;
-      }
-
-      .good { color: var(--green); }
-      .pending { color: var(--gold); }
-      .bad { color: #b42318; }
-
-      .contract-live-header {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 18px;
-      }
-
-      .contract-live-summary {
-        margin: 18px 0 0;
-        padding: 12px 14px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--soft);
-        font-weight: 800;
-      }
-
-      .contract-live-summary.good {
-        border-color: #a9dbc9;
-        background: #f0faf6;
-      }
-
-      .contract-live-summary.bad {
-        border-color: #f0b5ae;
-        background: #fff4f2;
-      }
-
-      .list {
-        display: grid;
-        gap: 10px;
-      }
-
-      .row {
-        display: grid;
-        grid-template-columns: minmax(146px, 0.8fr) minmax(0, 1.2fr);
-        gap: 12px;
-        align-items: start;
-        border-top: 1px solid var(--line);
-        padding-top: 10px;
-      }
-
-      .row:first-child {
-        border-top: 0;
-        padding-top: 0;
-      }
-
-      .row strong {
-        min-width: 0;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-        text-align: right;
-      }
-
-      .notice {
-        border-color: #ecd28c;
-        background: #fff8e6;
-      }
-
-      code {
-        border: 1px solid var(--line);
-        border-radius: 6px;
-        background: var(--soft);
-        padding: 2px 5px;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        font-size: 0.92em;
-        overflow-wrap: anywhere;
-      }
-
-      footer {
-        border-top: 1px solid var(--line);
-        padding: 22px 0;
-        color: var(--muted);
-        font-size: 14px;
-      }
-
-      @media (max-width: 900px) {
-        nav {
-          align-items: flex-start;
-          flex-direction: column;
-          padding: 14px 0;
-        }
-
-        .facts,
-        .grid,
-        .two {
-          grid-template-columns: 1fr;
-        }
-
-        .row {
-          grid-template-columns: 1fr;
-        }
-
-        .row strong {
-          text-align: left;
-        }
-
-        .contract-live-header {
-          align-items: stretch;
-          flex-direction: column;
-        }
-
-        .contract-live-header .button {
-          width: 100%;
-        }
-      }
-    </style>
-      <link rel="stylesheet" href="assets/gca-site.css?v=20260812">
-    <script src="assets/gca-site.js?v=20260812" defer></script>
+    <link rel="stylesheet" href="assets/gca-core.css?v=20260812-2">
+    <link rel="stylesheet" href="assets/gca-site.css?v=20260812-2">
+    <script src="assets/gca-site.js?v=20260812-2" defer></script>
     <script src="assets/contract-identity.js?v=20260811-2" defer></script>
   </head>
   <body>
-    <header>
-      <nav class="shell" aria-label="Primary">
-        <a class="brand" href="index.html" aria-label="GCA home">
-          <img src="assets/gca-logo.svg" alt="GCA logo">
-          <span>GCA</span>
-        </a>
-        <div class="nav-links">
-          <a href="index.html">Home</a>
-          <a href="zh-cn.html">中文入口</a>
-          <a href="zh-access.html">用户中心</a>
-          <a href="zh-wallet-verify.html">钱包验证</a>
-          <a href="zh-members.html">会员规则</a>
-          <a href="zh-release-gates.html">上线门槛</a>
-          <a href="zh-support.html">支持</a>
-        </div>
-      </nav>
-    </header>
+    <header><nav class="shell" aria-label="主导航"><a class="brand" href="zh-cn.html" aria-label="GCA 中文首页"><img src="assets/gca-logo.svg" alt="GCA 标志"><span>GCA</span></a><div class="nav-links"></div></nav></header>
 
-    <main class="shell">
-      <section aria-labelledby="title">
-        <p class="eyebrow">只读钱包验证 / 2026-08-11</p>
-        <h1 id="title">GCA 中文只读钱包验证</h1>
-        <p class="lead">这一页说明 GCA 会员和 credits 审核里的钱包验证方式。核心原则是只读：读取公开链上余额，不要求签名，不发起交易，不授权转移资产。</p>
-        <p class="lead">公开账户入口、只读钱包验证和符合条件的 100 credits / GCA Member 账本写入已经上线。用户可以用 MetaMask 等钱包提交公开钱包地址、购买交易哈希、持有开始日期和基础资料；10,000 GCA 会员权益仍需要后续人工审核和储备钱包处理。</p>
-        <div class="actions">
-          <a class="button primary" href="zh-access.html">中文用户中心</a>
-          <a class="button primary" href="register.html">邮箱注册</a>
-          <a class="button secondary" href="zh-members.html">中文会员规则</a>
-          <a class="button secondary" href="zh-member-checklist.html">中文会员审核资料清单</a>
-          <a class="button secondary" href="zh-member-benefit-transfer.html">中文会员权益转账流程</a>
-          <a class="button secondary" href="zh-release-gates.html">中文上线门槛</a>
-          <a class="button secondary" href="zh-support.html">中文支持和资料提交</a>
-          <a class="button" href="gca/member-access/">打开账户入口</a>
-          <a class="button" href="verify.html">英文合约验证</a>
-        </div>
+    <main id="main-content">
+      <section class="core-hero" aria-labelledby="title">
+        <img class="core-hero-art" src="assets/gca-logo.svg" alt="" aria-hidden="true">
+        <div class="shell"><div class="core-hero-content">
+          <p class="eyebrow">官方身份</p>
+          <h1 id="title">验证 GCA</h1>
+          <p class="lead hero-copy">在使用任何 GCA 链接或钱包提示前，请核对网络、合约、官方 GCA/USDT 池、域名和社交渠道。</p>
+          <div class="actions"><a class="button primary" href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6#code">查看 BaseScan 源码</a><button class="button accent" type="button" id="copyContract">复制合约</button><a class="button" href="verify.html">English</a></div>
+          <p class="command-status" id="copyStatus" aria-live="polite"></p>
+        </div></div>
       </section>
 
-      <section class="facts" aria-label="GCA 只读钱包验证摘要">
-        <div class="fact">
-          <span class="label">网络</span>
-          <span class="value">Base Mainnet / chainId 8453</span>
-        </div>
-        <div class="fact">
-          <span class="label">GCA 合约</span>
-          <span class="value">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</span>
-        </div>
-        <div class="fact">
-          <span class="label">读取方式</span>
-          <span class="value good"><code>eth_call</code> + <code>balanceOf</code></span>
-        </div>
-        <div class="fact">
-          <span class="label">官方池</span>
-          <span class="value good">GCA/USDT 0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</span>
-        </div>
-      </section>
+      <section class="fact-band" aria-label="GCA 标准身份"><div class="shell facts">
+        <div class="fact"><span class="fact-label">网络</span><span class="fact-value">Base Mainnet · 8453</span></div>
+        <div class="fact"><span class="fact-label">代币</span><span class="fact-value">GCA · 18 位精度</span></div>
+        <div class="fact"><span class="fact-label">总量</span><span class="fact-value">1,000,000,000 · 固定</span></div>
+        <div class="fact"><span class="fact-label">官方市场</span><span class="fact-value">GCA/USDT · Uniswap v4</span></div>
+      </div></section>
 
-      <section class="section panel" data-gca-contract-identity aria-labelledby="liveContractTitle">
-        <div class="contract-live-header">
-          <div>
-            <p class="eyebrow">链上实时核验</p>
-            <h2 id="liveContractTitle">GCA 合约身份</h2>
-            <p class="note">浏览器直接读取固定的 GCA 合约，核对 Base 主网、已部署代码、ERC-20 名称、符号、精度和固定总量。这一项核验合约身份，不读取个人钱包余额。</p>
-          </div>
-          <button class="button secondary" type="button" data-contract-action>重新检查</button>
+      <section class="section" aria-labelledby="identityTitle"><div class="shell split">
+        <div><p class="eyebrow">标准代币身份</p><h2 id="identityTitle">逐字核对。</h2><p class="lead">代币符号和 Logo 不能证明身份，合约地址与网络才是唯一标准。</p></div>
+        <div class="identity-list">
+          <div class="identity-row"><span>网络</span><strong>Base Mainnet</strong></div>
+          <div class="identity-row"><span>Chain ID</span><strong>8453</strong></div>
+          <div class="identity-row"><span>合约</span><strong>0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</strong></div>
+          <div class="identity-row"><span>符号</span><strong>GCA</strong></div>
+          <div class="identity-row"><span>精度</span><strong>18</strong></div>
         </div>
-        <p class="contract-live-summary pending" data-contract-summary data-state="pending" aria-live="polite">等待 Base Mainnet 实时检查……</p>
-        <div class="list">
-          <div class="row"><span>网络响应</span><strong data-contract-field="network">检查中……</strong></div>
-          <div class="row"><span>合约代码</span><strong data-contract-field="code">检查中……</strong></div>
-          <div class="row"><span>代币名称</span><strong data-contract-field="name">检查中……</strong></div>
-          <div class="row"><span>代币符号</span><strong data-contract-field="symbol">检查中……</strong></div>
-          <div class="row"><span>精度</span><strong data-contract-field="decimals">检查中……</strong></div>
-          <div class="row"><span>固定总量</span><strong data-contract-field="supply">检查中……</strong></div>
-          <div class="row"><span>读取来源</span><strong data-contract-field="source">检查中……</strong></div>
+      </div></section>
+
+      <section class="section soft" data-gca-contract-identity aria-labelledby="liveContractTitle"><div class="shell live-check">
+        <div class="live-header"><div><p class="eyebrow">只读链上检查</p><h2 id="liveContractTitle">GCA 合约实时身份</h2><p class="note">浏览器通过 Base 官方公共 RPC 读取固定的 GCA 合约，核对已部署代码、名称、符号、精度和固定总量。</p></div><button class="button" type="button" data-contract-action>重新检查</button></div>
+        <p class="live-summary" data-contract-summary data-state="pending" aria-live="polite">正在检查 Base Mainnet 合约身份……</p>
+        <div>
+          <div class="live-row"><span>网络响应</span><strong data-contract-field="network">检查中……</strong></div>
+          <div class="live-row"><span>合约代码</span><strong data-contract-field="code">检查中……</strong></div>
+          <div class="live-row"><span>代币名称</span><strong data-contract-field="name">检查中……</strong></div>
+          <div class="live-row"><span>代币符号</span><strong data-contract-field="symbol">检查中……</strong></div>
+          <div class="live-row"><span>精度</span><strong data-contract-field="decimals">检查中……</strong></div>
+          <div class="live-row"><span>固定总量</span><strong data-contract-field="supply">检查中……</strong></div>
+          <div class="live-row"><span>读取来源</span><strong data-contract-field="source">检查中……</strong></div>
         </div>
-        <p class="note" style="margin-top: 14px;"><strong>只读边界：</strong>不会连接钱包、申请权限、请求签名或发送交易。Base 公共 RPC 有频率限制；如果临时读取失败，请通过 <a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6" target="_blank" rel="noreferrer">官方 BaseScan 合约页</a>核对。</p>
-      </section>
+        <p class="note" style="margin-top:16px"><strong>只读边界：</strong>这一检查不会连接钱包、申请权限、请求签名或发送交易。Base 公共 RPC 存在频率限制；临时读取失败时请使用 BaseScan 源码链接核对。</p>
+      </div></section>
 
-      <section class="section grid" aria-label="验证方式">
-        <article class="card">
-          <h2>只读是什么意思</h2>
-          <p class="note">系统只读取 Base Mainnet 上 GCA 合约的 ERC-20 <code>balanceOf</code> 结果，用于确认某个公开钱包地址当前持有多少 GCA。</p>
-        </article>
-        <article class="card">
-          <h2>不会要求什么</h2>
-          <p class="note">不会要求私钥、助记词、钱包密码、验证码、交易所 API Secret、提现权限、转账授权或 approve 授权。</p>
-        </article>
-        <article class="card">
-          <h2>不会自动完成什么</h2>
-          <p class="note">读取余额本身不会转移任何资产。符合条件的钱包提交可以写入 100 credits 或 GCA Member 账本记录；10,000 GCA 会员权益仍需要人工审核和储备钱包处理。</p>
-        </article>
-      </section>
-
-      <section class="section two" aria-label="路径和资料">
-        <div class="panel">
-          <h2>会员审核路径</h2>
-          <div class="list">
-            <div class="row"><span>10,000 GCA</span><strong>进入 100 GCA AI Quant Access credits 审核路径</strong></div>
-            <div class="row"><span>1,000,000 GCA</span><strong>连续持有 30 天后进入 GCA Member 审核路径</strong></div>
-            <div class="row"><span>GCA Member</span><strong>通过后才可能进入一次性 10,000 GCA 会员权益审核</strong></div>
-            <div class="row"><span>当前状态</span><strong class="good">账户提交、只读验证和符合条件账本记录已上线</strong></div>
-          </div>
+      <section class="section warm" aria-labelledby="poolTitle"><div class="shell split">
+        <div><p class="eyebrow">官方市场路线</p><h2 id="poolTitle">Base 上的 GCA/USDT</h2><p class="lead">打开兑换前请同时核对两种资产和池地址。早期历史池不应被当作主要公开交易路线。</p><div class="actions"><a class="button primary" href="zh-markets.html">打开市场页</a><a class="button" href="zh-buy.html">购买说明</a></div></div>
+        <div class="identity-list">
+          <div class="identity-row"><span>DEX</span><strong>Uniswap v4</strong></div>
+          <div class="identity-row"><span>交易对</span><strong>GCA/USDT</strong></div>
+          <div class="identity-row"><span>池地址</span><strong>0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</strong></div>
+          <div class="identity-row"><span>Base USDT</span><strong>0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2</strong></div>
+          <div class="identity-row"><span>费率档位</span><strong>0.01%</strong></div>
         </div>
+      </div></section>
 
-        <div class="panel">
-          <h2>现在可以准备什么</h2>
-          <div class="list">
-            <div class="row"><span>钱包地址</span><strong>只提交公开地址，不提交任何密钥或密码</strong></div>
-            <div class="row"><span>购买交易哈希</span><strong>Base Mainnet 上可公开查询的交易哈希</strong></div>
-            <div class="row"><span>持有开始日期</span><strong>用于 30 天持有期人工复核</strong></div>
-            <div class="row"><span>余额结果</span><strong>由 Workers 后端用只读 <code>eth_call</code> / <code>balanceOf</code> 复核</strong></div>
-          </div>
+      <section class="section" aria-labelledby="channelsTitle"><div class="shell">
+        <div class="section-heading"><p class="eyebrow">官方渠道</p><h2 id="channelsTitle">只使用这里公布的链接。</h2><p>私信、仿冒域名和复制的代币 Logo 都不能作为官方身份依据。</p></div>
+        <div class="channel-grid">
+          <div class="channel"><strong>官网</strong><a href="https://gcagochina.com/">gcagochina.com</a></div>
+          <div class="channel"><strong>X</strong><a href="https://x.com/GCAAIGoChina">@GCAAIGoChina</a></div>
+          <div class="channel"><strong>Telegram</strong><a href="https://t.me/gcagochinaofficial">gcagochinaofficial</a></div>
+          <div class="channel"><strong>支持邮箱</strong><a href="mailto:support@gcagochina.com">support@gcagochina.com</a></div>
+          <div class="channel"><strong>GeckoTerminal</strong><a href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0">官方池</a></div>
+          <div class="channel"><strong>DEX Screener</strong><a href="https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0">GCA/USDT 交易对</a></div>
+          <div class="channel"><strong>总量</strong><a href="zh-supply.html">总量与储备</a></div>
+          <div class="channel"><strong>安全</strong><a href="zh-security.html">技术说明</a></div>
         </div>
-      </section>
+      </div></section>
 
-      <section class="section panel notice" aria-labelledby="warningTitle">
-        <p class="eyebrow">安全边界</p>
-        <h2 id="warningTitle">看到这些要求就先停止</h2>
-        <ul>
-          <li>要求你发送私钥、助记词、钱包密码、验证码、keystore 文件或交易所 API Secret。</li>
-          <li>要求你开通交易所提现权限，或把资产转到所谓客服、审核、保证、解锁地址。</li>
-          <li>要求你为“余额验证”签一笔陌生交易、approve 授权或授权转移资产。</li>
-          <li>声称验证后会自动转账、自动领取 10,000 GCA 会员权益，或绕过人工复核。</li>
+      <section class="section dark" aria-labelledby="avoidTitle"><div class="shell">
+        <div class="section-heading"><p class="eyebrow">防诈骗清单</p><h2 id="avoidTitle">遇到这些要求，请立即停止。</h2><p>GCA 官方支持不会索取钱包或交易所秘密信息。</p></div>
+        <ul class="safety-list">
+          <li><h3>绝不分享秘密信息</h3><p class="note">不要发送私钥、助记词、钱包密码、验证码或交易所 API Secret。</p></li>
+          <li><h3>绝不开放提现权限</h3><p class="note">不要开放交易所提现权限，也不要向所谓客服、验证或解锁地址转账。</p></li>
+          <li><h3>绝不把假活动当证明</h3><p class="note">付费喊单、虚假成交、自成交和保证上所都不是可信依据。</p></li>
         </ul>
-      </section>
-
-      <section class="section panel" aria-labelledby="statusTitle">
-        <p class="eyebrow">Current Status</p>
-        <h2 id="statusTitle">当前上线状态</h2>
-        <div class="list">
-          <div class="row"><span>邮箱注册 API</span><strong class="good">Cloudflare Workers + D1 已上线</strong></div>
-          <div class="row"><span>账户入口</span><strong class="good">可打开 <a href="gca/member-access/">gca/member-access/</a> 提交账户资料和钱包验证</strong></div>
-          <div class="row"><span>正式账户 UI</span><strong class="good">已上线，使用 Workers + D1 写入资料和账本记录</strong></div>
-          <div class="row"><span>100 credits 账本</span><strong class="good">符合 10,000 GCA 钱包条件时写入账户级记录</strong></div>
-          <div class="row"><span>GCA Member 账本</span><strong class="good">符合 1,000,000 GCA / 30 天条件时写入审核记录</strong></div>
-        </div>
-      </section>
-
-      <section class="section two" aria-label="入口">
-        <div class="panel">
-          <h2>中文用户入口</h2>
-          <div class="link-row">
-            <a class="text-link" href="zh-cn.html">中文入口</a>
-            <a class="text-link" href="zh-access.html">中文用户中心</a>
-            <a class="text-link" href="zh-members.html">中文会员规则</a>
-            <a class="text-link" href="zh-member-checklist.html">中文会员审核资料清单</a>
-            <a class="text-link" href="zh-release-gates.html">中文上线门槛</a>
-            <a class="text-link" href="zh-api-status.html">中文 API 状态</a>
-            <a class="text-link" href="zh-support.html">中文支持和资料提交</a>
-            <a class="text-link" href="zh-buy.html">中文购买说明</a>
-            <a class="text-link" href="zh-faq.html">中文 FAQ</a>
-            <a class="text-link" href="register.html">邮箱注册</a>
-          </div>
-        </div>
-
-        <div class="panel">
-          <h2>英文技术入口</h2>
-          <div class="link-row">
-            <a class="text-link" href="access.html">Access Portal</a>
-            <a class="text-link" href="access-api.html">Access API</a>
-            <a class="text-link" href="review-queue.html">Review Queue</a>
-            <a class="text-link" href="operations.html">Operations</a>
-            <a class="text-link" href="member-ledger.html">Member Ledger</a>
-            <a class="text-link" href="release-gates.html">Release Gates</a>
-          </div>
-        </div>
-      </section>
-
-      <section class="section panel" aria-labelledby="dataTitle">
-        <p class="eyebrow">钱包验证入口</p>
-        <h2 id="dataTitle">继续完成账户资料</h2>
-        <p class="note">普通用户用会员入口提交账户和钱包资料，再用中文支持页跟进。只读钱包验证不会发起交易或授权转账。</p>
-        <div class="actions">
-          <a class="button primary" href="gca/member-access/">会员入口</a>
-          <a class="button" href="zh-support.html">中文支持</a>
-          <a class="button" href="access.html">Access Portal</a>
-          <a class="button" href="access-api.html">Access API</a>
-          <a class="button" href="review-queue.html">Review Queue</a>
-          <a class="button" href="operations.html">Operations</a>
-          <a class="button" href="release-gates.html">Release Gates</a>
-        </div>
-      </section>
+      </div></section>
     </main>
 
-    <footer>
-      <div class="shell">GCA 中文只读钱包验证。请始终确认 Base Mainnet chainId 8453、GCA 合约、官方 GCA/USDT 池和官方联系渠道。</div>
-    </footer>
+    <footer><div class="shell footer-line"><strong>GCA · 官方验证</strong><div class="footer-links"><a href="zh-cn.html">首页</a><a href="zh-product.html">产品</a><a href="zh-markets.html">市场</a><a href="zh-support.html">支持</a></div></div></footer>
+
+    <script>
+      const CONTRACT = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6";
+      const copyStatus = document.getElementById("copyStatus");
+      document.getElementById("copyContract").addEventListener("click", async () => {
+        try { await navigator.clipboard.writeText(CONTRACT); copyStatus.textContent = "合约地址已复制。"; }
+        catch { copyStatus.textContent = "无法自动复制，请选择下方合约地址。"; }
+      });
+    </script>
   </body>
 </html>

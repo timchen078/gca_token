@@ -33,8 +33,8 @@ class PublicSiteExperienceTests(unittest.TestCase):
             depth = len(relative.parts) - 1
             prefix = "../" * depth
             page = path.read_text()
-            expected_css = f'href="{prefix}assets/gca-site.css?v=20260812"'
-            expected_js = f'src="{prefix}assets/gca-site.js?v=20260812" defer'
+            expected_css = f'href="{prefix}assets/gca-site.css?v=20260812-2"'
+            expected_js = f'src="{prefix}assets/gca-site.js?v=20260812-2" defer'
             if expected_css not in page or expected_js not in page:
                 missing.append(relative.as_posix())
 
@@ -66,7 +66,9 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "gca/member-access/",
             "about.html",
             "zh-cn.html",
+            "zh-product.html",
             "zh-markets.html",
+            "zh-wallet-verify.html",
             "zh-support.html",
         ):
             self.assertIn(f'"{path}"', script)

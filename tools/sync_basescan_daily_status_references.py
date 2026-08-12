@@ -42,7 +42,6 @@ PUBLIC_SITE_TARGET_FILES = [
     "site/token-safety.html",
     "site/trust.html",
     "site/trust.json",
-    "site/verify.html",
     "site/zh-basescan-followup.html",
     "site/zh-basescan-preflight.html",
     "site/zh-release-gates.html",

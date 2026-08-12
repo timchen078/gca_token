@@ -23,6 +23,7 @@ DAILY_REFERENCE_DATE_FIELDS = {
 }
 MAINNET_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
 X_URL = "https://x.com/GCAAIGoChina"
+TELEGRAM_URL = "https://t.me/gcagochinaofficial"
 FIRST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2054660559124255151"
 LATEST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2058090599535030302"
 OFFICIAL_POOL_ADDRESS = "0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
@@ -77,6 +78,7 @@ ZH_SUPPORT_PAGE_URL = "https://gcagochina.com/zh-support.html"
 ZH_ACCESS_PAGE_URL = "https://gcagochina.com/zh-access.html"
 ZH_RELEASE_GATES_PAGE_URL = "https://gcagochina.com/zh-release-gates.html"
 ZH_WALLET_VERIFY_PAGE_URL = "https://gcagochina.com/zh-wallet-verify.html"
+ZH_PRODUCT_PAGE_URL = "https://gcagochina.com/zh-product.html"
 ZH_MEMBER_CHECKLIST_PAGE_URL = "https://gcagochina.com/zh-member-checklist.html"
 ZH_MEMBER_BENEFIT_TRANSFER_PAGE_URL = "https://gcagochina.com/zh-member-benefit-transfer.html"
 ZH_SITE_MAP_PAGE_URL = "https://gcagochina.com/zh-site-map.html"
@@ -545,18 +547,23 @@ def validate_verify(text: str) -> None:
     assert_contains(text, 'href="zh-wallet-verify.html"', label)
     assert_contains(text, "does not connect a wallet, request permissions or signatures, or submit a transaction", label)
     assert_contains(text, "official Base public RPC is rate-limited", label)
-    assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-08-11; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
-    assert_contains(text, "Latest reviewer package", label)
-    assert_contains(text, "Final package 2026-08-11T18:56:43Z; daily status 2026-08-12T06:37:31Z", label)
-    assert_contains(text, "well-known token identity", label)
-    assert_contains(text, "Wallet Warning", label)
-    assert_contains(text, "External Reviews", label)
-    assert_contains(text, "Trust Center", label)
-    assert_contains(text, "On-chain Proofs", label)
-    assert_contains(text, "Brand Kit", label)
-    assert_contains(text, "Project References", label)
-    assert_contains(text, "Listing Kit", label)
+    assert_contains(text, "Canonical token", label)
+    assert_contains(text, "Official market route", label)
+    assert_contains(text, "Official channels", label)
+    assert_contains(text, "Anti-scam checklist", label)
+    assert_contains(text, "support@gcagochina.com", label)
+    assert_contains(text, X_URL, label)
+    assert_contains(text, TELEGRAM_URL, label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
+    assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
+    assert_contains(text, MAINNET_ADDRESS, label)
+    assert_contains(text, BASE_USDT_ADDRESS, label)
+    assert_contains(text, OFFICIAL_POOL_ADDRESS, label)
+    assert_not_contains(text, "Current Review Status", label)
+    assert_not_contains(text, "Latest reviewer package", label)
+    assert_not_contains(text, "Returned 2026-05-23", label)
+    assert_not_contains(text, "Pending independent report", label)
+    assert_not_contains(text, "Listing Kit", label)
     assert_not_contains(text, 'href="data.html"', label)
     assert_not_contains(text, "Data Room", label)
     assert_not_contains(text, "raw metadata", label)
@@ -3582,94 +3589,57 @@ def validate_zh_support_page(text: str) -> None:
     label = "/zh-support.html"
     assert_social_preview_meta(text, label, ZH_SUPPORT_PAGE_URL)
     for expected in (
-        "GCA 中文支持和资料提交",
-        "邮箱注册",
-        "register.html",
-        "邮箱退订",
-        "unsubscribe.html",
-        "中文用户中心",
-        "zh-access.html",
-        "中文上线门槛",
-        "zh-release-gates.html",
-        "中文只读钱包验证",
+        "GCA 中文支持",
+        "需要什么帮助？",
+        "发送支持邮件",
+        "打开会员账户",
+        "帮助主题",
+        "账户与会员",
+        "产品工具",
+        "钱包与合约",
+        "市场与流动性",
+        "安全问题",
+        "项目信息",
+        "请提供必要信息。",
+        "绝不发送秘密信息。",
+        "官方身份",
+        "官方渠道",
+        "从已验证链接联系 GCA。",
+        "gca/member-access/",
+        "zh-product.html",
         "zh-wallet-verify.html",
-        "中文站点地图",
-        "zh-site-map.html",
-        "官方邮箱",
+        "zh-markets.html",
         "support@gcagochina.com",
         "https://t.me/gcagochinaofficial",
         "https://x.com/GCAAIGoChina",
-        "Base Mainnet / chainId 8453",
+        "Base Mainnet",
         MAINNET_ADDRESS,
         "GCA/USDT",
         OFFICIAL_POOL_ADDRESS,
+        BASE_USDT_ADDRESS,
         "私钥",
         "助记词",
         "交易所 API Secret",
         "提现权限",
-        "验证码",
         "远程控制权限",
-        "承诺价格、收益、成交量、上所、审核通过或永久无风险提示",
-        "会员资料支持",
-        "优先在会员入口生成审核资料包",
-        "钱包地址、购买交易哈希、持有开始日期、只读余额验证结果",
-        "生成审核资料包",
-        "10,000 GCA / 100 GCA AI Quant Access credits",
-        "1,000,000 GCA / 30 天 GCA Member",
-        "钱包显示或风险提示",
-        "风险提示消失不等于永久批准",
-        "资料显示不一致",
-        "GCA 可以整理公开资料并提交更正请求",
-        "不能保证第三方平台即时处理",
-        "购买和池子问题",
-        "GCA 官方不能替用户决定买卖、滑点、价格或交易时机",
-        "安全或合约问题",
-        "第三方审计尚未完成",
-        "Certik、Hacken、Trail of Bits",
-        "官方公告以官网、X 和 Telegram 官方频道为准",
-        "不要相信私信里的替代合约、替代池子、空投领取或手动签名链接",
-        "推荐邮件格式",
-        "审核资料包",
-        "可从会员入口生成并复制",
-        "账户提交、审核资料包生成、只读钱包验证、符合条件的 credits / GCA Member 账本记录已经上线",
-        "会员资格和权益处理仍需要人工确认",
-        "BaseScan Token Profile",
-        "BaseScan 最终公开页面",
-        "LP 锁尚未完成",
-        "支持不会提供买入、卖出、价格或收益建议",
-        "支持处理路径",
-        "普通用户优先使用官网页面、邮箱、会员入口、审核资料包和只读钱包验证",
-        "zh-cn.html",
-        "zh-buy.html",
-        "zh-apply.html",
-        "zh-liquidity.html",
-        "zh-supply.html",
-        "zh-security.html",
-        "zh-roadmap.html",
-        "zh-faq.html",
-        "zh-members.html",
-        "zh-access.html",
-        "zh-site-map.html",
-        "register.html",
-        "unsubscribe.html",
         "support.html",
-        "gca/member-access/",
     ):
         assert_contains(text, expected, label)
     for forbidden in (
         "Platform-Only Evidence Path",
         "Reviewer Data Room",
         "平台审核资料",
-        "中文数据室说明",
         "Platform Replies",
-        "zh-data.html",
         'href="data.html"',
-        "zh-member-checklist.html",
-        "中文会员审核资料清单",
-        "zh-domain-email.html",
-        "中文域名邮箱整改",
-        "zh-api-status.html",
         "Reviewer Kit",
+        "中文上线门槛",
+        "审核队列",
+        "当前处理边界",
+        "第三方审计尚未完成",
+        "LP 锁尚未完成",
+        "BaseScan Token Profile",
+        "正在建设",
+        "建设中",
     ):
         assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
@@ -4085,74 +4055,81 @@ def validate_zh_wallet_verify_page(text: str) -> None:
     label = "/zh-wallet-verify.html"
     assert_social_preview_meta(text, label, ZH_WALLET_VERIFY_PAGE_URL)
     for expected in (
-        "GCA 中文只读钱包验证",
-        "只读钱包验证 / 2026-08-11",
-        "链上实时核验",
-        "GCA 合约身份",
+        "验证 GCA",
+        "只读链上检查",
+        "GCA 合约实时身份",
         "data-gca-contract-identity",
         "data-contract-summary",
         "data-contract-action",
         'data-contract-field="network"',
         'data-contract-field="supply"',
         "assets/contract-identity.js?v=20260811-2",
-        "这一项核验合约身份，不读取个人钱包余额",
         "不会连接钱包、申请权限、请求签名或发送交易",
-        "Base 公共 RPC 有频率限制",
-        "官方 BaseScan 合约页",
+        "Base 公共 RPC 存在频率限制",
         'href="verify.html"',
-        "公开账户入口、只读钱包验证和符合条件的 100 credits / GCA Member 账本写入已经上线",
-        "Base Mainnet / chainId 8453",
+        "Base Mainnet",
         MAINNET_ADDRESS,
         "GCA/USDT",
         OFFICIAL_POOL_ADDRESS,
-        "eth_call",
-        "balanceOf",
         "只读",
-        "不要求签名",
-        "不发起交易",
-        "不授权转移资产",
-        "approve",
         "私钥",
         "助记词",
-        "钱包密码",
-        "验证码",
         "交易所 API Secret",
         "提现权限",
-        "购买交易哈希",
-        "持有开始日期",
-        "10,000 GCA",
-        "100 GCA AI Quant Access credits",
-        "1,000,000 GCA",
-        "连续持有 30 天",
-        "GCA Member",
-        "10,000 GCA 会员权益",
-        "Cloudflare Workers + D1 已上线",
-        "MetaMask",
-        "gca/member-access/",
         "zh-cn.html",
-        "zh-access.html",
-        "zh-members.html",
-        "中文会员审核资料清单",
-        "zh-member-checklist.html",
-        "中文会员权益转账流程",
-        "zh-member-benefit-transfer.html",
-        "zh-release-gates.html",
-        "zh-api-status.html",
+        "zh-product.html",
         "zh-support.html",
-        "zh-buy.html",
-        "zh-faq.html",
-        "register.html",
-        "access.html",
-        "access-api.html",
-        "review-queue.html",
-        "operations.html",
-        "member-ledger.html",
-        "release-gates.html",
-        "钱包验证入口",
-        "继续完成账户资料",
+        "官方渠道",
+        "防诈骗清单",
     ):
         assert_contains(text, expected, label)
+    for forbidden in ("当前上线状态", "上线门槛", "Review Queue", "Operations", "Release Gates"):
+        assert_not_contains(text, forbidden, label)
     for forbidden in ("Platform-Only Evidence Path", "Reviewer Data Room", "平台审核资料", 'href="data.html"'):
+        assert_not_contains(text, forbidden, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_zh_product_page(text: str) -> None:
+    label = "/zh-product.html"
+    assert_social_preview_meta(text, label, ZH_PRODUCT_PAGE_URL)
+    for expected in (
+        "GCA AI Quant Access",
+        "把研究变清楚，把风险管住。",
+        "10 个浏览器工具",
+        "覆盖完整风险周期的工作区。",
+        "研究笔记",
+        "交易计划台账",
+        "仓位计算器",
+        "组合风险图",
+        "回测实验室",
+        "亏损复盘",
+        "ENTRY_READY 检查",
+        "GCA Member 资格",
+        "持有 1,000,000 GCA 满 30 天",
+        "安全边界",
+        "不托管资金",
+        "不需要提现权限",
+        "交易所 API Secret",
+        "官方链上身份",
+        "Base Mainnet",
+        MAINNET_ADDRESS,
+        BASE_USDT_ADDRESS,
+        OFFICIAL_POOL_ADDRESS,
+        'href="product.html"',
+        'href="zh-wallet-verify.html"',
+    ):
+        assert_contains(text, expected, label)
+    for forbidden in (
+        "Product Spec",
+        "Current Stage",
+        "Public Account UI",
+        "上线门槛",
+        "当前状态",
+        "正在建设",
+        "建设中",
+    ):
         assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
@@ -4424,143 +4401,64 @@ def validate_zh_data_page(text: str) -> None:
 
 def validate_zh_site_map_page(text: str) -> None:
     label = "/zh-site-map.html"
-    assert_contains(text, "member-workspace.html", label)
-    assert_contains(text, "risk-passport.html", label)
-    assert_contains(text, "workspace-vault.html", label)
-    assert_contains(text, "portfolio-risk.html", label)
-    assert_contains(text, "trade-plans.html", label)
     assert_social_preview_meta(text, label, ZH_SITE_MAP_PAGE_URL)
     for expected in (
-        "GCA 中文站点地图",
-        "中文站点地图 / 2026-05-20",
-        "Start Here / 用户入口",
-        "start.html",
-        "中文用户优先使用可读 HTML 页面",
-        "如果你打开了无法阅读的原始资料页面",
-        "Base Mainnet / chainId 8453",
+        "GCA 网站导航",
+        "官网目录",
+        "按用途查找。",
+        "产品与工具",
+        "会员账户",
+        "市场与代币",
+        "验证与安全",
+        "公司与资料",
+        "支持与社群",
+        "Base Mainnet",
         MAINNET_ADDRESS,
         "GCA/USDT",
         OFFICIAL_POOL_ADDRESS,
-        "普通用户路径",
-        "验证和购买",
-        "参与和状态",
-        "注册和支持",
-        "会员和用户中心",
-        "GCA Member / 100 credits / 钱包验证",
-        "中文会员资料",
-        "英文可读技术页",
-        "产品和接口规划",
-        "信任资料",
-        "给用户和平台看的可读页面",
-        "资料说明",
-        "普通分享优先使用可读页面",
-        "安全和审计状态",
-        "第三方审计尚未完成",
-        "链上和市场资料",
-        "社群和公开内容",
-        "项目更新、社群和内容发布",
-        "官方渠道",
-        "内容和发布",
-        "完整英文索引",
-        "安全边界",
-        "私钥",
-        "助记词",
-        "keystore",
-        "钱包密码",
-        "验证码",
-        "交易所 API Secret",
-        "提现权限",
-        "远程控制权限",
-        "普通用户使用可读页面和官方支持",
-        "不需要打开原始数据文件",
-        "需要更多资料",
-        "先打开可读资料页",
-        "zh-cn.html",
+        "zh-product.html",
+        "tools.html",
+        "risk-passport.html",
+        "workspace-vault.html",
+        "gca/member-access/",
+        "member-workspace.html",
+        "zh-product.html#memberTitle",
         "zh-buy.html",
-        "zh-apply.html",
-        "zh-status.html",
+        "zh-markets.html",
         "zh-liquidity.html",
         "zh-supply.html",
         "zh-security.html",
-        "zh-roadmap.html",
-        "zh-faq.html",
-        "zh-members.html",
-        "zh-member-checklist.html",
         "zh-wallet-verify.html",
-        "zh-access.html",
-        "zh-release-gates.html",
-        "zh-basescan-preflight.html",
-        "zh-basescan-submit.html",
-        "中文 BaseScan 提交流程",
-        "zh-basescan-handoff.html",
-        "中文 BaseScan 复审复制包",
-        "zh-basescan-followup.html",
-        "中文 BaseScan 跟进处理",
-        "BaseScan Handoff",
-        "basescan-handoff.html",
-        "zh-api-status.html",
-        "zh-operations.html",
+        "zh-faq.html",
         "zh-support.html",
-        "register.html",
-        "unsubscribe.html",
-        "verify.html",
-        "markets.html",
-        "status.html",
-        "action-plan.html",
-        "members.html",
-        "gca/member-access/",
-        "credits.html",
-        "member-ledger.html",
-        "member-benefit.html",
-        "member-benefit-transfer.html",
-        "release-gates.html",
-        "product.html",
-        "utility.html",
-        "access.html",
-        "access-api.html",
-        "operations.html",
-        "review-queue.html",
-        "basescan-handoff.html",
-        "listing-kit.html",
-        "security.html",
-        "token-safety.html",
-        "technical-report.html",
-        "audit-readiness.html",
-        "wallet-warning.html",
-        "blockaid-followup.html",
-        "trust.html",
         "onchain-proofs.html",
-        "supply.html",
-        "reserve-statement.html",
-        "holder-distribution.html",
-        "liquidity.html",
-        "market-quality.html",
-        "risk-remediation.html",
-        "custody-roadmap.html",
+        "about.html",
+        "team.html",
+        "tim-chen.html",
+        "whitepaper.html",
+        "brand-kit.html",
         "community.html",
-        "announcements.html",
-        "campaign.html",
-        "content-library.html",
-        "publishing-desk.html",
-        "narrative.html",
         "radar.html",
-        "radar-issue-006.html",
-        "radar-issue-005.html",
-        "radar-issue-004.html",
-        "member-access-brief-001.html",
         "site-map.html",
     ):
         assert_contains(text, expected, label)
     for forbidden in (
-        "Reviewer Data Room",
-        "Platform-Only Evidence Path",
-        "平台审核资料",
-        "Raw JSON",
-        "中文数据室",
+        "参与和状态",
+        "产品和接口规划",
+        "中文上线门槛",
+        "审核队列",
+        "BaseScan 复审",
+        "当前哪些已完成",
+        "等待外部平台",
+        "第三方审计尚未完成",
         'href="data.html"',
-        "zh-data.html",
-        "reviewer-kit.html",
-        "platform-replies.html",
+        "review-queue.html",
+        "release-gates.html",
+        "zh-release-gates.html",
+        "operations.html",
+        "zh-operations.html",
+        "basescan-handoff.html",
+        "zh-basescan-handoff.html",
         'href="operator.html"',
     ):
         assert_not_contains(text, forbidden, label)
@@ -4762,119 +4660,65 @@ def validate_data_page(text: str) -> None:
 
 def validate_site_map_page(text: str) -> None:
     label = "/site-map.html"
-    assert_contains(text, "member-workspace.html", label)
-    assert_contains(text, "risk-passport.html", label)
-    assert_contains(text, "workspace-vault.html", label)
-    assert_contains(text, "portfolio-risk.html", label)
-    assert_contains(text, "trade-plans.html", label)
     assert_social_preview_meta(text, label, SITE_MAP_PAGE_URL)
     for expected in (
         "GCA Site Map",
-        "Human-Readable Index",
-        "Start Here",
-        "start.html",
-        "Normal visitors should open HTML pages first",
-        "Use Readable Evidence Pages First",
+        "Website directory",
+        "Browse by purpose.",
+        "Product &amp; tools",
+        "Member account",
+        "Market &amp; token",
+        "Verification &amp; security",
+        "Company &amp; documents",
+        "Support &amp; community",
         "Verify GCA",
-        "Buy Guide",
-        "About GCA",
-        "中文入口",
-        "zh-cn.html",
-        "中文购买说明",
-        "zh-buy.html",
-        "中文参与指引",
-        "zh-apply.html",
-        "中文项目进度",
-        "zh-status.html",
-        "中文池子和流动性说明",
-        "zh-liquidity.html",
-        "中文总量和储备说明",
-        "zh-supply.html",
-        "中文安全和审计说明",
-        "zh-security.html",
-        "中文路线图",
-        "zh-roadmap.html",
-        "中文 FAQ",
-        "zh-faq.html",
-        "中文会员规则",
-        "zh-members.html",
-        "中文用户中心",
-        "zh-access.html",
-        "中文只读钱包验证",
-        "zh-wallet-verify.html",
-        "中文会员审核资料清单",
-        "zh-member-checklist.html",
-        "中文会员权益转账流程",
-        "zh-member-benefit-transfer.html",
         "中文站点地图",
         "zh-site-map.html",
-        "中文只读钱包验证",
-        "zh-wallet-verify.html",
-        "中文 API 状态",
-        "zh-api-status.html",
-        "中文运营流程",
-        "zh-operations.html",
-        "中文支持和资料提交",
-        "zh-support.html",
-        "邮箱注册",
-        "register.html",
-        "邮箱退订",
-        "unsubscribe.html",
-        "Member Access",
-        "Trust Center",
-        "Core User Path",
-        "Verify and Buy",
-        "Status and Help",
-        "Official Docs",
-        "Product and Members",
-        "Product Map",
-        "Member Program",
-        "Operations",
-        "API Status",
-        "Worker Routes Handoff",
-        "worker-routes-handoff.html",
-        "api-status.html",
-        "Daily Status",
-        "daily-status.html",
-        "Trust and Review",
-        "Domain Email Plan",
-        "domain-email.html",
-        "Domain Email Evidence Checklist",
-        "domain-email-evidence.html",
-        "BaseScan Preflight",
-        "basescan-preflight.html",
-        "BaseScan Handoff",
-        "basescan-handoff.html",
-        "zh-basescan-submit.html",
-        "中文 BaseScan 提交流程",
-        "zh-basescan-handoff.html",
-        "中文 BaseScan 复审复制包",
-        "Security Materials",
-        "External Review",
-        "Supply and Custody",
-        "Content and Community",
-        "Community Channels",
-        "Campaign Desk",
-        "Radar Issues",
-        "Need Evidence",
-        "Trust Center",
         MAINNET_ADDRESS,
         "Base Mainnet",
         "8453",
         "GCA/USDT",
         OFFICIAL_POOL_ADDRESS,
-        "zh-site-map.html",
+        "product.html",
+        "tools.html",
+        "risk-passport.html",
+        "workspace-vault.html",
+        "gca/member-access/",
+        "member-workspace.html",
+        "product.html#memberTitle",
+        "markets.html",
+        "buy.html",
+        "supply.html",
+        "liquidity.html",
+        "verify.html",
+        "security.html",
+        "onchain-proofs.html",
         "about.html",
+        "team.html",
+        "tim-chen.html",
+        "whitepaper.html",
         "support.html",
         "brand-kit.html",
-        "onchain-proofs.html",
+        "community.html",
+        "radar.html",
+        "faq.html",
     ):
         assert_contains(text, expected, label)
     for forbidden in (
-        "Reviewer Data Room",
-        "Platform-Only Evidence Path",
+        "Access Buildout",
+        "Product Spec",
+        "Release Gates",
+        "Review Queue",
+        "Operations Runbook",
+        "BaseScan Handoff",
+        "Current Status",
+        "under construction",
+        "in progress",
         'href="data.html"',
-        "zh-data.html",
+        "review-queue.html",
+        "release-gates.html",
+        "operations.html",
+        "basescan-handoff.html",
         'href="operator.html"',
     ):
         assert_not_contains(text, forbidden, label)
@@ -5970,39 +5814,54 @@ def validate_operator_page(text: str) -> None:
 
 def validate_support_page(text: str) -> None:
     label = "/support.html"
-    assert_contains(text, "GCA Support & Intake", label)
-    assert_contains(text, "Email Registration", label)
-    assert_contains(text, "register.html", label)
-    assert_contains(text, "Support References", label)
+    assert_social_preview_meta(text, label, SUPPORT_PAGE_URL)
+    assert_contains(text, "GCA Support", label)
+    assert_contains(text, "How can we help?", label)
+    assert_contains(text, "Email Support", label)
+    assert_contains(text, "Help topics", label)
+    assert_contains(text, "Account &amp; membership", label)
+    assert_contains(text, "Product tools", label)
+    assert_contains(text, "Wallet &amp; contract", label)
+    assert_contains(text, "Market &amp; liquidity", label)
+    assert_contains(text, "Security concern", label)
+    assert_contains(text, "Project information", label)
+    assert_contains(text, "Include enough context.", label)
+    assert_contains(text, "Never send secrets.", label)
+    assert_contains(text, "Official identity", label)
+    assert_contains(text, "Official channels", label)
     assert_contains(text, "gca/member-access/", label)
-    for forbidden in ("Platform-Only Evidence Path", "Data Room", 'href="data.html"'):
-        assert_not_contains(text, forbidden, label)
-    assert_contains(text, "Reviewer Kit", label)
-    assert_contains(text, "Platform Replies", label)
-    assert_contains(text, "Team Profile", label)
-    assert_contains(text, "BaseScan Remediation", label)
-    assert_contains(text, "Review Queue", label)
-    assert_contains(text, "Operations Runbook", label)
-    assert_contains(text, "GCAgochina@outlook.com", label)
-    assert_contains(text, "Domain Email", label)
-    assert_contains(text, "Domain email ready for BaseScan resubmission", label)
+    assert_contains(text, "product.html", label)
+    assert_contains(text, "verify.html", label)
+    assert_contains(text, "markets.html", label)
+    assert_contains(text, "support@gcagochina.com", label)
+    assert_contains(text, X_URL, label)
+    assert_contains(text, TELEGRAM_URL, label)
     assert_contains(text, "Private key or seed phrase", label)
-    assert_contains(text, "Exchange API secret or withdrawal permission", label)
-    assert_contains(text, "Support Workflow", label)
-    assert_contains(text, "Support Cannot Do", label)
-    assert_contains(text, "Base Mainnet / chainId 8453", label)
-    assert_contains(text, "GCA/USDT", label)
-    assert_contains(text, "gca_member_preregistration_v2", label)
-    assert_contains(text, "memberBenefitReviewEvidence", label)
-    assert_contains(text, "GCA Member holding start date", label)
-    assert_contains(text, "GCA Member evidence note", label)
-    assert_contains(text, "Redacted Review Package Handoff", label)
-    assert_contains(text, "redacted-public", label)
-    assert_contains(text, "tools/export_gca_review_package.py", label)
-    assert_contains(text, "tools/verify_gca_review_package.py", label)
+    assert_contains(text, "Exchange API secret", label)
+    assert_contains(text, "Withdrawal permission", label)
+    assert_contains(text, "Remote-control access", label)
+    assert_contains(text, "Base Mainnet", label)
     assert_contains(text, MAINNET_ADDRESS, label)
-    assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
-    assert_not_contains(text, "GCA/WETH", label)
+    assert_contains(text, BASE_USDT_ADDRESS, label)
+    assert_current_pool_text(text, label)
+    for forbidden in (
+        "Platform-Only Evidence Path",
+        "Data Room",
+        'href="data.html"',
+        "Reviewer Kit",
+        "Platform Replies",
+        "BaseScan Remediation",
+        "Review Queue",
+        "Operations Runbook",
+        "Redacted Review Package Handoff",
+        "Domain email ready for BaseScan resubmission",
+        "Current Intake",
+        "Current Stage",
+        "under construction",
+        "in progress",
+    ):
+        assert_not_contains(text, forbidden, label)
+    assert_no_forbidden_public_claims(text, label)
 
 
 def validate_support_json(text: str) -> None:
@@ -8522,51 +8381,41 @@ def validate_utility_json(text: str) -> None:
 
 def validate_product_page(text: str) -> None:
     label = "/product.html"
-    assert_contains(text, "GCA AI Quant Access Product Spec", label)
-    assert_contains(text, "Product References", label)
+    assert_contains(text, "GCA AI Quant Access", label)
+    assert_contains(text, "Research clearly. Control risk.", label)
     assert_no_public_data_room_terms(text, label)
-    assert_contains(text, "Access Portal", label)
-    assert_contains(text, "Credits Catalog", label)
-    assert_contains(text, "Ten browser-based risk and research tools", label)
-    assert_contains(text, "Public Account UI", label)
-    assert_contains(text, "Live at /gca/member-access/", label)
-    assert_contains(text, "Accounts, ledgers, reviewed services, and ten browser tools live", label)
-    assert_contains(text, "China Narrative Radar", label)
-    assert_contains(text, "Weekly Go China Radar", label)
+    assert_contains(text, "10 browser-based tools", label)
+    assert_contains(text, "One workspace for the full risk cycle", label)
     assert_contains(text, "Liquidation Replay", label)
-    assert_contains(text, "Risk Warning Credits", label)
     assert_contains(text, "Backtest Lab", label)
     assert_contains(text, "ENTRY_READY Review", label)
     assert_contains(text, "Position Size Calculator", label)
     assert_contains(text, "Risk Discipline Training", label)
     assert_contains(text, 'href="risk-training.html"', label)
-    assert_contains(text, "Member Research Notes", label)
+    assert_contains(text, "Research Notes", label)
     assert_contains(text, 'href="research-notes.html"', label)
     assert_contains(text, "Trade Plan Ledger", label)
     assert_contains(text, 'href="trade-plans.html"', label)
     assert_contains(text, "Portfolio Risk Map", label)
     assert_contains(text, 'href="portfolio-risk.html"', label)
-    assert_contains(text, "GCA Member Workspace", label)
-    assert_contains(text, "Browser-Local Workspace Live", label)
+    assert_contains(text, "Member Workspace", label)
     assert_contains(text, 'href="member-workspace.html"', label)
-    assert_contains(text, "GCA Risk Passport", label)
-    assert_contains(text, "Browser-Local Report Live", label)
-    assert_contains(text, 'href="risk-passport.html"', label)
-    assert_contains(text, "GCA Workspace Vault", label)
-    assert_contains(text, "Encrypted Local Backup Live", label)
-    assert_contains(text, 'href="workspace-vault.html"', label)
-    assert_contains(text, "Product Access", label)
-    assert_contains(text, "Product Principles", label)
-    assert_contains(text, "Security Boundaries", label)
+    assert_contains(text, "Security boundaries", label)
     assert_contains(text, "No custody", label)
-    assert_contains(text, "no withdrawal permission", label)
-    assert_contains(text, "exchange API secret collection", label)
+    assert_contains(text, "withdrawal permission", label)
+    assert_contains(text, "exchange API secrets", label)
     assert_contains(text, "10,000 GCA", label)
-    assert_contains(text, "100 utility credits", label)
+    assert_contains(text, "100 credits", label)
     assert_contains(text, "1,000,000 GCA", label)
     assert_contains(text, MAINNET_ADDRESS, label)
     assert_contains(text, BASE_USDT_ADDRESS, label)
+    assert_contains(text, OFFICIAL_POOL_ADDRESS, label)
     assert_current_pool_text(text, label)
+    assert_contains(text, 'href="zh-product.html"', label)
+    assert_not_contains(text, "Product Spec", label)
+    assert_not_contains(text, "Current Stage", label)
+    assert_not_contains(text, "Public Account UI", label)
+    assert_not_contains(text, "Reviewed Service", label)
     assert_not_contains(text, "Release Gates", label)
     assert_not_contains(text, "Roadmap", label)
     assert_not_contains(text, "Public Preview Live", label)
@@ -17764,6 +17613,7 @@ def validate_sitemap(text: str) -> None:
         "https://gcagochina.com/register.html",
         "https://gcagochina.com/unsubscribe.html",
         "https://gcagochina.com/zh-cn.html",
+        "https://gcagochina.com/zh-product.html",
         "https://gcagochina.com/zh-buy.html",
         "https://gcagochina.com/zh-markets.html",
         "https://gcagochina.com/zh-apply.html",
@@ -17926,8 +17776,6 @@ def validate_sitemap(text: str) -> None:
     for path in (
         "markets.html",
         "zh-markets.html",
-        "verify.html",
-        "zh-wallet-verify.html",
         "community.html",
         "community.json",
         "announcements.html",
@@ -17941,6 +17789,17 @@ def validate_sitemap(text: str) -> None:
         "project.json",
     ):
         assert_sitemap_lastmod(path, "2026-08-11")
+    for path in (
+        "product.html",
+        "verify.html",
+        "zh-product.html",
+        "zh-wallet-verify.html",
+        "support.html",
+        "site-map.html",
+        "zh-support.html",
+        "zh-site-map.html",
+    ):
+        assert_sitemap_lastmod(path, "2026-08-12")
     for path in (
         "roadmap.html",
         "roadmap.json",
@@ -18028,9 +17887,7 @@ def validate_sitemap(text: str) -> None:
         "member-workspace.html",
         "risk-passport.html",
         "workspace-vault.html",
-        "site-map.html",
         "tools.html",
-        "zh-site-map.html",
     ):
         assert_sitemap_lastmod(path, "2026-07-19")
     for path in (
@@ -18045,9 +17902,7 @@ def validate_sitemap(text: str) -> None:
         "member-program.json",
         "privacy.html",
         "privacy.json",
-        "product.html",
         "product.json",
-        "support.html",
         "support.json",
         "terms.html",
         "terms.json",
@@ -18079,6 +17934,7 @@ def validate_robots(text: str) -> None:
     assert_contains(text, "Allow: /register.html", label)
     assert_contains(text, "Allow: /unsubscribe.html", label)
     assert_contains(text, "Allow: /zh-cn.html", label)
+    assert_contains(text, "Allow: /zh-product.html", label)
     assert_contains(text, "Allow: /zh-buy.html", label)
     assert_contains(text, "Allow: /zh-markets.html", label)
     assert_contains(text, "Allow: /zh-apply.html", label)
@@ -18265,6 +18121,7 @@ CHECKS: list[EndpointCheck] = [
     ("/action-plan.html", validate_action_plan_page),
     ("/action-plan.json", validate_action_plan_json),
     ("/zh-cn.html", validate_zh_cn_page),
+    ("/zh-product.html", validate_zh_product_page),
     ("/zh-buy.html", validate_zh_buy_page),
     ("/zh-markets.html", validate_zh_markets),
     ("/zh-apply.html", validate_zh_apply_page),

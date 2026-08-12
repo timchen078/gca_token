@@ -14,6 +14,7 @@ PRODUCT_STAGE = (
 SUPPORT_STATUS = "live-structured-account-service-intake-and-manual-email-support"
 SERVICE_REQUEST_ENDPOINT = "/gca/account-service-requests"
 LAST_UPDATED = "2026-08-10"
+CORE_PAGE_LAST_UPDATED = "2026-08-12"
 MEMBER_PAGE_LAST_UPDATED = "2026-08-11"
 CONTENT_CYCLE_LAST_UPDATED = "2026-08-11"
 
@@ -309,7 +310,6 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             "member-program.json",
             "privacy.html",
             "privacy.json",
-            "product.html",
             "product.json",
             "roadmap.html",
             "roadmap.json",
@@ -324,7 +324,6 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             "utility.html",
             "utility.json",
             "whitepaper.html",
-            "support.html",
             "support.json",
             "terms.html",
             "terms.json",
@@ -332,6 +331,10 @@ class PublicStatusConsistencyTests(unittest.TestCase):
         for path in updated_paths:
             url = f"https://gcagochina.com/{path}"
             self.assertEqual(sitemap.get(url), LAST_UPDATED, url)
+
+        for path in ("product.html", "support.html"):
+            url = f"https://gcagochina.com/{path}"
+            self.assertEqual(sitemap.get(url), CORE_PAGE_LAST_UPDATED, url)
 
         self.assertEqual(
             sitemap.get("https://gcagochina.com/project.json"),
