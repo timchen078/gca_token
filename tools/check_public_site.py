@@ -62,6 +62,7 @@ PUBLIC_INDEXABLE_LASTMOD = {
     "/team.html": "2026-08-13",
     "/zh-team.html": "2026-08-13",
     "/whitepaper.html": "2026-08-10",
+    "/zh-whitepaper.html": "2026-08-13",
     "/brand-kit.html": "2026-05-13",
     "/reserve-statement.html": "2026-05-16",
     "/tokenlist.html": "2026-06-03",
@@ -155,6 +156,7 @@ SECURITY_PAGE_URL = "https://gcagochina.com/security.html"
 RISK_PAGE_URL = "https://gcagochina.com/risk.html"
 FAQ_PAGE_URL = "https://gcagochina.com/faq.html"
 WHITEPAPER_PAGE_URL = "https://gcagochina.com/whitepaper.html"
+ZH_WHITEPAPER_PAGE_URL = "https://gcagochina.com/zh-whitepaper.html"
 MEMBER_PROGRAM_URL = "https://gcagochina.com/member-program.json"
 MEMBER_PROGRAM_PAGE_URL = "https://gcagochina.com/member-program.html"
 MEMBER_LEDGER_PAGE_URL = "https://gcagochina.com/member-ledger.html"
@@ -2672,6 +2674,7 @@ def validate_zh_cn_page(text: str) -> None:
         "register.html",
         "zh-about.html",
         "zh-team.html",
+        "zh-whitepaper.html",
     ):
         assert_contains(text, expected, label)
     for forbidden in (
@@ -4575,7 +4578,7 @@ def validate_zh_site_map_page(text: str) -> None:
         "onchain-proofs.html",
         "zh-about.html",
         "zh-team.html",
-        "whitepaper.html",
+        "zh-whitepaper.html",
         "brand-kit.html",
         X_URL,
         TELEGRAM_URL,
@@ -5062,7 +5065,81 @@ def validate_whitepaper_page(text: str) -> None:
     assert_contains(text, BASE_USDT_ADDRESS, label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
+    assert_contains(text, '<link rel="alternate" hreflang="en" href="https://gcagochina.com/whitepaper.html">', label)
+    assert_contains(text, '<link rel="alternate" hreflang="zh-CN" href="https://gcagochina.com/zh-whitepaper.html">', label)
+    assert_contains(text, 'href="zh-whitepaper.html"', label)
     assert_current_pool_text(text, label)
+
+
+def validate_zh_whitepaper_page(text: str) -> None:
+    label = "/zh-whitepaper.html"
+    assert_social_preview_meta(text, label, ZH_WHITEPAPER_PAGE_URL)
+    for expected in (
+        "GCA 项目白皮书",
+        "项目白皮书 · Version 0.6",
+        "Go China Access",
+        "叙事连接产品，产品强调风险控制。",
+        "三条产品主线，共用一个官方身份。",
+        "固定总量，身份唯一。",
+        "公开分配口径与链上总量分开说明。",
+        "Base 上的 GCA/USDT。",
+        "资格、记录与权益分开处理。",
+        "技术事实与外部认证分开说明。",
+        "当前公开产品以研究和风控为核心。",
+        "责任、资料与官方渠道统一公开。",
+        "10 项浏览器研究与风控工具",
+        "100 GCA AI Quant Access credits",
+        "10,000 GCA",
+        "1,000,000 GCA",
+        "30 天",
+        "10,000 GCA 会员权益审核",
+        "400,000,000 GCA",
+        "600,000,000 GCA",
+        "owner-held reserve",
+        "未锁定",
+        "Uniswap v4 · 0.01%",
+        "目前没有独立第三方审计报告",
+        "不属于当前公开产品",
+        "support@gcagochina.com",
+        X_URL,
+        TELEGRAM_URL,
+        MAINNET_ADDRESS,
+        BASE_USDT_ADDRESS,
+        OFFICIAL_POOL_ADDRESS,
+        "zh-product.html",
+        "zh-wallet-verify.html",
+        "zh-supply.html",
+        "zh-markets.html",
+        "zh-members.html",
+        "zh-security.html",
+        "zh-team.html",
+        "zh-about.html",
+        "zh-support.html",
+        "zh-site-map.html",
+        '<link rel="alternate" hreflang="en" href="https://gcagochina.com/whitepaper.html">',
+        '<link rel="alternate" hreflang="zh-CN" href="https://gcagochina.com/zh-whitepaper.html">',
+        'href="whitepaper.html"',
+    ):
+        assert_contains(text, expected, label)
+    for forbidden in (
+        "Tim Chen",
+        "CEO",
+        "创始人",
+        "公司",
+        "正在建设",
+        "建设中",
+        "project-profile.html",
+        "listing-kit.html",
+        "technical-report.html",
+        "domain-email.html",
+        "basescan-handoff.html",
+        "data.html",
+        ".json",
+    ):
+        assert_not_contains(text, forbidden, label)
+    assert_no_public_data_room_terms(text, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
 
 
 def validate_token_safety_page(text: str) -> None:
@@ -17842,6 +17919,7 @@ CHECKS: list[EndpointCheck] = [
     ("/status.html", validate_status_page),
     ("/listing-kit.html", validate_listing_kit_page),
     ("/whitepaper.html", validate_whitepaper_page),
+    ("/zh-whitepaper.html", validate_zh_whitepaper_page),
     ("/project-profile.html", validate_project_profile_page),
     ("/tokenlist.html", validate_tokenlist_page),
     ("/buy.html", validate_buy_page),

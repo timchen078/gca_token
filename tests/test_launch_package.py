@@ -655,6 +655,7 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_status_page((ROOT / "site" / "status.html").read_text())
         module.validate_listing_kit_page((ROOT / "site" / "listing-kit.html").read_text())
         module.validate_whitepaper_page((ROOT / "site" / "whitepaper.html").read_text())
+        module.validate_zh_whitepaper_page((ROOT / "site" / "zh-whitepaper.html").read_text())
         module.validate_buy_page((ROOT / "site" / "buy.html").read_text())
         module.validate_markets((ROOT / "site" / "markets.html").read_text())
         module.validate_security_page((ROOT / "site" / "security.html").read_text())
@@ -800,7 +801,7 @@ class LaunchPackageTests(unittest.TestCase):
                 return "/" + relative.removesuffix("index.html")
             return "/" + relative
 
-        self.assertEqual(58, len(module.PUBLIC_INDEXABLE_PATHS))
+        self.assertEqual(59, len(module.PUBLIC_INDEXABLE_PATHS))
         for path in (ROOT / "site").rglob("*.html"):
             route = public_path(path)
             page = path.read_text()
@@ -1131,7 +1132,7 @@ class LaunchPackageTests(unittest.TestCase):
             for path in module.PUBLIC_INDEXABLE_PATHS
         }
         self.assertEqual(indexed_urls, expected_urls)
-        self.assertEqual(len(indexed_urls), 58)
+        self.assertEqual(len(indexed_urls), 59)
 
         for excluded in (
             DATA_PAGE_URL,
@@ -11682,11 +11683,23 @@ class LaunchPackageTests(unittest.TestCase):
 
     def test_site_has_whitepaper_page(self):
         index = (ROOT / "site" / "index.html").read_text()
+        chinese_index = (ROOT / "site" / "zh-cn.html").read_text()
         whitepaper = (ROOT / "site" / "whitepaper.html").read_text()
+        chinese_whitepaper = (ROOT / "site" / "zh-whitepaper.html").read_text()
         whitepaper_source = (ROOT / "docs" / "whitepaper.md").read_text()
         public_profile = (ROOT / "docs" / "mainnet_public_profile.md").read_text()
         self.assertIn('href="whitepaper.html"', index)
+        self.assertIn('href="zh-whitepaper.html"', chinese_index)
+        self.assertIn('href="zh-whitepaper.html"', whitepaper)
         self.assertIn("GCA Whitepaper", whitepaper)
+        self.assertIn("GCA 项目白皮书", chinese_whitepaper)
+        self.assertIn("叙事连接产品，产品强调风险控制。", chinese_whitepaper)
+        self.assertIn("10 项浏览器研究与风控工具", chinese_whitepaper)
+        self.assertIn("100 GCA AI Quant Access credits", chinese_whitepaper)
+        self.assertIn("目前没有独立第三方审计报告", chinese_whitepaper)
+        self.assertIn(MAINNET_ADDRESS, chinese_whitepaper)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, chinese_whitepaper)
+        self.assertIn(BASE_USDT_ADDRESS, chinese_whitepaper)
         self.assertIn("Version 0.6", whitepaper)
         self.assertIn("Go China Access", index)
         self.assertIn("Go China Access", whitepaper)

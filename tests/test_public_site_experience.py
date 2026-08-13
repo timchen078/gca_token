@@ -98,6 +98,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
                 "zh-team.html",
                 "zh-support.html",
                 "zh-site-map.html",
+                "zh-whitepaper.html",
             )
         }
 
@@ -125,6 +126,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         language_pairs = (
             ("about.html", "zh-about.html"),
             ("team.html", "zh-team.html"),
+            ("whitepaper.html", "zh-whitepaper.html"),
         )
         for english_name, chinese_name in language_pairs:
             english = (SITE / english_name).read_text()
@@ -188,11 +190,19 @@ class PublicSiteExperienceTests(unittest.TestCase):
 
     def test_whitepaper_uses_shared_mobile_navigation_and_wraps_long_links(self):
         page = (SITE / "whitepaper.html").read_text()
+        chinese = (SITE / "zh-whitepaper.html").read_text()
 
         self.assertIn('<div class="nav-links">', page)
         self.assertIn('aria-label="Primary"', page)
         self.assertIn("article a {", page)
         self.assertIn("overflow-wrap: anywhere;", page)
+        self.assertIn('<div class="nav-links"></div>', chinese)
+        self.assertIn('aria-label="主导航"', chinese)
+        self.assertIn('assets/gca-core.css?v=20260812-2', chinese)
+        self.assertIn('assets/gca-site.css?v=20260812-3', chinese)
+        self.assertIn('assets/gca-site.js?v=20260812-2', chinese)
+        self.assertNotIn("Tim Chen", chinese)
+        self.assertNotIn("CEO", chinese)
 
     def test_member_access_restores_non_sensitive_device_snapshot(self):
         page = (SITE / "gca" / "member-access" / "index.html").read_text()
