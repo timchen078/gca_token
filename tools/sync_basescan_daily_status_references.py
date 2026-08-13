@@ -38,7 +38,6 @@ PUBLIC_SITE_TARGET_FILES = [
     "site/reviewer-kit.html",
     "site/reviewer-kit.json",
     "site/roadmap.html",
-    "site/terms.html",
     "site/token-safety.html",
     "site/trust.html",
     "site/trust.json",

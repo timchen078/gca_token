@@ -3286,14 +3286,22 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Account-Level Service Access", terms_page)
         self.assertIn("No Custody Or Withdrawal Permission", terms_page)
         self.assertIn("No Outcome Promise", terms_page)
-        self.assertIn("Returned 2026-05-23; final package refreshed 2026-08-11; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", terms_page)
-        self.assertIn("Latest reviewer package", terms_page)
-        self.assertIn("Final package 2026-08-11T18:56:43Z; daily status 2026-08-12T06:37:31Z", terms_page)
+        self.assertIn("Technical Identity", terms_page)
+        self.assertIn("BaseScan-verified source", terms_page)
+        self.assertIn("Fixed at 1,000,000,000 GCA", terms_page)
+        self.assertIn("Source verification does not equal an independent audit", terms_page)
         self.assertIn("GCA/USDT on Base Mainnet", terms_page)
         self.assertIn("Privacy Notice", terms_page)
         self.assertIsNone(re.search(r'href="[^"]*\.json', terms_page))
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, terms_page)
         self.assertNotIn("GCA/WETH", terms_page)
+        for forbidden in (
+            "Current External Status",
+            "Returned 2026-05-23",
+            "Latest reviewer package",
+            "Handoff and Chinese owner flow",
+        ):
+            self.assertNotIn(forbidden, terms_page)
 
         self.assertEqual(terms["schema"], PARTICIPATION_TERMS_URL)
         self.assertEqual(terms["pageUrl"], PARTICIPATION_TERMS_PAGE_URL)
@@ -4238,7 +4246,7 @@ class LaunchPackageTests(unittest.TestCase):
         radar = json.loads((ROOT / "site" / "radar.json").read_text())
 
         self.assertIn("Weekly Go China Radar", page)
-        self.assertIn("Evidence Paths", page)
+        self.assertIn("Explore GCA", page)
         self.assertNotIn("Platform-Only Evidence Path", page)
         self.assertNotIn("Data Room", page)
         self.assertNotIn('href="data.html"', page)
@@ -4246,13 +4254,12 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Live Access and Verifiable Market Context", page)
         self.assertIn("Live access with explicit boundaries", page)
         self.assertIn("Verifiable market context", page)
-        self.assertIn("Reviewer-ready public identity", page)
-        self.assertIn("Read-only Base Mainnet GCA balance check live", page)
-        self.assertIn("Eligible account-level ledger records live", page)
+        self.assertIn("Public verification foundation", page)
+        self.assertIn("Read-only Base Mainnet GCA balance check", page)
+        self.assertIn("Account-level records for eligible holders", page)
         self.assertIn("GCA Member", page)
         self.assertIn("no automatic token claim", page)
-        self.assertIn("External Audit", page)
-        self.assertIn("Copy-Ready Post", page)
+        self.assertIn("Token Model", page)
         self.assertIn("artificial volume", page)
         self.assertIn("not a wallet quote", page)
         self.assertIn("buy or sell signal", page)
@@ -4264,6 +4271,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn("member pre-registration and read-only balance preview as preparation only", page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
         self.assertNotIn("GCA/WETH", page)
+        for forbidden in (
+            "BaseScan Handoff",
+            "Reviewer-ready public identity",
+            "Copy-Ready Post",
+            "Manual Or Pending",
+            "pending external publication",
+        ):
+            self.assertNotIn(forbidden, page)
 
         self.assertEqual(radar["schema"], RADAR_URL)
         self.assertEqual(radar["pageUrl"], RADAR_PAGE_URL)
@@ -4465,12 +4480,12 @@ class LaunchPackageTests(unittest.TestCase):
             "Live Access and Verifiable Market Context",
             "Live access with explicit boundaries",
             "Verifiable market context",
-            "Reviewer-ready public identity",
-            "Read-only Base Mainnet GCA balance check live",
-            "100 credits",
+            "Public verification foundation",
+            "Read-only Base Mainnet GCA balance check",
+            "Utility credits",
             "GCA Member",
             "no automatic token claim",
-            "No third-party audit has been completed",
+            "Source verification is not an independent audit",
             "Issue 006 References",
             MAINNET_ADDRESS,
             BASE_USDT_ADDRESS,
@@ -4486,6 +4501,14 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn('href="data.html"', page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
         self.assertNotIn("GCA/WETH", page)
+        for forbidden in (
+            "BaseScan Handoff",
+            "Reviewer-ready public identity",
+            "Manual Or Pending",
+            "External publication pending",
+            "Reviewer Kit",
+        ):
+            self.assertNotIn(forbidden, page)
 
         self.assertEqual(radar["schema"], RADAR_ISSUE_006_URL)
         self.assertEqual(radar["pageUrl"], RADAR_ISSUE_006_PAGE_URL)
@@ -9497,20 +9520,20 @@ class LaunchPackageTests(unittest.TestCase):
         liquidity = json.loads((ROOT / "site" / "liquidity.json").read_text())
 
         self.assertIn("GCA Liquidity And LP Custody", page)
-        self.assertIn("Liquidity References", page)
+        self.assertIn("Market Sources", page)
         self.assertNotIn("Platform-Only Evidence Path", page)
         self.assertNotIn("Data Room", page)
         self.assertNotIn('href="data.html"', page)
         self.assertIn("Base Mainnet / 8453", page)
         self.assertIn("GCA/USDT", page)
-        self.assertIn("Starter-depth only", page)
-        self.assertIn("LP Lock Claim", page)
-        self.assertIn("Not claimed", page)
+        self.assertIn("Variable; check live", page)
+        self.assertIn("LP Custody", page)
+        self.assertIn("Unlocked", page)
         self.assertIn("LP Custody Boundary", page)
         self.assertIn("No LP lock, LP burn, or LP multisig custody is currently claimed", page)
-        self.assertIn("Future LP Lock Evidence Requirements", page)
-        self.assertIn("Custody Roadmap", page)
-        self.assertIn("Do not claim deep liquidity", page)
+        self.assertIn("Before Trading", page)
+        self.assertIn("Independent Verification", page)
+        self.assertIn("Market Risk", page)
         self.assertIn(MAINNET_ADDRESS, page)
         self.assertIn(OFFICIAL_POOL_ADDRESS, page)
         self.assertIn(BASE_USDT_ADDRESS, page)
@@ -9518,6 +9541,15 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(OFFICIAL_DEXSCREENER_URL, page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
         self.assertNotIn("GCA/WETH", page)
+        for forbidden in (
+            "Reviewer Kit",
+            "Reviewer Use",
+            "Future LP Lock Evidence Requirements",
+            "What To Share Publicly",
+            "Do not claim deep liquidity",
+            "Custody Roadmap",
+        ):
+            self.assertNotIn(forbidden, page)
 
         self.assertEqual(liquidity["schema"], LIQUIDITY_URL)
         self.assertEqual(liquidity["pageUrl"], LIQUIDITY_PAGE_URL)

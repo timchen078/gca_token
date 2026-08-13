@@ -7486,19 +7486,18 @@ def validate_radar_page(text: str) -> None:
     label = "/radar.html"
     assert_social_preview_meta(text, label, RADAR_PAGE_URL)
     assert_contains(text, "Weekly Go China Radar", label)
-    assert_contains(text, "Evidence Paths", label)
+    assert_contains(text, "Explore GCA", label)
     assert_no_public_data_room_terms(text, label)
     assert_contains(text, "Issue 006 / 2026-08-11 / Published", label)
     assert_contains(text, "Live Access and Verifiable Market Context", label)
     assert_contains(text, "Live access with explicit boundaries", label)
     assert_contains(text, "Verifiable market context", label)
-    assert_contains(text, "Reviewer-ready public identity", label)
-    assert_contains(text, "Read-only Base Mainnet GCA balance check live", label)
-    assert_contains(text, "Eligible account-level ledger records live", label)
+    assert_contains(text, "Public verification foundation", label)
+    assert_contains(text, "Read-only Base Mainnet GCA balance check", label)
+    assert_contains(text, "Account-level records for eligible holders", label)
     assert_contains(text, "GCA Member", label)
     assert_contains(text, "no automatic token claim", label)
-    assert_contains(text, "External Audit", label)
-    assert_contains(text, "Copy-Ready Post", label)
+    assert_contains(text, "Token Model", label)
     assert_contains(text, "artificial volume", label)
     assert_contains(text, "not a wallet quote", label)
     assert_contains(text, "buy or sell signal", label)
@@ -7506,6 +7505,15 @@ def validate_radar_page(text: str) -> None:
     assert_contains(text, BASE_USDT_ADDRESS, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
+    for forbidden in (
+        "BaseScan Handoff",
+        "Reviewer-ready public identity",
+        "Copy-Ready Post",
+        "Manual Or Pending",
+        "pending external publication",
+        "Operator review",
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_radar_issue_006_payload(payload: dict, label: str) -> None:
@@ -7846,12 +7854,12 @@ def validate_radar_issue_006_page(text: str) -> None:
         "Live Access and Verifiable Market Context",
         "Live access with explicit boundaries",
         "Verifiable market context",
-        "Reviewer-ready public identity",
-        "Read-only Base Mainnet GCA balance check live",
-        "100 credits",
+        "Public verification foundation",
+        "Read-only Base Mainnet GCA balance check",
+        "Utility credits",
         "GCA Member",
         "no automatic token claim",
-        "No third-party audit has been completed",
+        "Source verification is not an independent audit",
         "Issue 006 References",
         MAINNET_ADDRESS,
         BASE_USDT_ADDRESS,
@@ -7863,6 +7871,14 @@ def validate_radar_issue_006_page(text: str) -> None:
         assert_contains(text, expected, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
+    for forbidden in (
+        "BaseScan Handoff",
+        "Reviewer-ready public identity",
+        "Manual Or Pending",
+        "External publication pending",
+        "Reviewer Kit",
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_radar_issue_006_json(text: str) -> None:
@@ -13640,13 +13656,22 @@ def validate_terms_page(text: str) -> None:
     assert_contains(text, "Account-Level Service Access", label)
     assert_contains(text, "No Custody Or Withdrawal Permission", label)
     assert_contains(text, "No Outcome Promise", label)
-    assert_contains(text, "Returned 2026-05-23; final package refreshed 2026-08-11; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
-    assert_contains(text, "Latest reviewer package", label)
-    assert_contains(text, "Final package 2026-08-11T18:56:43Z; daily status 2026-08-12T06:37:31Z", label)
+    assert_contains(text, "Technical Identity", label)
+    assert_contains(text, "BaseScan-verified source", label)
+    assert_contains(text, "Fixed at 1,000,000,000 GCA", label)
+    assert_contains(text, "Source verification does not equal an independent audit", label)
     assert_contains(text, "GCA/USDT on Base Mainnet", label)
     assert_contains(text, "Privacy Notice", label)
     assert_not_contains(text, OLD_WETH_POOL_ADDRESS, label)
     assert_not_contains(text, "GCA/WETH", label)
+    for forbidden in (
+        "Current External Status",
+        "Returned 2026-05-23",
+        "Latest reviewer package",
+        "Handoff and Chinese owner flow",
+        "daily status refreshed",
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_terms_json(text: str) -> None:
@@ -13943,7 +13968,7 @@ def validate_tokenlist_page(text: str) -> None:
     assert_social_preview_meta(text, label, TOKENLIST_PAGE_URL)
     for expected in (
         "GCA Token List Guide",
-        "Readable Token Metadata",
+        "Official Wallet Reference",
         "Wallet Import",
         "Manual Wallet Fields",
         "Base Mainnet",
@@ -13954,10 +13979,9 @@ def validate_tokenlist_page(text: str) -> None:
         "assets/gca-logo.png",
         "Official Market Route",
         "Token Safety",
-        "Platform Metadata",
-        "Reviewer Kit",
-        "Listing Kit",
-        "Platform Replies",
+        "Official Resources",
+        "Whitepaper",
+        "Support",
     ):
         assert_contains(text, expected, label)
     assert_current_pool_text(text, label)
@@ -13969,6 +13993,9 @@ def validate_tokenlist_page(text: str) -> None:
         'href="data.html"',
         "Data Room",
         "Raw JSON",
+        "Reviewer Kit",
+        "Listing Kit",
+        "Platform Replies",
     ):
         assert_not_contains(text, forbidden, label)
 
@@ -16180,22 +16207,31 @@ def validate_liquidity_json(text: str) -> None:
 def validate_liquidity_page(text: str) -> None:
     label = "/liquidity.html"
     assert_contains(text, "GCA Liquidity And LP Custody", label)
-    assert_contains(text, "Liquidity References", label)
+    assert_contains(text, "Market Sources", label)
     assert_no_public_data_room_terms(text, label)
     assert_not_contains(text, 'href="liquidity.json"', label)
     assert_contains(text, "Base Mainnet / 8453", label)
     assert_contains(text, "GCA/USDT", label)
-    assert_contains(text, "Starter-depth only", label)
-    assert_contains(text, "LP Lock Claim", label)
-    assert_contains(text, "Not claimed", label)
+    assert_contains(text, "Variable; check live", label)
+    assert_contains(text, "LP Custody", label)
+    assert_contains(text, "Unlocked", label)
     assert_contains(text, "LP Custody Boundary", label)
     assert_contains(text, "No LP lock, LP burn, or LP multisig custody is currently claimed", label)
-    assert_contains(text, "Future LP Lock Evidence Requirements", label)
-    assert_contains(text, "Custody Roadmap", label)
-    assert_contains(text, "Do not claim deep liquidity", label)
+    assert_contains(text, "Before Trading", label)
+    assert_contains(text, "Independent Verification", label)
+    assert_contains(text, "Market Risk", label)
     assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
     assert_current_pool_text(text, label)
+    for forbidden in (
+        "Reviewer Kit",
+        "Reviewer Use",
+        "Future LP Lock Evidence Requirements",
+        "What To Share Publicly",
+        "Do not claim deep liquidity",
+        "Custody Roadmap",
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_holder_distribution_json(text: str) -> None:
