@@ -15,6 +15,7 @@ SUPPORT_STATUS = "live-structured-account-service-intake-and-manual-email-suppor
 SERVICE_REQUEST_ENDPOINT = "/gca/account-service-requests"
 LAST_UPDATED = "2026-08-10"
 CORE_PAGE_LAST_UPDATED = "2026-08-12"
+VISITOR_IDENTITY_LAST_UPDATED = "2026-08-13"
 MEMBER_PAGE_LAST_UPDATED = "2026-08-11"
 CONTENT_CYCLE_LAST_UPDATED = "2026-08-11"
 
@@ -300,19 +301,28 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             )
             for item in root.findall("sm:url", namespace)
         }
-        updated_paths = (
-            "",
-            "privacy.html",
-            "whitepaper.html",
-            "terms.html",
-        )
+        updated_paths = ("privacy.html", "whitepaper.html", "terms.html")
         for path in updated_paths:
             url = f"https://gcagochina.com/{path}"
             self.assertEqual(sitemap.get(url), LAST_UPDATED, url)
 
-        for path in ("product.html", "support.html", "team.html"):
+        for path in ("product.html",):
             url = f"https://gcagochina.com/{path}"
             self.assertEqual(sitemap.get(url), CORE_PAGE_LAST_UPDATED, url)
+
+        for path in (
+            "",
+            "zh-cn.html",
+            "start.html",
+            "about.html",
+            "team.html",
+            "support.html",
+            "zh-support.html",
+            "site-map.html",
+            "zh-site-map.html",
+        ):
+            url = f"https://gcagochina.com/{path}"
+            self.assertEqual(sitemap.get(url), VISITOR_IDENTITY_LAST_UPDATED, url)
 
         self.assertEqual(
             sitemap.get("https://gcagochina.com/members.html"),

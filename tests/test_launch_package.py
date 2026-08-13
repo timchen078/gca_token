@@ -1161,7 +1161,7 @@ class LaunchPackageTests(unittest.TestCase):
         leaked_sitemap = sitemap.replace(
             "</urlset>",
             "<url><loc>https://gcagochina.com/basescan-preflight.html</loc>"
-            "<lastmod>2026-08-12</lastmod></url></urlset>",
+            "<lastmod>2026-08-13</lastmod></url></urlset>",
         )
         with self.assertRaises(module.SiteCheckError):
             module.validate_sitemap(leaked_sitemap)
@@ -1315,7 +1315,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Responsibility Model", page)
         self.assertIn("Accountability by operating area", page)
         self.assertIn("Defined responsibilities", page)
-        self.assertIn("project-profile.html", page)
+        self.assertIn("about.html", page)
         self.assertIn(X_URL, page)
         self.assertIn(TELEGRAM_URL, page)
         self.assertIn("Operating scope", page)
@@ -1325,6 +1325,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn("BaseScan Remediation", page)
         self.assertNotIn("Reviewer", page)
         self.assertNotIn("add LinkedIn", page)
+        self.assertNotIn("company identity", page)
+        self.assertNotIn("project-profile.html", page)
         self.assertNotIn('href="project.json"', page)
         self.assertNotIn('href="tokenlist.json"', page)
         self.assertNotIn('href="basescan-remediation.json"', page)

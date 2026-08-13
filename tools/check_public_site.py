@@ -17,8 +17,8 @@ from urllib.request import Request, urlopen
 
 DEFAULT_BASE_URL = "https://gcagochina.com/"
 PUBLIC_INDEXABLE_LASTMOD = {
-    "/": "2026-08-10",
-    "/zh-cn.html": "2026-08-12",
+    "/": "2026-08-13",
+    "/zh-cn.html": "2026-08-13",
     "/product.html": "2026-08-12",
     "/zh-product.html": "2026-08-12",
     "/tools.html": "2026-07-19",
@@ -35,7 +35,7 @@ PUBLIC_INDEXABLE_LASTMOD = {
     "/member-workspace.html": "2026-07-19",
     "/risk-passport.html": "2026-07-19",
     "/workspace-vault.html": "2026-07-19",
-    "/start.html": "2026-08-12",
+    "/start.html": "2026-08-13",
     "/register.html": "2026-05-19",
     "/gca/member-access/": "2026-07-24",
     "/members.html": "2026-08-12",
@@ -57,8 +57,8 @@ PUBLIC_INDEXABLE_LASTMOD = {
     "/risk.html": "2026-05-11",
     "/faq.html": "2026-05-11",
     "/zh-faq.html": "2026-08-10",
-    "/about.html": "2026-08-12",
-    "/team.html": "2026-08-12",
+    "/about.html": "2026-08-13",
+    "/team.html": "2026-08-13",
     "/whitepaper.html": "2026-08-10",
     "/brand-kit.html": "2026-05-13",
     "/reserve-statement.html": "2026-05-16",
@@ -67,12 +67,12 @@ PUBLIC_INDEXABLE_LASTMOD = {
     "/radar-issue-006.html": "2026-08-11",
     "/radar-issue-005.html": "2026-06-14",
     "/radar-issue-004.html": "2026-05-17",
-    "/support.html": "2026-08-12",
-    "/zh-support.html": "2026-08-12",
+    "/support.html": "2026-08-13",
+    "/zh-support.html": "2026-08-13",
     "/privacy.html": "2026-08-10",
     "/terms.html": "2026-08-10",
-    "/site-map.html": "2026-08-12",
-    "/zh-site-map.html": "2026-08-12",
+    "/site-map.html": "2026-08-13",
+    "/zh-site-map.html": "2026-08-13",
 }
 PUBLIC_INDEXABLE_PATHS = frozenset(PUBLIC_INDEXABLE_LASTMOD)
 SOURCE_DAILY_STATUS_GENERATED_AT = "2026-08-12T06:37:31Z"
@@ -592,7 +592,7 @@ def validate_start_page(text: str) -> None:
         "remote-control access",
         "No third-party audit has been completed",
         "10,000 GCA member benefit remains manual reserve-wallet review only",
-        "Team Profile",
+        "Operating Responsibilities",
         "verify.html",
         "buy.html",
         "zh-buy.html",
@@ -608,6 +608,7 @@ def validate_start_page(text: str) -> None:
         "Raw JSON 主要给 BaseScan",
         "BaseScan Remediation",
         "Platform Replies",
+        'href="trust.html"',
     ):
         assert_not_contains(text, forbidden, label)
     for forbidden in (
@@ -905,7 +906,7 @@ def validate_about_page(text: str) -> None:
     assert_social_preview_meta(text, label, ABOUT_PAGE_URL)
     for expected in (
         "About GCA",
-        "Company and Project Profile",
+        "Project Profile",
         "中文入口",
         "zh-cn.html",
         "Project Operations",
@@ -919,8 +920,7 @@ def validate_about_page(text: str) -> None:
         "Clear by design",
         "Roles and Responsibilities",
         "team.html",
-        "project-profile.html",
-        "Company Resources",
+        "Project resources",
         "Official references",
         "support@gcagochina.com",
         X_URL,
@@ -936,8 +936,8 @@ def validate_about_page(text: str) -> None:
         "tools.html",
         "support.html",
         "brand-kit.html",
-        "listing-kit.html",
-        "technical-report.html",
+        "security.html",
+        "onchain-proofs.html",
         "reserve-statement.html",
     ):
         assert_contains(text, expected, label)
@@ -953,6 +953,12 @@ def validate_about_page(text: str) -> None:
         "Action Plan",
         "BaseScan Remediation",
         "Review Status",
+        "Company and Project Profile",
+        "Company Resources",
+        "Leadership",
+        "project-profile.html",
+        "listing-kit.html",
+        "technical-report.html",
     ):
         assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
@@ -968,7 +974,7 @@ def validate_team_page(text: str) -> None:
         "Responsibility Model",
         "Accountability by operating area",
         "Defined responsibilities",
-        "project-profile.html",
+        "about.html",
         X_URL,
         "https://t.me/gcagochinaofficial",
         "Operating scope",
@@ -986,6 +992,8 @@ def validate_team_page(text: str) -> None:
         "Reviewer",
         "No Hidden Claims",
         "add LinkedIn",
+        "company identity",
+        "project-profile.html",
     ):
         assert_not_contains(text, forbidden, label)
     assert_no_forbidden_public_claims(text, label)
@@ -4438,7 +4446,7 @@ def validate_zh_site_map_page(text: str) -> None:
         "会员账户",
         "市场与代币",
         "验证与安全",
-        "公司与资料",
+        "项目与资料",
         "支持与社群",
         "Base Mainnet",
         MAINNET_ADDRESS,
@@ -4698,7 +4706,7 @@ def validate_site_map_page(text: str) -> None:
         "Member account",
         "Market &amp; token",
         "Verification &amp; security",
-        "Company &amp; documents",
+        "Project &amp; documents",
         "Support &amp; community",
         "Verify GCA",
         "中文站点地图",

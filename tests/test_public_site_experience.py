@@ -79,6 +79,41 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('navLinks.replaceChildren()', script)
         self.assertIn('aria-current", "page"', script)
 
+    def test_primary_identity_pages_use_project_language_and_hide_review_workspaces(self):
+        english_pages = {
+            name: (SITE / name).read_text()
+            for name in (
+                "index.html",
+                "about.html",
+                "team.html",
+                "support.html",
+                "site-map.html",
+            )
+        }
+        chinese_pages = {
+            name: (SITE / name).read_text()
+            for name in ("zh-cn.html", "zh-support.html", "zh-site-map.html")
+        }
+
+        for name, page in english_pages.items():
+            self.assertNotRegex(page, re.compile(r"\bCompany\b|\bLeadership\b", re.IGNORECASE), name)
+        for name, page in chinese_pages.items():
+            self.assertNotIn("公司", page, name)
+
+        for name in ("about.html", "team.html", "start.html"):
+            page = (SITE / name).read_text()
+            for internal_path in (
+                "project-profile.html",
+                "trust.html",
+                "listing-kit.html",
+                "technical-report.html",
+            ):
+                self.assertNotIn(f'href="{internal_path}"', page, f"{name}: {internal_path}")
+
+        self.assertIn("Project resources", english_pages["about.html"])
+        self.assertIn("Project &amp; documents", english_pages["site-map.html"])
+        self.assertIn("项目与资料", chinese_pages["zh-site-map.html"])
+
     def test_homepages_publish_professional_identity_and_product_signals(self):
         english = (SITE / "index.html").read_text()
         chinese = (SITE / "zh-cn.html").read_text()
