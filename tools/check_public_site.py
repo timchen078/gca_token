@@ -7624,29 +7624,40 @@ def validate_radar_issue_004_page(text: str) -> None:
     assert_contains(text, "Issue 004 References", label)
     assert_no_public_data_room_terms(text, label)
     for expected in (
-        "Weekly Go China Radar Issue 004",
-        "Issue 004 / 2026-05-20 / Ready for review",
-        "Ready for operator review",
+        "Go China Research Corridor | GCA Radar 004",
+        "Issue 004 / 2026-05-20 / Archive",
+        "Go China Access: Research, Risk and Verification",
+        "Public archive",
         "Go China Access as a research corridor",
         "Risk-first quant utility",
         "Verification before interaction",
+        "Product Ideas Introduced",
         "Liquidation Replay",
         "Backtesting",
         "Risk Alerts",
         "ENTRY_READY Review",
         "Position Sizing",
-        "No third-party audit has been completed",
-        "Copy-Ready Post",
-        RADAR_ISSUE_004_PAGE_URL,
+        "Research Boundaries",
+        "do not replace an independent third-party audit",
         MAINNET_ADDRESS,
         BASE_USDT_ADDRESS,
         "GCA/USDT",
-        "not financial advice",
-        "not live market data",
+        "How To Read This Archive",
+        "Current Radar",
     ):
         assert_contains(text, expected, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
+    for forbidden in (
+        "Ready for review",
+        "Ready for operator review",
+        "Copy-Ready Post",
+        "Publishing Desk",
+        "Content Library",
+        "Campaign Calendar",
+        "operator review",
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_radar_issue_004_json(text: str) -> None:
@@ -7727,31 +7738,42 @@ def validate_radar_issue_005_page(text: str) -> None:
     assert_contains(text, "Issue 005 References", label)
     assert_no_public_data_room_terms(text, label)
     for expected in (
-        "Weekly Go China Radar Issue 005",
-        "Issue 005 / 2026-06-14 / Ready for review",
-        "Ready for review",
+        "Access Foundation | GCA Radar 005",
+        "Issue 005 / 2026-06-14 / Archive",
+        "Access Foundation: Accounts, Verification and Utility",
+        "Public archive",
         "Access Foundation",
         "Public account foundation",
         "Utility without custody",
-        "Reviewer evidence stays current",
+        "Verifiable token identity",
         "Email registration",
         "Read-only Base Mainnet GCA balance check",
         "100 credits",
         "GCA Member",
-        "Manual reserve-wallet transfer review",
-        "No third-party audit has been completed",
-        "Copy-Ready Post",
-        RADAR_ISSUE_005_PAGE_URL,
+        "Eligibility review before any reserve-wallet distribution",
+        "Operating Boundaries",
+        "Source verification does not replace an independent third-party audit",
         MAINNET_ADDRESS,
         BASE_USDT_ADDRESS,
         OFFICIAL_POOL_ADDRESS,
         "GCA/USDT",
-        "not live market data",
-        "not a buy or sell signal",
+        "How To Read This Archive",
+        "Open Member Access",
     ):
         assert_contains(text, expected, label)
     assert_current_pool_text(text, label)
     assert_no_forbidden_public_claims(text, label)
+    for forbidden in (
+        "Ready for review",
+        "Manual posting only",
+        "Copy-Ready Post",
+        "Review Queue",
+        "Release Gates",
+        "Daily Status",
+        "BaseScan Follow-Up",
+        "reviewer follow-up",
+    ):
+        assert_not_contains(text, forbidden, label)
 
 
 def validate_radar_issue_005_json(text: str) -> None:

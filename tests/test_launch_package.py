@@ -4329,13 +4329,14 @@ class LaunchPackageTests(unittest.TestCase):
         page = (ROOT / "site" / "radar-issue-004.html").read_text()
         radar = json.loads((ROOT / "site" / "radar-issue-004.json").read_text())
 
-        self.assertIn("Weekly Go China Radar Issue 004", page)
+        self.assertIn("Go China Research Corridor | GCA Radar 004", page)
         self.assertIn("Issue 004 References", page)
         self.assertNotIn("Platform-Only Evidence Path", page)
         self.assertNotIn("Data Room", page)
         self.assertNotIn('href="data.html"', page)
-        self.assertIn("Issue 004 / 2026-05-20 / Ready for review", page)
-        self.assertIn("Ready for operator review", page)
+        self.assertIn("Issue 004 / 2026-05-20 / Archive", page)
+        self.assertIn("Go China Access: Research, Risk and Verification", page)
+        self.assertIn("Public archive", page)
         self.assertIn("Go China Access as a research corridor", page)
         self.assertIn("Risk-first quant utility", page)
         self.assertIn("Verification before interaction", page)
@@ -4344,17 +4345,26 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Risk Alerts", page)
         self.assertIn("ENTRY_READY Review", page)
         self.assertIn("Position Sizing", page)
-        self.assertIn("No third-party audit has been completed", page)
-        self.assertIn("Copy-Ready Post", page)
-        self.assertIn(RADAR_ISSUE_004_PAGE_URL, page)
+        self.assertIn("Research Boundaries", page)
+        self.assertIn("do not replace an independent third-party audit", page)
         self.assertIn(MAINNET_ADDRESS, page)
         self.assertIn(BASE_USDT_ADDRESS, page)
         self.assertIn(OFFICIAL_POOL_ADDRESS, page)
         self.assertIn("GCA/USDT", page)
-        self.assertIn("not financial advice", page)
-        self.assertIn("not live market data", page)
+        self.assertIn("How To Read This Archive", page)
+        self.assertIn("Current Radar", page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
         self.assertNotIn("GCA/WETH", page)
+        for forbidden in (
+            "Ready for review",
+            "Ready for operator review",
+            "Copy-Ready Post",
+            "Publishing Desk",
+            "Content Library",
+            "Campaign Calendar",
+            "operator review",
+        ):
+            self.assertNotIn(forbidden, page)
 
         self.assertEqual(radar["schema"], RADAR_ISSUE_004_URL)
         self.assertEqual(radar["pageUrl"], RADAR_ISSUE_004_PAGE_URL)
@@ -4396,34 +4406,45 @@ class LaunchPackageTests(unittest.TestCase):
         page = (ROOT / "site" / "radar-issue-005.html").read_text()
         radar = json.loads((ROOT / "site" / "radar-issue-005.json").read_text())
 
-        self.assertIn("Weekly Go China Radar Issue 005", page)
+        self.assertIn("Access Foundation | GCA Radar 005", page)
         self.assertIn("Issue 005 References", page)
         self.assertNotIn("Platform-Only Evidence Path", page)
         self.assertNotIn("Data Room", page)
         self.assertNotIn("Raw JSON", page)
         self.assertNotIn('href="data.html"', page)
-        self.assertIn("Issue 005 / 2026-06-14 / Ready for review", page)
-        self.assertIn("Ready for review", page)
+        self.assertIn("Issue 005 / 2026-06-14 / Archive", page)
+        self.assertIn("Access Foundation: Accounts, Verification and Utility", page)
+        self.assertIn("Public archive", page)
         self.assertIn("Access Foundation", page)
         self.assertIn("Public account foundation", page)
         self.assertIn("Utility without custody", page)
-        self.assertIn("Reviewer evidence stays current", page)
+        self.assertIn("Verifiable token identity", page)
         self.assertIn("Email registration", page)
         self.assertIn("Read-only Base Mainnet GCA balance check", page)
         self.assertIn("100 credits", page)
         self.assertIn("GCA Member", page)
-        self.assertIn("Manual reserve-wallet transfer review", page)
-        self.assertIn("No third-party audit has been completed", page)
-        self.assertIn("Copy-Ready Post", page)
-        self.assertIn(RADAR_ISSUE_005_PAGE_URL, page)
+        self.assertIn("Eligibility review before any reserve-wallet distribution", page)
+        self.assertIn("Operating Boundaries", page)
+        self.assertIn("Source verification does not replace an independent third-party audit", page)
         self.assertIn(MAINNET_ADDRESS, page)
         self.assertIn(BASE_USDT_ADDRESS, page)
         self.assertIn(OFFICIAL_POOL_ADDRESS, page)
         self.assertIn("GCA/USDT", page)
-        self.assertIn("not live market data", page)
-        self.assertIn("not a buy or sell signal", page)
+        self.assertIn("How To Read This Archive", page)
+        self.assertIn("Open Member Access", page)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, page)
         self.assertNotIn("GCA/WETH", page)
+        for forbidden in (
+            "Ready for review",
+            "Manual posting only",
+            "Copy-Ready Post",
+            "Review Queue",
+            "Release Gates",
+            "Daily Status",
+            "BaseScan Follow-Up",
+            "reviewer follow-up",
+        ):
+            self.assertNotIn(forbidden, page)
 
         self.assertEqual(radar["schema"], RADAR_ISSUE_005_URL)
         self.assertEqual(radar["pageUrl"], RADAR_ISSUE_005_PAGE_URL)
