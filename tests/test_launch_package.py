@@ -801,7 +801,7 @@ class LaunchPackageTests(unittest.TestCase):
                 return "/" + relative.removesuffix("index.html")
             return "/" + relative
 
-        self.assertEqual(59, len(module.PUBLIC_INDEXABLE_PATHS))
+        self.assertEqual(60, len(module.PUBLIC_INDEXABLE_PATHS))
         for path in (ROOT / "site").rglob("*.html"):
             route = public_path(path)
             page = path.read_text()
@@ -1132,7 +1132,7 @@ class LaunchPackageTests(unittest.TestCase):
             for path in module.PUBLIC_INDEXABLE_PATHS
         }
         self.assertEqual(indexed_urls, expected_urls)
-        self.assertEqual(len(indexed_urls), 59)
+        self.assertEqual(len(indexed_urls), 60)
 
         for excluded in (
             DATA_PAGE_URL,

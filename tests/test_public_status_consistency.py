@@ -223,13 +223,27 @@ class PublicStatusConsistencyTests(unittest.TestCase):
         ):
             self.assertNotIn(marker, members)
 
-        for marker in ("当前规则", "受控流程", "会员账户入口"):
+        for marker in (
+            "一个账户，一条清晰的会员路径。",
+            "会员等级",
+            "100 GCA AI Quant Access credits",
+            "1,000,000 GCA · 30 天",
+            "只读验证，不接管钱包。",
+            "进入会员账户",
+        ):
             self.assertIn(marker, zh_members)
         for marker in (
             "未来 100 GCA AI Quant Access credits",
             "计划规则",
             "未来流程",
             "会员预登记",
+            "管理员 token",
+            "Workers + D1",
+            "审核队列",
+            "上线门槛",
+            "member-ledger.html",
+            "zh-member-checklist.html",
+            "zh-member-benefit-transfer.html",
         ):
             self.assertNotIn(marker, zh_members)
 
@@ -325,6 +339,7 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             "zh-support.html",
             "site-map.html",
             "zh-site-map.html",
+            "zh-members.html",
         ):
             url = f"https://gcagochina.com/{path}"
             self.assertEqual(sitemap.get(url), VISITOR_IDENTITY_LAST_UPDATED, url)
@@ -337,7 +352,6 @@ class PublicStatusConsistencyTests(unittest.TestCase):
         for path in (
             "access.html",
             "project.json",
-            "zh-members.html",
             "roadmap.html",
             "credits.html",
         ):
