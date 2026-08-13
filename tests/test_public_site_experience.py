@@ -92,7 +92,13 @@ class PublicSiteExperienceTests(unittest.TestCase):
         }
         chinese_pages = {
             name: (SITE / name).read_text()
-            for name in ("zh-cn.html", "zh-support.html", "zh-site-map.html")
+            for name in (
+                "zh-cn.html",
+                "zh-about.html",
+                "zh-team.html",
+                "zh-support.html",
+                "zh-site-map.html",
+            )
         }
 
         for name, page in english_pages.items():
@@ -113,6 +119,21 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("Project resources", english_pages["about.html"])
         self.assertIn("Project &amp; documents", english_pages["site-map.html"])
         self.assertIn("项目与资料", chinese_pages["zh-site-map.html"])
+        self.assertIn("官方参考入口", chinese_pages["zh-about.html"])
+        self.assertIn("事实始终连接到证据", chinese_pages["zh-team.html"])
+
+        language_pairs = (
+            ("about.html", "zh-about.html"),
+            ("team.html", "zh-team.html"),
+        )
+        for english_name, chinese_name in language_pairs:
+            english = (SITE / english_name).read_text()
+            chinese = (SITE / chinese_name).read_text()
+            english_url = f"https://gcagochina.com/{english_name}"
+            chinese_url = f"https://gcagochina.com/{chinese_name}"
+            for page in (english, chinese):
+                self.assertIn(f'rel="alternate" hreflang="en" href="{english_url}"', page)
+                self.assertIn(f'rel="alternate" hreflang="zh-CN" href="{chinese_url}"', page)
 
     def test_homepages_publish_professional_identity_and_product_signals(self):
         english = (SITE / "index.html").read_text()

@@ -58,7 +58,9 @@ PUBLIC_INDEXABLE_LASTMOD = {
     "/faq.html": "2026-05-11",
     "/zh-faq.html": "2026-08-10",
     "/about.html": "2026-08-13",
+    "/zh-about.html": "2026-08-13",
     "/team.html": "2026-08-13",
+    "/zh-team.html": "2026-08-13",
     "/whitepaper.html": "2026-08-10",
     "/brand-kit.html": "2026-05-13",
     "/reserve-statement.html": "2026-05-16",
@@ -98,11 +100,13 @@ UNSUBSCRIBE_PAGE_URL = "https://gcagochina.com/unsubscribe.html"
 BUY_PAGE_URL = "https://gcagochina.com/buy.html"
 STATUS_PAGE_URL = "https://gcagochina.com/status.html"
 ABOUT_PAGE_URL = "https://gcagochina.com/about.html"
+ZH_ABOUT_PAGE_URL = "https://gcagochina.com/zh-about.html"
 PROJECT_PROFILE_PAGE_URL = "https://gcagochina.com/project-profile.html"
 TOKENLIST_PAGE_URL = "https://gcagochina.com/tokenlist.html"
 ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
 ACTION_PLAN_JSON_URL = "https://gcagochina.com/action-plan.json"
 TEAM_PAGE_URL = "https://gcagochina.com/team.html"
+ZH_TEAM_PAGE_URL = "https://gcagochina.com/zh-team.html"
 DOMAIN_EMAIL_PAGE_URL = "https://gcagochina.com/domain-email.html"
 DOMAIN_EMAIL_URL = "https://gcagochina.com/domain-email.json"
 DOMAIN_EMAIL_EVIDENCE_PAGE_URL = "https://gcagochina.com/domain-email-evidence.html"
@@ -908,7 +912,8 @@ def validate_about_page(text: str) -> None:
         "About GCA",
         "Project Profile",
         "中文入口",
-        "zh-cn.html",
+        "zh-about.html",
+        '<link rel="alternate" hreflang="zh-CN" href="https://gcagochina.com/zh-about.html">',
         "Project Operations",
         "Published responsibilities",
         "GCA | Go China Access",
@@ -983,6 +988,8 @@ def validate_team_page(text: str) -> None:
         "support@gcagochina.com",
         "product.html",
         "verify.html",
+        "zh-team.html",
+        '<link rel="alternate" hreflang="zh-CN" href="https://gcagochina.com/zh-team.html">',
     ):
         assert_contains(text, expected, label)
     for forbidden in (
@@ -994,6 +1001,103 @@ def validate_team_page(text: str) -> None:
         "add LinkedIn",
         "company identity",
         "project-profile.html",
+    ):
+        assert_not_contains(text, forbidden, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_zh_about_page(text: str) -> None:
+    label = "/zh-about.html"
+    assert_social_preview_meta(text, label, ZH_ABOUT_PAGE_URL)
+    for expected in (
+        "关于 GCA",
+        "项目简介",
+        "Go China Access",
+        "连接研究、工具与公开验证。",
+        "三条相互连接的产品主线。",
+        "GCA AI Quant Access",
+        "官方身份",
+        "唯一且可核验的资产身份。",
+        "固定总量",
+        "关键信息清晰公开。",
+        "职责与公开边界均有明确说明。",
+        "官方参考入口。",
+        "zh-team.html",
+        "zh-product.html",
+        "zh-wallet-verify.html",
+        "zh-supply.html",
+        "zh-markets.html",
+        "zh-support.html",
+        "support@gcagochina.com",
+        X_URL,
+        TELEGRAM_URL,
+        MAINNET_ADDRESS,
+        BASE_USDT_ADDRESS,
+        OFFICIAL_POOL_ADDRESS,
+        "Base Mainnet",
+        "8453",
+        "GCA/USDT",
+        '<link rel="alternate" hreflang="en" href="https://gcagochina.com/about.html">',
+        '<link rel="alternate" hreflang="zh-CN" href="https://gcagochina.com/zh-about.html">',
+    ):
+        assert_contains(text, expected, label)
+    for forbidden in (
+        "Tim Chen",
+        "CEO",
+        "创始人",
+        "公司",
+        "正在建设",
+        "建设中",
+        "审核资料",
+        "内部审核",
+        "project-profile.html",
+        "listing-kit.html",
+        "technical-report.html",
+        'href="data.html"',
+    ):
+        assert_not_contains(text, forbidden, label)
+    assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
+
+
+def validate_zh_team_page(text: str) -> None:
+    label = "/zh-team.html"
+    assert_social_preview_meta(text, label, ZH_TEAM_PAGE_URL)
+    for expected in (
+        "GCA 运营职责",
+        "项目运营",
+        "查看职责",
+        "责任模型",
+        "按运营领域明确责任。",
+        "运营范围",
+        "项目各领域都有清晰职责。",
+        "公开责任",
+        "事实始终连接到证据。",
+        "官方渠道",
+        "zh-about.html",
+        "zh-product.html",
+        "zh-wallet-verify.html",
+        "zh-support.html",
+        "support@gcagochina.com",
+        X_URL,
+        TELEGRAM_URL,
+        '<link rel="alternate" hreflang="en" href="https://gcagochina.com/team.html">',
+        '<link rel="alternate" hreflang="zh-CN" href="https://gcagochina.com/zh-team.html">',
+    ):
+        assert_contains(text, expected, label)
+    for forbidden in (
+        "Tim Chen",
+        "CEO",
+        "创始人",
+        "公司",
+        "正在建设",
+        "建设中",
+        "审核资料",
+        "内部审核",
+        "BaseScan",
+        "Reviewer",
+        "project-profile.html",
+        'href="data.html"',
     ):
         assert_not_contains(text, forbidden, label)
     assert_no_forbidden_public_claims(text, label)
@@ -2566,7 +2670,8 @@ def validate_zh_cn_page(text: str) -> None:
         "zh-security.html",
         "zh-support.html",
         "register.html",
-        "about.html",
+        "zh-about.html",
+        "zh-team.html",
     ):
         assert_contains(text, expected, label)
     for forbidden in (
@@ -4468,9 +4573,8 @@ def validate_zh_site_map_page(text: str) -> None:
         "zh-faq.html",
         "zh-support.html",
         "onchain-proofs.html",
-        "about.html",
-        "team.html",
-        "team.html",
+        "zh-about.html",
+        "zh-team.html",
         "whitepaper.html",
         "brand-kit.html",
         X_URL,
@@ -17688,7 +17792,9 @@ CHECKS: list[EndpointCheck] = [
     ("/register.html", validate_register_page),
     ("/unsubscribe.html", validate_unsubscribe_page),
     ("/about.html", validate_about_page),
+    ("/zh-about.html", validate_zh_about_page),
     ("/team.html", validate_team_page),
+    ("/zh-team.html", validate_zh_team_page),
     ("/domain-email.html", validate_domain_email_page),
     ("/domain-email.json", validate_domain_email_json),
     ("/domain-email-evidence.html", validate_domain_email_evidence_page),

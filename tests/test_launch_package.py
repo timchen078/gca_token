@@ -606,7 +606,9 @@ class LaunchPackageTests(unittest.TestCase):
         module.validate_register_page((ROOT / "site" / "register.html").read_text())
         module.validate_unsubscribe_page((ROOT / "site" / "unsubscribe.html").read_text())
         module.validate_about_page((ROOT / "site" / "about.html").read_text())
+        module.validate_zh_about_page((ROOT / "site" / "zh-about.html").read_text())
         module.validate_team_page((ROOT / "site" / "team.html").read_text())
+        module.validate_zh_team_page((ROOT / "site" / "zh-team.html").read_text())
         module.validate_domain_email_page((ROOT / "site" / "domain-email.html").read_text())
         module.validate_domain_email_json((ROOT / "site" / "domain-email.json").read_text())
         module.validate_domain_email_evidence_page((ROOT / "site" / "domain-email-evidence.html").read_text())
@@ -798,7 +800,7 @@ class LaunchPackageTests(unittest.TestCase):
                 return "/" + relative.removesuffix("index.html")
             return "/" + relative
 
-        self.assertEqual(56, len(module.PUBLIC_INDEXABLE_PATHS))
+        self.assertEqual(58, len(module.PUBLIC_INDEXABLE_PATHS))
         for path in (ROOT / "site").rglob("*.html"):
             route = public_path(path)
             page = path.read_text()
@@ -1129,7 +1131,7 @@ class LaunchPackageTests(unittest.TestCase):
             for path in module.PUBLIC_INDEXABLE_PATHS
         }
         self.assertEqual(indexed_urls, expected_urls)
-        self.assertEqual(len(indexed_urls), 56)
+        self.assertEqual(len(indexed_urls), 58)
 
         for excluded in (
             DATA_PAGE_URL,
