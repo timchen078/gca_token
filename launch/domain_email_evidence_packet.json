@@ -2,7 +2,7 @@
   "baseScanSubmissionPolicy": {
     "includeDomainEmailData": "https://gcagochina.com/domain-email.json",
     "includeDomainEmailPlan": "https://gcagochina.com/domain-email.html",
-    "includeProfessionalProfile": "https://gcagochina.com/tim-chen.html",
+    "includeTeamResponsibilities": "https://gcagochina.com/team.html",
     "nextCleanSubmissionSender": "support@gcagochina.com"
   },
   "boundaries": {

@@ -93,7 +93,7 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
         self.assertEqual(packet["status"], "ready-for-owner-resubmission")
         self.assertEqual(packet["missingOrBlockedRequirements"], [])
         self.assertEqual(packet["baseScanSubmissionPolicy"]["nextCleanSubmissionSender"], "support@gcagochina.com")
-        self.assertIn("https://gcagochina.com/tim-chen.html", packet["baseScanSubmissionPolicy"]["includeProfessionalProfile"])
+        self.assertIn("https://gcagochina.com/team.html", packet["baseScanSubmissionPolicy"]["includeTeamResponsibilities"])
 
     def test_markdown_packet_is_copyable_and_keeps_boundaries(self):
         packet = build_packet(

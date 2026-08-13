@@ -58,7 +58,7 @@ REQUIRED_URL_FIELDS = (
     "verifyUrl",
     "statusPageUrl",
     "teamPageUrl",
-    "timChenProfessionalProfileUrl",
+    "teamResponsibilitiesUrl",
     "domainEmailSetupPlanUrl",
     "domainEmailSetupPlanDataUrl",
     "baseScanRemediationPageUrl",
@@ -204,10 +204,10 @@ def validate_values(values: dict[str, Any]) -> list[dict[str, Any]]:
             values.get("officialEmail"),
         ),
         status_entry(
-            "tim-chen-profile",
-            str(values.get("timChenProfessionalProfileUrl", "")).strip() == "https://gcagochina.com/tim-chen.html",
-            "Tim Chen professional profile must be included.",
-            values.get("timChenProfessionalProfileUrl"),
+            "team-profile",
+            str(values.get("teamResponsibilitiesUrl", "")).strip() == "https://gcagochina.com/team.html",
+            "GCA team responsibilities must be included.",
+            values.get("teamResponsibilitiesUrl"),
         ),
         status_entry(
             "domain-email-plan",

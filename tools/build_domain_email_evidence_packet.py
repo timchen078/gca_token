@@ -345,7 +345,7 @@ def build_packet(
         ),
         "baseScanSubmissionPolicy": {
             "nextCleanSubmissionSender": target_email,
-            "includeProfessionalProfile": "https://gcagochina.com/tim-chen.html",
+            "includeTeamResponsibilities": "https://gcagochina.com/team.html",
             "includeDomainEmailPlan": "https://gcagochina.com/domain-email.html",
             "includeDomainEmailData": "https://gcagochina.com/domain-email.json",
         },

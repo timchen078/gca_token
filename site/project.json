@@ -264,17 +264,17 @@
         "checkCommand": "python3 tools/check_site_links.py --site-root site --base-url https://gcagochina.com/ --check-live --timeout 20 && python3 tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20"
       },
       {
-        "id": "founder-team-transparency",
-        "returnReason": "project does not provide transparent founder and team information with public professional profiles",
+        "id": "team-responsibility-transparency",
+        "returnReason": "project does not provide transparent team responsibility information with public team responsibility pages",
         "status": "implemented-official-domain-equivalent",
         "evidencePages": [
-          "https://gcagochina.com/team.html#tim-chen",
-          "https://gcagochina.com/tim-chen.html",
-          "https://github.com/timchen078/gca_token",
+          "https://gcagochina.com/team.html",
+          "https://gcagochina.com/team.html",
+          "https://gcagochina.com/project-profile.html",
           "https://x.com/GCAAIGoChina",
           "https://t.me/gcagochinaofficial"
         ],
-        "note": "Add LinkedIn later only if BaseScan specifically requires third-party social-network evidence."
+        "note": "If BaseScan requests external organization evidence, publish an official organization profile on a recognized business network."
       },
       {
         "id": "domain-email-match",
@@ -348,7 +348,7 @@
     "baseScanOwnership": "verified",
     "baseScanTokenProfile": "ready-for-owner-resubmission",
     "baseScanTokenProfileLastCheckedDate": "2026-08-12",
-    "baseScanTokenProfileLastCheckedResult": "Read-only public BaseScan check on 2026-08-12: Token Rep remains Unknown; official gcagochina.com metadata and a custom preview image are not published; contract source verification remains visible. The prior 2026-05-23 information-insufficient return remains unresolved. Tim Chen official-domain professional profile evidence is published, support@gcagochina.com is active, and the domain email setup plan, public evidence checklist, activation evidence packet, expanded BaseScan reply template, BaseScan Handoff copy blocks, and Chinese owner flow are published. The 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present and readyForBaseScanEmailEvidence is true. The final owner submission package was regenerated on 2026-08-11T18:56:43Z and the daily public status snapshot was refreshed on 2026-08-12T06:37:31Z.",
+    "baseScanTokenProfileLastCheckedResult": "Read-only public BaseScan check on 2026-08-12: Token Rep remains Unknown; official gcagochina.com metadata and a custom preview image are not published; contract source verification remains visible. The prior 2026-05-23 information-insufficient return remains unresolved. GCA team responsibility evidence is published, support@gcagochina.com is active, and the domain email setup plan, public evidence checklist, activation evidence packet, expanded BaseScan reply template, BaseScan Handoff copy blocks, and Chinese owner flow are published. The 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present and readyForBaseScanEmailEvidence is true. The final owner submission package was regenerated on 2026-08-11T18:56:43Z and the daily public status snapshot was refreshed on 2026-08-12T06:37:31Z.",
     "baseScanFinalSubmissionPackageGeneratedAt": "2026-08-11T18:56:43Z",
     "dailyStatusPage": "https://gcagochina.com/daily-status.html",
     "dailyStatus": "https://gcagochina.com/daily-status.json",
@@ -363,7 +363,7 @@
     "domainEmailEvidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
     "domainEmailEvidenceChecklistData": "https://gcagochina.com/domain-email-evidence.json",
     "teamPage": "https://gcagochina.com/team.html",
-    "timChenProfessionalProfile": "https://gcagochina.com/tim-chen.html",
+    "teamResponsibilities": "https://gcagochina.com/team.html",
     "geckoTerminalTokenInfo": "approved-2026-05-11",
     "narrativeSystem": "public-narrative-system-published",
     "weeklyGoChinaRadar": "weekly-go-china-radar-issue-006-published",
@@ -614,7 +614,7 @@
     "dailyStatusGeneratedAt": "2026-08-12T06:37:31Z",
     "baseScanChineseOwnerFlow": "https://gcagochina.com/zh-basescan-submit.html",
     "teamPage": "https://gcagochina.com/team.html",
-    "timChenProfessionalProfile": "https://gcagochina.com/tim-chen.html",
+    "teamResponsibilities": "https://gcagochina.com/team.html",
     "blockaidMetaMask": "owner-observed-no-warning-visible",
     "geckoTerminal": "approved-2026-05-11",
     "coinGeckoTrackedListing": "deferred",

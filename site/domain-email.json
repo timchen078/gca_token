@@ -20,7 +20,7 @@
       "MX, SPF, DKIM, and DMARC DNS checks pass for gcagochina.com",
       "public website pages show the same domain email used in the BaseScan request",
       "tools/check_domain_email_public_switch.py --json --require-switched passes",
-      "BaseScan resubmission includes https://gcagochina.com/tim-chen.html"
+      "BaseScan resubmission includes https://gcagochina.com/team.html"
     ]
   },
   "liveDnsSnapshot": {
@@ -386,7 +386,7 @@
       "owner is logged into BaseScan with the correct account",
       "private evidence files remain available if BaseScan asks for proof"
     ],
-    "ifBaseScanAsksBeforeActivation": "Activation is complete. Reply from support@gcagochina.com and link the public domain-email readiness page plus Tim Chen professional profile."
+    "ifBaseScanAsksBeforeActivation": "Activation is complete. Reply from support@gcagochina.com and link the public domain-email readiness page plus GCA team responsibilities."
   },
   "filesToUpdateAfterActivation": [
     "site/support.html",

@@ -267,7 +267,7 @@ Do not submit another clean BaseScan token update until all of these are true:
 - `support@gcagochina.com` sends authenticated external mail.
 - MX, SPF, DMARC, and DKIM checks pass through `tools/check_domain_email_dns.py`.
 - The public website shows the same domain email as the BaseScan sender/contact email.
-- Tim Chen professional profile remains published at `https://gcagochina.com/tim-chen.html`.
+- GCA team responsibilities remain published at `https://gcagochina.com/team.html`.
 - BaseScan remediation links and official market links still load.
 
 ## Failure Handling

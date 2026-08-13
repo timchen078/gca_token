@@ -29,12 +29,12 @@ READY_VALUES = {
     "verifyUrl": "https://gcagochina.com/verify.html",
     "statusPageUrl": "https://gcagochina.com/status.html",
     "teamPageUrl": "https://gcagochina.com/team.html",
-    "timChenProfessionalProfileUrl": "https://gcagochina.com/tim-chen.html",
+    "teamResponsibilitiesUrl": "https://gcagochina.com/team.html",
     "domainEmailSetupPlanUrl": "https://gcagochina.com/domain-email.html",
     "domainEmailSetupPlanDataUrl": "https://gcagochina.com/domain-email.json",
     "baseScanRemediationPageUrl": "https://gcagochina.com/basescan-remediation.html",
     "baseScanRemediationUrl": "https://gcagochina.com/basescan-remediation.json",
-    "githubRepoUrl": "https://github.com/timchen078/gca_token",
+    "projectProfileSourceUrl": "https://gcagochina.com/project-profile.html",
     "listingKitUrl": "https://gcagochina.com/listing-kit.html",
     "brandKitPageUrl": "https://gcagochina.com/brand-kit.html",
     "brandKitUrl": "https://gcagochina.com/brand-kit.json",
@@ -147,7 +147,7 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
 
         self.assertTrue(package["readyForOwnerSubmission"])
         self.assertEqual(package["formFields"]["basicInformation"]["projectEmailAddress"], "support@gcagochina.com")
-        self.assertEqual(package["formFields"]["socialProfiles"]["timChenProfessionalProfile"], "https://gcagochina.com/tim-chen.html")
+        self.assertEqual(package["formFields"]["socialProfiles"]["teamResponsibilities"], "https://gcagochina.com/team.html")
         self.assertEqual(package["formFields"]["priceData"]["officialMarketRoute"], "GCA/USDT")
         self.assertEqual(package["formFields"]["saleDetails"]["publicSale"], "Not applicable. No ICO/IEO or public token sale has been conducted.")
         self.assertIn("Please review the updated GCA token profile metadata", package["copyPasteBlocks"]["baseScanReviewerComment"])
@@ -163,7 +163,7 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertIn("Public account intake and eligibility submission are live", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("No automatic token claim", package["copyPasteBlocks"]["baseScanReviewerComment"])
         self.assertIn("not claiming BaseScan token profile approval", package["copyPasteBlocks"]["baseScanReviewerComment"])
-        self.assertIn("Tim Chen professional profile", package["copyPasteBlocks"]["evidenceLinksPlainText"])
+        self.assertIn("GCA team responsibilities", package["copyPasteBlocks"]["evidenceLinksPlainText"])
         self.assertIn("Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle", package["copyPasteBlocks"]["evidenceLinksPlainText"])
         self.assertIn("Review queue contract: https://gcagochina.com/review-queue.html", package["copyPasteBlocks"]["evidenceLinksPlainText"])
         self.assertIn("GCA/USDT", package["copyPasteBlocks"]["marketAndSupplyPlainText"])
@@ -206,7 +206,7 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertIn("Files publishing forbidden legacy email: `0`", markdown)
         self.assertIn("redacted-non-domain-legacy-inbox", markdown)
         self.assertNotIn("cxy070800@gmail.com", markdown)
-        self.assertIn("Return reason: founder and team transparency", markdown)
+        self.assertIn("Return reason: team responsibility transparency", markdown)
         self.assertIn("Copy/Paste Reviewer Comment", markdown)
         self.assertIn("Copy/Paste Basic Information", markdown)
         self.assertIn("Copy/Paste Access And Claim Boundary", markdown)

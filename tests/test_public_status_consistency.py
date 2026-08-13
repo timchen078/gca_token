@@ -156,8 +156,6 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             "site/narrative.json",
             "site/listing-kit.html",
             "site/team.html",
-            "site/tim-chen.html",
-            "site/tim-chen.json",
             "site/whitepaper.html",
             "docs/whitepaper.md",
             "docs/mainnet_public_profile.md",
@@ -284,7 +282,6 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             "credits.json",
             "utility.json",
             "narrative.json",
-            "tim-chen.json",
         )
         for path in json_paths:
             payload = json.loads((SITE / path).read_text())
@@ -313,7 +310,7 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             url = f"https://gcagochina.com/{path}"
             self.assertEqual(sitemap.get(url), LAST_UPDATED, url)
 
-        for path in ("product.html", "support.html", "team.html", "tim-chen.html"):
+        for path in ("product.html", "support.html", "team.html"):
             url = f"https://gcagochina.com/{path}"
             self.assertEqual(sitemap.get(url), CORE_PAGE_LAST_UPDATED, url)
 
@@ -326,7 +323,6 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             "access.html",
             "project.json",
             "zh-members.html",
-            "tim-chen.json",
             "roadmap.html",
             "credits.html",
         ):

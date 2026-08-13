@@ -19,7 +19,7 @@ Do not describe the BaseScan token profile as complete, published, or accepted u
 
 ## Why It Was Returned
 
-BaseScan replied that it could not process the token update request because the submitted information about the token/project was insufficient. A cleaner resubmission was sent on 2026-05-13, but BaseScan returned the update again on 2026-05-23. Tim Chen official-domain professional profile evidence is now published, the project-domain email evidence gate is ready, the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, readyForBaseScanEmailEvidence is true, the BaseScan Handoff copy blocks are current, and the 2026-06-15 daily public status snapshot confirms readyForBaseScanResubmission is true.
+BaseScan replied that it could not process the token update request because the submitted information about the token/project was insufficient. A cleaner resubmission was sent on 2026-05-13, but BaseScan returned the update again on 2026-05-23. GCA team responsibility evidence is now published, the project-domain email evidence gate is ready, the 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present, readyForBaseScanEmailEvidence is true, the BaseScan Handoff copy blocks are current, and the 2026-06-15 daily public status snapshot confirms readyForBaseScanResubmission is true.
 
 ## Waiting Checklist
 
@@ -28,9 +28,9 @@ BaseScan replied that it could not process the token update request because the 
 - Review the current DNS snapshot at `https://gcagochina.com/domain-email.html#snapshotTitle`: MX/SPF/DKIM/DMARC present as of 2026-05-30
 - Run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json` and confirm `readyForBaseScanEmailEvidence` is true
 - Archive the domain email activation evidence packet: provider active screenshot, DNS proof, inbound test, outbound test, and updated support-page screenshot
-- Tim Chen professional profile remains live: `https://gcagochina.com/tim-chen.html`
-- Tim Chen profile data remains live: `https://gcagochina.com/tim-chen.json`
-- Team founder anchor remains live: `https://gcagochina.com/team.html#tim-chen`
+- GCA team responsibilities remain live: `https://gcagochina.com/team.html`
+- GCA team responsibilities data remains live: `https://gcagochina.com/project.json`
+- Public team page remains live: `https://gcagochina.com/team.html`
 - Domain email setup plan remains live: `https://gcagochina.com/domain-email.html`
 - Domain email setup JSON remains live: `https://gcagochina.com/domain-email.json`
 - Domain email DNS worksheet remains live: `https://gcagochina.com/domain-email.html#worksheetTitle`
@@ -42,10 +42,10 @@ BaseScan replied that it could not process the token update request because the 
 - English BaseScan no-reply follow-up JSON remains live: `https://gcagochina.com/basescan-followup.json`
 - Daily public status remains live: `https://gcagochina.com/daily-status.html`
 - Daily public status JSON remains live: `https://gcagochina.com/daily-status.json`
-- Add LinkedIn later only if BaseScan specifically requires a third-party social-network profile
+- If BaseScan requests external organization evidence, publish an official organization profile on a recognized business network
 - Public team profile remains live: `https://gcagochina.com/team.html`
 - BaseScan remediation page remains live: `https://gcagochina.com/basescan-remediation.html`
-- Public GitHub repository remains live: `https://github.com/timchen078/gca_token`
+- Project profile remains live: `https://gcagochina.com/project-profile.html`
 - Official inbox and spam folder for `support@gcagochina.com`
 - Redacted non-domain legacy inbox and spam folder only if BaseScan replies to an old thread
 - BaseScan account notifications
@@ -99,11 +99,11 @@ Official project email: support@gcagochina.com
 BaseScan Handoff: https://gcagochina.com/basescan-handoff.html
 English BaseScan follow-up: https://gcagochina.com/basescan-followup.html
 Project profile reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle
-Tim Chen professional profile: https://gcagochina.com/tim-chen.html
+GCA team responsibilities: https://gcagochina.com/team.html
 Domain email evidence: https://gcagochina.com/domain-email-evidence.html
 Daily public status: https://gcagochina.com/daily-status.html
 
-The current public materials address the prior information-insufficient return reasons: official HTTPS website, project-domain email, founder/team profile, whitepaper, brand kit, support page, domain email evidence, GitHub repository, Telegram, X, official GCA/USDT market route, and clear public claim boundaries.
+The current public materials address the prior information-insufficient return reasons: official HTTPS website, project-domain email, team responsibility profile, whitepaper, brand kit, support page, domain email evidence, project profile, Telegram, X, official GCA/USDT market route, and clear public claim boundaries.
 
 The latest daily public status snapshot was refreshed at 2026-08-12T06:37:31Z and reports readyForBaseScanResubmission as true. Could you please confirm whether the request is still in the review queue, or whether any additional field correction or owner-wallet signature is required?
 
@@ -130,7 +130,7 @@ Thank you.
 
 Use this until approval:
 
-`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. Tim Chen public professional profile evidence is now published at https://gcagochina.com/tim-chen.html with team, GitHub, X, Telegram, and structured profile-data links for reviewer due diligence; the latest 2026-05-30 DNS snapshot at https://gcagochina.com/domain-email.html#snapshotTitle shows MX/SPF/DKIM/DMARC present, so readyForBaseScanEmailEvidence is true; the BaseScan Handoff was generated at 2026-08-11T18:56:43Z, and the live daily public status snapshot was refreshed at 2026-08-12T06:37:31Z. The owner may send one concise status-check follow-up from support@gcagochina.com if the request is already submitted, and should avoid duplicate token-profile submissions while BaseScan reviews it.`
+`BaseScan source verification and deployer-wallet ownership verification are complete. The public BaseScan token profile update was returned again as information-insufficient on 2026-05-23. The profile is not approved or published. GCA team responsibility evidence is now published at https://gcagochina.com/team.html with official X, Telegram, project-profile, and structured project-data links for reviewer due diligence; the latest 2026-05-30 DNS snapshot at https://gcagochina.com/domain-email.html#snapshotTitle shows MX/SPF/DKIM/DMARC present, so readyForBaseScanEmailEvidence is true; the BaseScan Handoff was generated at 2026-08-11T18:56:43Z, and the live daily public status snapshot was refreshed at 2026-08-12T06:37:31Z. The owner may send one concise status-check follow-up from support@gcagochina.com if the request is already submitted, and should avoid duplicate token-profile submissions while BaseScan reviews it.`
 
 Public follow-up pack: `https://gcagochina.com/basescan-followup.html`
 
@@ -166,8 +166,8 @@ Official logo: https://gcagochina.com/assets/gca-logo.svg
 Brand kit: https://gcagochina.com/brand-kit.html
 Whitepaper: https://gcagochina.com/whitepaper.html
 External review status: https://gcagochina.com/external-reviews.html
-Tim Chen professional profile: https://gcagochina.com/tim-chen.html
-Tim Chen profile data: https://gcagochina.com/tim-chen.json
+GCA team responsibilities: https://gcagochina.com/team.html
+GCA team responsibilities data: https://gcagochina.com/project.json
 BaseScan Handoff: https://gcagochina.com/basescan-handoff.html
 Daily public status: https://gcagochina.com/daily-status.html
 Domain email setup plan: https://gcagochina.com/domain-email.html

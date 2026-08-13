@@ -13,12 +13,12 @@
 - Return reason: sender email did not match the official project domain
   Response: Switched the official project contact to the active domain mailbox support@gcagochina.com.
   Evidence: support@gcagochina.com | https://gcagochina.com/domain-email.html
-- Return reason: founder and team transparency needed more public evidence
-  Response: Published the team page and Tim Chen official-domain professional profile for reviewer use.
-  Evidence: https://gcagochina.com/team.html | https://gcagochina.com/tim-chen.html
+- Return reason: team responsibility transparency needed more public evidence
+  Response: Published GCA operating roles and responsibilities with official project channels and evidence links.
+  Evidence: https://gcagochina.com/team.html
 - Return reason: logo, links, metadata, or contract evidence needed a cleaner route
-  Response: Published the brand kit, remediation tracker, GitHub repository, and market/supply evidence links in one package.
-  Evidence: https://gcagochina.com/brand-kit.html | https://gcagochina.com/basescan-remediation.html | https://github.com/timchen078/gca_token
+  Response: Published the brand kit, remediation tracker, project profile, and market/supply evidence links in one package.
+  Evidence: https://gcagochina.com/brand-kit.html | https://gcagochina.com/basescan-remediation.html | https://gcagochina.com/project-profile.html
 
 ## Public Email Guard
 
@@ -34,11 +34,11 @@
 
 - Status: `aligned`
 - Aligned: `true`
-- Files checked: `35`
+- Files checked: `34`
 - Files requiring updates: `0`
 - Missing target files: `0`
 - Files missing canonical reference: `0`
-- Canonical reference: `{"baseScanProfileCheckedAt": "2026-08-11T17:22:15Z", "baseScanProfileCheckedDate": "2026-08-11", "dailyStatusDate": "2026-08-11", "dailyStatusGeneratedAt": "2026-08-11T17:22:15Z"}`
+- Canonical reference: `{"baseScanProfileCheckedAt": "2026-08-12T06:37:31Z", "baseScanProfileCheckedDate": "2026-08-12", "dailyStatusDate": "2026-08-12", "dailyStatusGeneratedAt": "2026-08-12T06:37:31Z"}`
 - Boundary: This is a read-only repository consistency guard. It does not submit BaseScan requests, send email, sign messages, or touch wallets/contracts.
 
 ## Copy/Paste Reviewer Comment
@@ -51,7 +51,7 @@ Please review the updated GCA token profile metadata for Base Mainnet / chainId 
 This resubmission directly addresses the prior information-insufficient return reasons:
 - Official website and support path: https://gcagochina.com/ and https://gcagochina.com/support.html
 - Official project-domain email: support@gcagochina.com
-- Founder/team transparency: https://gcagochina.com/team.html and https://gcagochina.com/tim-chen.html
+- Team responsibility transparency: https://gcagochina.com/team.html
 - Project documentation and status: https://gcagochina.com/whitepaper.html and https://gcagochina.com/external-reviews.html
 - Consolidated project profile and return-reason map: https://gcagochina.com/project-profile.html#basescanMapTitle
 - Logo, brand, and metadata evidence: https://gcagochina.com/brand-kit.html
@@ -62,12 +62,12 @@ This resubmission directly addresses the prior information-insufficient return r
 Contract: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 Official website: https://gcagochina.com/
 Official project email: support@gcagochina.com
-Founder/team transparency: https://gcagochina.com/team.html and https://gcagochina.com/tim-chen.html
+Team responsibility transparency: https://gcagochina.com/team.html
 Whitepaper: https://gcagochina.com/whitepaper.html
 Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle
 Public remediation tracker: https://gcagochina.com/basescan-remediation.html
 Domain email evidence plan: https://gcagochina.com/domain-email.html
-Source repository: https://github.com/timchen078/gca_token
+Project profile: https://gcagochina.com/project-profile.html
 Official market route: GCA/USDT on Uniswap v4
 Pool: 0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0
 Access boundary: Public account intake and eligibility submission are live, but 100 GCA AI Quant Access credits are account-level service records, not cash or transferable tokens. GCA Member review requires 1,000,000 GCA plus 30 consecutive days of holding evidence, and any 10,000 GCA member benefit remains manual reserve-wallet processing after support approval.
@@ -99,8 +99,7 @@ Total Supply: 1000000000
 ## Copy/Paste Evidence Links
 
 ```text
-Team page: https://gcagochina.com/team.html
-Tim Chen professional profile: https://gcagochina.com/tim-chen.html
+GCA team responsibilities: https://gcagochina.com/team.html
 Whitepaper: https://gcagochina.com/whitepaper.html
 Support: https://gcagochina.com/support.html
 Brand Kit: https://gcagochina.com/brand-kit.html
@@ -109,7 +108,7 @@ External review status: https://gcagochina.com/external-reviews.html
 Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle
 Domain email evidence plan: https://gcagochina.com/domain-email.html
 BaseScan remediation tracker: https://gcagochina.com/basescan-remediation.html
-GitHub source repository: https://github.com/timchen078/gca_token
+Project profile: https://gcagochina.com/project-profile.html
 Telegram: https://t.me/gcagochinaofficial
 X: https://x.com/GCAAIGoChina
 Access portal: https://gcagochina.com/access.html
@@ -159,9 +158,8 @@ Not automatic: No automatic token claim, no self-service member-benefit transfer
 
 - Telegram: `https://t.me/gcagochinaofficial`
 - X: `https://x.com/GCAAIGoChina`
-- GitHub: `https://github.com/timchen078/gca_token`
-- Team: `https://gcagochina.com/team.html`
-- Tim Chen professional profile: `https://gcagochina.com/tim-chen.html`
+- Project profile: `https://gcagochina.com/project-profile.html`
+- GCA team responsibilities: `https://gcagochina.com/team.html`
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
 - Support: `https://gcagochina.com/support.html`
 - Brand Kit: `https://gcagochina.com/brand-kit.html`

@@ -23,7 +23,7 @@ This plan documents the intended public allocation and the executed owner-reserv
 
 ## Owner-Held Reserve
 
-The `600,000,000 GCA` reserve is held by the owner/founder in a separate publicly disclosed wallet. It should not be described as circulating while held as a reserve.
+The `600,000,000 GCA` reserve is held in a separate publicly disclosed, owner-controlled wallet. It should not be described as circulating while held as a reserve.
 
 Reserve custody:
 

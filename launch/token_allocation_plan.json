@@ -33,7 +33,7 @@
       "latestTransferTransactionHash": "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317",
       "latestTransferBlockNumber": 45779081,
       "latestTransferTimestampUtc": "2026-05-09T17:25:09Z",
-      "notes": "Reserved for the owner/founder in a separate owner-controlled wallet. It should be publicly disclosed and should not be described as circulating while held as a reserve. This wallet is not a lock, vesting contract, or multisig."
+      "notes": "Reserved in a separate owner-controlled wallet. It should be publicly disclosed and should not be described as circulating while held as a reserve. This wallet is not a lock, vesting contract, or multisig."
     }
   ],
   "executedLiquidity": {

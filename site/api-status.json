@@ -770,7 +770,7 @@
     "unsubscribePage": "https://gcagochina.com/unsubscribe.html",
     "accessApiPage": "https://gcagochina.com/access-api.html",
     "dataRoom": "https://gcagochina.com/data.html",
-    "githubWorkflow": "https://github.com/timchen078/gca_token/actions/workflows/check-gca-registration-api.yml",
+    "githubWorkflow": "https://gcagochina.com/api-status.html",
     "memberAccessPage": "https://gcagochina.com/gca/member-access/",
     "workerRoutesHandoffPage": "https://gcagochina.com/worker-routes-handoff.html",
     "workerRoutesHandoff": "https://gcagochina.com/worker-routes-handoff.json"

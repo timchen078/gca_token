@@ -30,8 +30,8 @@ Use this file as the single operating checklist for external review, wallet-warn
 - Public external review status page: `https://gcagochina.com/external-reviews.html`
 - Public external review status JSON: `https://gcagochina.com/external-reviews.json`
 - Public team profile: `https://gcagochina.com/team.html`
-- Tim Chen professional profile: `https://gcagochina.com/tim-chen.html`
-- Tim Chen professional profile JSON: `https://gcagochina.com/tim-chen.json`
+- GCA team responsibilities: `https://gcagochina.com/team.html`
+- GCA team responsibilities JSON: `https://gcagochina.com/project.json`
 - Domain email setup plan: `https://gcagochina.com/domain-email.html`
 - Domain email setup JSON: `https://gcagochina.com/domain-email.json`
 - Domain email DNS worksheet: `https://gcagochina.com/domain-email.html#worksheetTitle`
@@ -44,7 +44,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 - BaseScan Handoff copy blocks: `https://gcagochina.com/basescan-handoff.html`
 - BaseScan Handoff JSON: `https://gcagochina.com/basescan-handoff.json`
 - Chinese BaseScan owner submission flow: `https://gcagochina.com/zh-basescan-submit.html`
-- Public GitHub repository: `https://github.com/timchen078/gca_token`
+- Project profile: `https://gcagochina.com/project-profile.html`
 - Market quality page: `https://gcagochina.com/market-quality.html`
 - Market quality JSON: `https://gcagochina.com/market-quality.json`
 - Listing readiness page: `https://gcagochina.com/listing-readiness.html`
@@ -58,7 +58,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 
 | Platform | Current status | Contact / inbox | Next action |
 | --- | --- | --- | --- |
-| BaseScan token profile | Submitted on 2026-05-09, returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23 | Current: `support@gcagochina.com`; historical old thread: redacted non-domain legacy inbox | Use `https://gcagochina.com/zh-basescan-submit.html`, `https://gcagochina.com/basescan-handoff.html`, and `https://gcagochina.com/project-profile.html#basescanMapTitle`; include the Tim Chen professional profile URL, rerun checks, then submit one clean update through the official BaseScan form from `support@gcagochina.com`. |
+| BaseScan token profile | Submitted on 2026-05-09, returned as information-insufficient on 2026-05-13, resubmitted on 2026-05-13, and returned again as information-insufficient on 2026-05-23 | Current: `support@gcagochina.com`; historical old thread: redacted non-domain legacy inbox | Use `https://gcagochina.com/zh-basescan-submit.html`, `https://gcagochina.com/basescan-handoff.html`, and `https://gcagochina.com/project-profile.html#basescanMapTitle`; include the GCA team responsibilities URL, rerun checks, then submit one clean update through the official BaseScan form from `support@gcagochina.com`. |
 | Blockaid / MetaMask warning | False-positive report submitted on 2026-05-10; follow-up submitted on 2026-05-13; owner observed no wallet risk warning visible on 2026-05-14 | Owner browser / wallet UI / `support@gcagochina.com` | Keep monitoring wallet and Uniswap warning UI. Do not submit another duplicate unless Blockaid, MetaMask, or Uniswap asks for more information. |
 | GeckoTerminal | Token information update approved on 2026-05-11 | `support@gcagochina.com` | No duplicate update unless official details change or GeckoTerminal asks for a correction. |
 | DEX Screener | Discoverable through the live GCA/USDT pool | Not submitted as a direct paid metadata update | Keep the GCA/USDT pool, website, token list, and GeckoTerminal data consistent. |
@@ -74,7 +74,7 @@ Use this file as the single operating checklist for external review, wallet-warn
 4. Run `python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json` and confirm `readyForBaseScanEmailEvidence` is true.
 5. archive the activation evidence packet: provider active screenshot, DNS proof, inbound test, outbound test, and updated support-page screenshot.
 6. Keep that domain email published on support, about, and team pages before resubmission.
-7. Include the published Tim Chen professional profile `https://gcagochina.com/tim-chen.html` and the Project Profile BaseScan reviewer map `https://gcagochina.com/project-profile.html#basescanMapTitle`; add LinkedIn later only if BaseScan specifically requires a third-party social-network profile.
+7. Include the published GCA team responsibilities `https://gcagochina.com/team.html` and the Project Profile BaseScan reviewer map `https://gcagochina.com/project-profile.html#basescanMapTitle`; if BaseScan requests external organization evidence, publish an official organization profile on a recognized business network.
 8. Open the Chinese owner checklist at `https://gcagochina.com/zh-basescan-submit.html`.
 9. Copy form values from `https://gcagochina.com/basescan-handoff.html`; do not use old WETH links, old project emails, or raw JSON pages as the user-facing submission source.
 10. Check the redacted non-domain legacy inbox and spam only for old thread replies, and check `support@gcagochina.com` for the current official-domain submission.
@@ -128,7 +128,7 @@ Official website: https://gcagochina.com/
 Official verify page: https://gcagochina.com/verify.html
 Official market page: https://gcagochina.com/markets.html
 Team profile: https://gcagochina.com/team.html
-Tim Chen professional profile: https://gcagochina.com/tim-chen.html
+GCA team responsibilities: https://gcagochina.com/team.html
 Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle
 Domain email setup plan: https://gcagochina.com/domain-email.html
 Domain email setup data: https://gcagochina.com/domain-email.json
@@ -140,7 +140,7 @@ Domain email activation evidence packet: https://gcagochina.com/domain-email.htm
 BaseScan Handoff copy blocks: https://gcagochina.com/basescan-handoff.html
 Chinese owner submission flow: https://gcagochina.com/zh-basescan-submit.html
 BaseScan remediation: https://gcagochina.com/basescan-remediation.html
-Public GitHub repository: https://github.com/timchen078/gca_token
+Project profile: https://gcagochina.com/project-profile.html
 Official logo: https://gcagochina.com/assets/gca-logo.svg
 Brand kit: https://gcagochina.com/brand-kit.html
 Whitepaper: https://gcagochina.com/whitepaper.html

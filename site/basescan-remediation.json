@@ -11,7 +11,7 @@
   "baseScanReturnNotice": {
     "ownerProvidedNoticeDate": "2026-05-23",
     "from": "Team BaseScan.org [Aiman Hakimi]",
-    "summary": "BaseScan was unable to update the public token page due to insufficient or inconsistent information. The notice listed common blockers: website accessibility or safety, unclear token/project information, placeholders, broken links, insufficient founder/team transparency with public professional profiles, and sender email not matching the project domain.",
+    "summary": "BaseScan was unable to update the public token page due to insufficient or inconsistent information. The notice listed common blockers: website accessibility or safety, unclear token/project information, placeholders, broken links, insufficient team transparency with supporting public profiles, and sender email not matching the project domain.",
     "mustNotClaim": "Do not say BaseScan token profile is approved, published, accepted, or complete until BaseScan publishes the token profile."
   },
   "officialIdentity": {
@@ -21,7 +21,7 @@
     "projectProfileBaseScanMap": "https://gcagochina.com/project-profile.html#basescanMapTitle",
     "about": "https://gcagochina.com/about.html",
     "team": "https://gcagochina.com/team.html",
-    "timChenProfessionalProfile": "https://gcagochina.com/tim-chen.html",
+    "teamResponsibilities": "https://gcagochina.com/team.html",
     "domainEmailSetupPlan": "https://gcagochina.com/domain-email.html",
     "domainEmailDnsWorksheet": "https://gcagochina.com/domain-email.html#worksheetTitle",
     "domainEmailSetupPlanData": "https://gcagochina.com/domain-email.json",
@@ -39,7 +39,7 @@
     "logoPng": "https://gcagochina.com/assets/gca-logo.png",
     "telegram": "https://t.me/gcagochinaofficial",
     "x": "https://x.com/GCAAIGoChina",
-    "github": "https://github.com/timchen078/gca_token"
+    "projectProfileSource": "https://gcagochina.com/project-profile.html"
   },
   "currentEmailState": {
     "publishedPrimaryEmail": "support@gcagochina.com",
@@ -71,24 +71,24 @@
     "ownerActionRequired": "Submit one clean BaseScan token profile update from support@gcagochina.com and keep private provider/DNS/inbound/outbound/support-page evidence available if the reviewer requests it."
   },
   "teamTransparency": {
-    "publicFounder": "Tim Chen",
-    "officialTeamPage": "https://gcagochina.com/team.html#tim-chen",
-    "officialProfessionalProfile": "https://gcagochina.com/tim-chen.html",
-    "officialProfessionalProfileData": "https://gcagochina.com/tim-chen.json",
-    "equivalentOfficialProfessionalProfilePublished": true,
-    "equivalentOfficialProfessionalProfileType": "official-domain-equivalent-public-professional-profile",
-    "projectGitHub": "https://github.com/timchen078/gca_token",
-    "founderEvidencePacket": {
-      "profile": "https://gcagochina.com/tim-chen.html",
-      "profileData": "https://gcagochina.com/tim-chen.json",
-      "teamAnchor": "https://gcagochina.com/team.html#tim-chen",
-      "repository": "https://github.com/timchen078/gca_token",
+    "responsibleTeam": "GCA Team",
+    "officialTeamPage": "https://gcagochina.com/team.html",
+    "teamResponsibilitiesPage": "https://gcagochina.com/team.html",
+    "projectProfileData": "https://gcagochina.com/project.json",
+    "teamResponsibilitiesPublished": true,
+    "teamResponsibilitiesType": "official-domain-team-responsibility-page",
+    "projectProfile": "https://gcagochina.com/project-profile.html",
+    "teamEvidencePacket": {
+      "profile": "https://gcagochina.com/team.html",
+      "profileData": "https://gcagochina.com/project.json",
+      "teamAnchor": "https://gcagochina.com/team.html",
+      "projectProfile": "https://gcagochina.com/project-profile.html",
       "officialX": "https://x.com/GCAAIGoChina",
       "officialTelegram": "https://t.me/gcagochinaofficial",
-      "reviewerWording": "Tim Chen is the published founder, CEO, and project lead for GCA. The official-domain profile provides role scope and public evidence links; add LinkedIn later only if BaseScan specifically requires third-party social-network evidence."
+      "reviewerWording": "GCA publishes project responsibilities, official channels, and supporting evidence through its official domain."
     },
-    "externalProfessionalProfileStillRecommended": true,
-    "ownerActionRequired": "Include https://gcagochina.com/tim-chen.html in the next BaseScan submission. If BaseScan specifically requires a third-party social-network profile, publish a LinkedIn profile as stronger external evidence."
+    "externalOrganizationProfileStillRecommended": true,
+    "ownerActionRequired": "Include https://gcagochina.com/team.html in the next BaseScan submission. If BaseScan specifically requests external organization evidence, publish an official organization profile on a recognized business network."
   },
   "remediationChecklist": [
     {
@@ -107,9 +107,9 @@
       "evidence": "tools/check_site_links.py traverses every public HTML link and resource reference, validates local files and fragments, rejects placeholders and duplicate IDs, and checks all discovered same-origin targets after deployment. tools/check_public_site.py separately validates published identity, content, the current GCA/USDT route, and raw JSON routing."
     },
     {
-      "id": "team-founder-transparency",
+      "id": "team-responsibility-transparency",
       "status": "implemented-official-domain-equivalent",
-      "evidence": "Official-domain team page is published at https://gcagochina.com/team.html and the Tim Chen public professional profile is published at https://gcagochina.com/tim-chen.html. A LinkedIn profile can still be added if BaseScan specifically requires a third-party social-network profile."
+      "evidence": "GCA operating roles and responsibilities are published at https://gcagochina.com/team.html with official project channels and supporting evidence links."
     },
     {
       "id": "domain-email",
@@ -119,7 +119,7 @@
     {
       "id": "full-social-links",
       "status": "implemented",
-      "evidence": "Official Telegram, X, GitHub, support, whitepaper, brand kit, and website URLs are available as full URLs."
+      "evidence": "Official Telegram, X, project profile, support, whitepaper, brand kit, and website URLs are available as full URLs."
     }
   ],
   "nextSubmissionGate": {
@@ -137,9 +137,9 @@
       "Use support@gcagochina.com as the official BaseScan project email.",
       "Keep the public domain email evidence checklist available at https://gcagochina.com/domain-email-evidence.html and retain private mailbox evidence for reviewer follow-up.",
       "Include the Project Profile BaseScan reviewer map https://gcagochina.com/project-profile.html#basescanMapTitle in the next BaseScan submission.",
-      "Include the published Tim Chen professional profile URL https://gcagochina.com/tim-chen.html in the next BaseScan submission.",
+      "Include the published GCA team responsibilities URL https://gcagochina.com/team.html in the next BaseScan submission.",
       "Run python3 tools/check_basescan_resubmission_readiness.py --json --require-ready and proceed only when readyForBaseScanResubmission is true.",
-      "Use the updated BaseScan reply template at https://gcagochina.com/platform-replies.html and include GitHub, team page, start page, support page, and whitepaper."
+      "Use the updated BaseScan reply template at https://gcagochina.com/platform-replies.html and include the project profile, team page, start page, support page, and whitepaper."
     ],
     "preflightTool": {
       "tool": "tools/check_basescan_resubmission_readiness.py",

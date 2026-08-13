@@ -36,7 +36,7 @@ def ready_values():
         "chainId": 8453,
         "contractAddress": "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6",
         "officialEmail": TARGET_DOMAIN_EMAIL,
-        "timChenProfessionalProfileUrl": "https://gcagochina.com/tim-chen.html",
+        "teamResponsibilitiesUrl": "https://gcagochina.com/team.html",
         "domainEmailSetupPlanUrl": "https://gcagochina.com/domain-email.html",
     }
     for field in REQUIRED_URL_FIELDS:

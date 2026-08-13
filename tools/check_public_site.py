@@ -59,7 +59,6 @@ PUBLIC_INDEXABLE_LASTMOD = {
     "/zh-faq.html": "2026-08-10",
     "/about.html": "2026-08-12",
     "/team.html": "2026-08-12",
-    "/tim-chen.html": "2026-08-12",
     "/whitepaper.html": "2026-08-10",
     "/brand-kit.html": "2026-05-13",
     "/reserve-statement.html": "2026-05-16",
@@ -104,8 +103,6 @@ TOKENLIST_PAGE_URL = "https://gcagochina.com/tokenlist.html"
 ACTION_PLAN_PAGE_URL = "https://gcagochina.com/action-plan.html"
 ACTION_PLAN_JSON_URL = "https://gcagochina.com/action-plan.json"
 TEAM_PAGE_URL = "https://gcagochina.com/team.html"
-TIM_CHEN_PROFILE_PAGE_URL = "https://gcagochina.com/tim-chen.html"
-TIM_CHEN_PROFILE_URL = "https://gcagochina.com/tim-chen.json"
 DOMAIN_EMAIL_PAGE_URL = "https://gcagochina.com/domain-email.html"
 DOMAIN_EMAIL_URL = "https://gcagochina.com/domain-email.json"
 DOMAIN_EMAIL_EVIDENCE_PAGE_URL = "https://gcagochina.com/domain-email-evidence.html"
@@ -118,7 +115,7 @@ BASESCAN_HANDOFF_PAGE_URL = "https://gcagochina.com/basescan-handoff.html"
 BASESCAN_HANDOFF_URL = "https://gcagochina.com/basescan-handoff.json"
 BASESCAN_FOLLOWUP_PAGE_URL = "https://gcagochina.com/basescan-followup.html"
 BASESCAN_FOLLOWUP_URL = "https://gcagochina.com/basescan-followup.json"
-GITHUB_REPO_URL = "https://github.com/timchen078/gca_token"
+PROJECT_PROFILE_DATA_URL = "https://gcagochina.com/project.json"
 ZH_CN_PAGE_URL = "https://gcagochina.com/zh-cn.html"
 ZH_BUY_PAGE_URL = "https://gcagochina.com/zh-buy.html"
 ZH_MARKET_PAGE_URL = "https://gcagochina.com/zh-markets.html"
@@ -520,7 +517,7 @@ def validate_root(text: str) -> None:
         "1,000,000 GCA held for 30 days",
         "GCA/USDT on Base",
         "Fixed at 1 billion GCA",
-        "Tim Chen public profile",
+        "Roles and responsibilities",
         "support@gcagochina.com",
         "Base Mainnet",
         "8453",
@@ -877,7 +874,7 @@ def validate_status_page(text: str) -> None:
     assert_contains(text, "domain-email-evidence.html", label)
     assert_contains(text, "Published for platform reviewers", label)
     assert_contains(text, "team.html", label)
-    assert_contains(text, "tim-chen.html", label)
+    assert_contains(text, "team.html", label)
     assert_contains(text, "basescan-remediation.html", label)
     assert_contains(text, "basescan-preflight.html", label)
     assert_contains(text, "GeckoTerminal token information update", label)
@@ -911,8 +908,8 @@ def validate_about_page(text: str) -> None:
         "Company and Project Profile",
         "中文入口",
         "zh-cn.html",
-        "CEO / Project Lead",
-        "Tim Chen",
+        "Project Operations",
+        "Published responsibilities",
         "GCA | Go China Access",
         "Go China Access",
         "GCA AI Quant Access",
@@ -920,9 +917,9 @@ def validate_about_page(text: str) -> None:
         "Risk Tools",
         "Official Identity",
         "Clear by design",
-        "Team Profile",
-        "team.html#tim-chen",
-        GITHUB_REPO_URL,
+        "Roles and Responsibilities",
+        "team.html",
+        "project-profile.html",
         "Company Resources",
         "Official references",
         "support@gcagochina.com",
@@ -966,16 +963,15 @@ def validate_team_page(text: str) -> None:
     assert_social_preview_meta(text, label, TEAM_PAGE_URL)
     for expected in (
         "GCA Team",
-        "Founder and Public Profile",
-        "Tim Chen",
-        "Founder, CEO, and Project Lead for GCA",
-        "team.html#tim-chen",
-        TIM_CHEN_PROFILE_PAGE_URL,
-        "Official-domain professional profile",
-        GITHUB_REPO_URL,
+        "Project Operations",
+        "Roles and Responsibilities",
+        "Responsibility Model",
+        "Accountability by operating area",
+        "Defined responsibilities",
+        "project-profile.html",
         X_URL,
         "https://t.me/gcagochinaofficial",
-        "Leadership scope",
+        "Operating scope",
         "Public accountability",
         "Official channels",
         "support@gcagochina.com",
@@ -993,91 +989,6 @@ def validate_team_page(text: str) -> None:
     ):
         assert_not_contains(text, forbidden, label)
     assert_no_forbidden_public_claims(text, label)
-
-
-def validate_tim_chen_profile_page(text: str) -> None:
-    label = "/tim-chen.html"
-    assert_social_preview_meta(text, label, TIM_CHEN_PROFILE_PAGE_URL)
-    for expected in (
-        "Tim Chen | GCA Founder and CEO",
-        "Public Professional Profile",
-        "Founder / CEO / Project Lead",
-        "Founder, CEO, and Project Lead for GCA | Go China Access",
-        "Professional overview",
-        "Leadership scope",
-        "Professional principles",
-        "Official channels",
-        "support@gcagochina.com",
-        TIM_CHEN_PROFILE_PAGE_URL,
-        TEAM_PAGE_URL,
-        "team.html#tim-chen",
-        GITHUB_REPO_URL,
-        MAINNET_ADDRESS,
-    ):
-        assert_contains(text, expected, label)
-    assert_no_public_data_room_terms(text, label)
-    assert_not_contains(text, 'href="tim-chen.json"', label)
-    assert_not_contains(text, 'href="project.json"', label)
-    for forbidden in (
-        "BaseScan use",
-        "BaseScan Evidence Packet",
-        "Reviewer",
-        "add LinkedIn",
-        "No Hidden Claims",
-        "remain staged",
-    ):
-        assert_not_contains(text, forbidden, label)
-    assert_no_forbidden_public_claims(text, label)
-
-
-def validate_tim_chen_profile_json(text: str) -> None:
-    label = "/tim-chen.json"
-    payload = load_json(text, label)
-    person = payload.get("person", {})
-    scope = payload.get("professionalScope", {})
-    links = payload.get("publicEvidenceLinks", {})
-    reviewer = payload.get("reviewerUse", {})
-
-    if payload.get("schema") != TIM_CHEN_PROFILE_URL:
-        raise SiteCheckError(f"{label}: wrong schema")
-    if payload.get("pageUrl") != TIM_CHEN_PROFILE_PAGE_URL:
-        raise SiteCheckError(f"{label}: wrong pageUrl")
-    last_updated = payload.get("lastUpdated")
-    if last_updated != "2026-08-10":
-        raise SiteCheckError(f"{label}: wrong lastUpdated")
-    if payload.get("status") != "official-domain-professional-profile-published":
-        raise SiteCheckError(f"{label}: wrong status")
-    if payload.get("profileType") != "official-domain-equivalent-public-professional-profile":
-        raise SiteCheckError(f"{label}: wrong profileType")
-    if person.get("name") != "Tim Chen":
-        raise SiteCheckError(f"{label}: wrong person name")
-    if person.get("publicRole") != "Founder, CEO, and Project Lead":
-        raise SiteCheckError(f"{label}: wrong public role")
-    if person.get("profileUrl") != TIM_CHEN_PROFILE_PAGE_URL:
-        raise SiteCheckError(f"{label}: wrong profile URL")
-    if person.get("teamPageUrl") != f"{TEAM_PAGE_URL}#tim-chen":
-        raise SiteCheckError(f"{label}: wrong team page URL")
-    if scope.get("chainId") != 8453:
-        raise SiteCheckError(f"{label}: wrong chainId")
-    if scope.get("contractAddress") != MAINNET_ADDRESS:
-        raise SiteCheckError(f"{label}: wrong contractAddress")
-    if links.get("professionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
-        raise SiteCheckError(f"{label}: wrong professionalProfile")
-    if links.get("githubRepository") != GITHUB_REPO_URL:
-        raise SiteCheckError(f"{label}: wrong GitHub repository")
-    packet = payload.get("baseScanFounderEvidencePacket")
-    if last_updated == "2026-05-26":
-        if not isinstance(packet, dict) or packet.get("namedFounder") != "Tim Chen":
-            raise SiteCheckError(f"{label}: missing founder evidence packet")
-        evidence_links = packet.get("evidenceLinks", [])
-        for expected_link in (TIM_CHEN_PROFILE_PAGE_URL, f"{TEAM_PAGE_URL}#tim-chen", GITHUB_REPO_URL):
-            if expected_link not in evidence_links:
-                raise SiteCheckError(f"{label}: missing founder evidence link {expected_link}")
-    if reviewer.get("linkedinStillStrongerIfRequired") is not True:
-        raise SiteCheckError(f"{label}: missing LinkedIn caveat")
-    if "BaseScan token profile" not in reviewer.get("baseScanUse", ""):
-        raise SiteCheckError(f"{label}: missing BaseScan use")
-    assert_no_forbidden_public_claims(json.dumps(payload), label)
 
 
 def validate_domain_email_page(text: str) -> None:
@@ -1146,7 +1057,7 @@ def validate_domain_email_page(text: str) -> None:
         "domain email setup plan",
         "support.html",
         "basescan-remediation.html",
-        "tim-chen.html",
+        "team.html",
         "BaseScan Remediation",
         "Evidence Checklist",
         "domain-email-evidence.html",
@@ -1437,7 +1348,7 @@ def validate_domain_email_evidence_page(text: str) -> None:
         "No Private Screenshot Publishing",
         "domain-email.html",
         "basescan-remediation.html",
-        "tim-chen.html",
+        "team.html",
         "platform-replies.html",
     ):
         assert_contains(text, expected, label)
@@ -1489,8 +1400,8 @@ def validate_domain_email_evidence_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong setupPlan")
     if base_scan_use.get("baseScanRemediation") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong baseScanRemediation")
-    if base_scan_use.get("founderProfile") != TIM_CHEN_PROFILE_PAGE_URL:
-        raise SiteCheckError(f"{label}: wrong founderProfile")
+    if base_scan_use.get("teamResponsibilities") != TEAM_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong teamResponsibilities")
 
     expected_files = {
         "domain-email-provider-active.png",
@@ -1545,8 +1456,8 @@ def validate_domain_email_evidence_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong related domain email plan")
     if related.get("baseScanRemediation") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong related BaseScan remediation")
-    if related.get("founderProfile") != TIM_CHEN_PROFILE_PAGE_URL:
-        raise SiteCheckError(f"{label}: wrong related founder profile")
+    if related.get("teamResponsibilities") != TEAM_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong related team responsibilities")
     if related.get("platformReplies") != PLATFORM_REPLIES_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong related platform replies")
     if related.get("dataRoom") != DATA_PAGE_URL:
@@ -1569,8 +1480,8 @@ def validate_basescan_remediation_page(text: str) -> None:
         "DNS snapshot",
         "MX / SPF / DKIM / DMARC present",
         "domain email evidence packet is ready",
-        "Professional profile",
-        TIM_CHEN_PROFILE_PAGE_URL,
+        "Team responsibilities",
+        TEAM_PAGE_URL,
         "Preflight checker",
         "tools/check_basescan_resubmission_readiness.py",
         "Readable preflight gate",
@@ -1600,9 +1511,9 @@ def validate_basescan_remediation_page(text: str) -> None:
         "Project Profile Map",
         f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle",
         "tools/check_site_links.py",
-        "Tim Chen",
+        "GCA Team",
         "team.html",
-        GITHUB_REPO_URL,
+        PROJECT_PROFILE_PAGE_URL,
         "Ready to resubmit today?",
         "Yes. Owner may submit one clean BaseScan token profile update",
         "Current email blocker",
@@ -1650,8 +1561,8 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong projectProfilePage")
     if identity.get("projectProfileBaseScanMap") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
         raise SiteCheckError(f"{label}: wrong projectProfileBaseScanMap")
-    if identity.get("timChenProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
-        raise SiteCheckError(f"{label}: wrong Tim Chen profile page")
+    if identity.get("teamResponsibilities") != TEAM_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong GCA team responsibilities page")
     if identity.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong domainEmailSetupPlan")
     if identity.get("domainEmailSetupPlanData") != DOMAIN_EMAIL_URL:
@@ -1668,8 +1579,8 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong platformRepliesPage")
     if identity.get("platformRepliesData") != PLATFORM_REPLIES_URL:
         raise SiteCheckError(f"{label}: wrong platformRepliesData")
-    if identity.get("github") != GITHUB_REPO_URL:
-        raise SiteCheckError(f"{label}: wrong GitHub URL")
+    if identity.get("projectProfileSource") != PROJECT_PROFILE_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong project profile URL")
     if email_state.get("domainEmailRecommendedBeforeNextSubmission") not in {False, True}:
         raise SiteCheckError(f"{label}: missing domain email recommendation")
     if email_state.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
@@ -1693,18 +1604,18 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong latest DNS evidence checklist")
     if "support@gcagochina.com" not in email_state.get("recommendedDomainEmailExamples", []):
         raise SiteCheckError(f"{label}: missing recommended support domain email")
-    if team.get("publicFounder") != "Tim Chen":
-        raise SiteCheckError(f"{label}: wrong public founder")
-    if team.get("officialTeamPage") != f"{TEAM_PAGE_URL}#tim-chen":
-        raise SiteCheckError(f"{label}: wrong founder profile permalink")
-    if team.get("officialProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
-        raise SiteCheckError(f"{label}: wrong official professional profile")
-    if team.get("officialProfessionalProfileData") != TIM_CHEN_PROFILE_URL:
-        raise SiteCheckError(f"{label}: wrong official professional profile data")
-    if team.get("equivalentOfficialProfessionalProfilePublished") is not True:
-        raise SiteCheckError(f"{label}: missing official-domain professional profile")
-    if team.get("externalProfessionalProfileStillRecommended") is not True:
-        raise SiteCheckError(f"{label}: missing external professional profile recommendation")
+    if team.get("responsibleTeam") != "GCA Team":
+        raise SiteCheckError(f"{label}: wrong public project team")
+    if team.get("officialTeamPage") != TEAM_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong team responsibilities permalink")
+    if team.get("teamResponsibilitiesPage") != TEAM_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong official team responsibilities")
+    if team.get("projectProfileData") != PROJECT_PROFILE_DATA_URL:
+        raise SiteCheckError(f"{label}: wrong official team responsibilities data")
+    if team.get("teamResponsibilitiesPublished") is not True:
+        raise SiteCheckError(f"{label}: missing official-domain team responsibility page")
+    if team.get("externalOrganizationProfileStillRecommended") is not True:
+        raise SiteCheckError(f"{label}: missing external team responsibilities recommendation")
     link_item = remediation_items.get("placeholder-and-broken-link-review", {})
     if link_item.get("status") != "implemented-with-automated-check":
         raise SiteCheckError(f"{label}: wrong link-integrity remediation status")
@@ -1848,14 +1759,14 @@ def validate_basescan_preflight_page(text: str) -> None:
         "Submit only one clean request",
         "reviewer comment is clean for submission",
         "Evidence Links To Include When Ready",
-        "Tim Chen profile",
-        "team.html#tim-chen",
+        "GCA team responsibilities",
+        "team.html",
         "domain-email.html",
         "domain-email-evidence.html",
         "basescan-remediation.html",
         "basescan-handoff.html",
         "BaseScan Handoff",
-        GITHUB_REPO_URL,
+        PROJECT_PROFILE_PAGE_URL,
         "GCA/USDT on Base Mainnet",
         "Submit Once And Keep Claim Boundaries",
         "does not sign wallet messages, submit forms, send email, write DNS records, or touch contracts",
@@ -1928,13 +1839,13 @@ def validate_basescan_preflight_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong daily-status reference alignment command")
     if "tools/check_basescan_resubmission_readiness.py --json --require-ready" not in commands.get("baseScanPreflight", ""):
         raise SiteCheckError(f"{label}: wrong BaseScan preflight command")
-    if links.get("timChenProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
-        raise SiteCheckError(f"{label}: wrong Tim Chen evidence link")
+    if links.get("teamResponsibilities") != TEAM_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong GCA Team evidence link")
     if links.get("domainEmailEvidenceChecklist") != DOMAIN_EMAIL_EVIDENCE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong evidence checklist link")
     if links.get("baseScanRemediation") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong remediation link")
-    if links.get("githubRepository") != GITHUB_REPO_URL:
+    if links.get("projectProfileSource") != PROJECT_PROFILE_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong GitHub link")
     if "readyForBaseScanResubmission is true" not in payload.get("doNotSubmitUntil", []):
         raise SiteCheckError(f"{label}: missing do-not-submit readiness gate")
@@ -1983,7 +1894,7 @@ def validate_basescan_handoff_page(text: str) -> None:
         "ten browser-only public risk and research tools",
         "connected market-data and trading modules remain staged behind release gates",
         "Copy/Paste Evidence Links",
-        "GitHub source repository: https://github.com/timchen078/gca_token",
+        "Project profile: https://gcagochina.com/project-profile.html",
         "Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle",
         "Copy/Paste Market And Supply",
         "Official market route: GCA/USDT",
@@ -2019,7 +1930,7 @@ def validate_basescan_handoff_page(text: str) -> None:
         MAINNET_ADDRESS,
         "Base Mainnet chain ID 8453",
         "team.html",
-        "tim-chen.html",
+        "team.html",
         "project-profile.html#basescanMapTitle",
         "domain-email.html",
         "domain-email-evidence.html",
@@ -2100,7 +2011,7 @@ def validate_basescan_handoff_json(text: str) -> None:
         PROJECT_PROFILE_PAGE_URL,
         REVIEWER_KIT_PAGE_URL,
         DOMAIN_EMAIL_PAGE_URL,
-        TIM_CHEN_PROFILE_PAGE_URL,
+        TEAM_PAGE_URL,
         TECHNICAL_REPORT_PAGE_URL,
         LIQUIDITY_PAGE_URL,
         PLATFORM_REPLIES_PAGE_URL,
@@ -2125,7 +2036,7 @@ def validate_basescan_handoff_json(text: str) -> None:
         "Project Email Address: support@gcagochina.com",
         "ten browser-only public risk and research tools",
         "connected market-data and trading modules remain staged behind release gates",
-        "Tim Chen professional profile: https://gcagochina.com/tim-chen.html",
+        "GCA team responsibilities: https://gcagochina.com/team.html",
         "Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle",
         "Official market route: GCA/USDT",
         "Reserve boundary: Do not describe the reserve as locked",
@@ -2163,7 +2074,7 @@ def validate_basescan_handoff_json(text: str) -> None:
         ("domainEmailPlanPage", DOMAIN_EMAIL_PAGE_URL),
         ("domainEmailEvidenceChecklistPage", DOMAIN_EMAIL_EVIDENCE_PAGE_URL),
         ("teamPage", TEAM_PAGE_URL),
-        ("timChenProfessionalProfile", TIM_CHEN_PROFILE_PAGE_URL),
+        ("teamResponsibilities", TEAM_PAGE_URL),
         ("technicalReportPage", TECHNICAL_REPORT_PAGE_URL),
         ("onchainProofsPage", ONCHAIN_PROOFS_PAGE_URL),
         ("tokenSafetyPage", TOKEN_SAFETY_PAGE_URL),
@@ -2182,7 +2093,7 @@ def validate_basescan_handoff_json(text: str) -> None:
         "links, logo, website, and metadata need review",
         "contract, supply, and market evidence",
         "implemented-domain-email-ready",
-        TIM_CHEN_PROFILE_PAGE_URL,
+        TEAM_PAGE_URL,
         f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle",
         DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
         TECHNICAL_REPORT_PAGE_URL,
@@ -2259,7 +2170,7 @@ def validate_basescan_followup_page(text: str) -> None:
         "basescan-preflight.html",
         "domain-email-evidence.html",
         "project-profile.html#basescanMapTitle",
-        "tim-chen.html",
+        "team.html",
         "technical-report.html",
         "onchain-proofs.html",
         "token-safety.html",
@@ -2323,7 +2234,7 @@ def validate_basescan_followup_json(text: str) -> None:
         ("baseScanPreflight", BASESCAN_PREFLIGHT_PAGE_URL),
         ("projectProfileBaseScanMap", f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle"),
         ("teamPage", TEAM_PAGE_URL),
-        ("timChenProfessionalProfile", TIM_CHEN_PROFILE_PAGE_URL),
+        ("teamResponsibilities", TEAM_PAGE_URL),
         ("domainEmailEvidence", DOMAIN_EMAIL_EVIDENCE_PAGE_URL),
         ("domainEmailSnapshot", f"{DOMAIN_EMAIL_PAGE_URL}#snapshotTitle"),
         ("technicalReport", TECHNICAL_REPORT_PAGE_URL),
@@ -2350,7 +2261,7 @@ def validate_basescan_followup_json(text: str) -> None:
         "Official project email: support@gcagochina.com",
         BASESCAN_HANDOFF_PAGE_URL,
         f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle",
-        TIM_CHEN_PROFILE_PAGE_URL,
+        TEAM_PAGE_URL,
         DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
         DAILY_STATUS_PAGE_URL,
         BASESCAN_FOLLOWUP_PAGE_URL,
@@ -2565,7 +2476,7 @@ def validate_action_plan_json(text: str) -> None:
         raise SiteCheckError(f"{label}: BaseScan action must require owner action")
     for expected in (
         "https://gcagochina.com/project-profile.html#basescanMapTitle",
-        "https://gcagochina.com/tim-chen.html",
+        "https://gcagochina.com/team.html",
         "https://gcagochina.com/domain-email-evidence.html",
         "https://gcagochina.com/basescan-handoff.html",
         "https://gcagochina.com/zh-basescan-submit.html",
@@ -2630,7 +2541,7 @@ def validate_zh_cn_page(text: str) -> None:
         "持有 1,000,000 GCA 满 30 天",
         "Base 上的 GCA/USDT",
         "固定 10 亿枚 GCA",
-        "Tim Chen 公开职业资料",
+        "职责与公开边界",
         "support@gcagochina.com",
         "Base Mainnet",
         "8453",
@@ -2864,7 +2775,7 @@ def validate_zh_status_page(text: str) -> None:
         "zh-support.html",
         "zh-roadmap.html",
         "zh-site-map.html",
-        "tim-chen.html",
+        "team.html",
         "team.html",
         "product.html",
         "markets.html",
@@ -2998,8 +2909,8 @@ def validate_zh_domain_email_page(text: str) -> None:
         "basescan-remediation.html",
         "Platform Replies",
         "platform-replies.html",
-        "Tim Chen Profile",
-        "tim-chen.html",
+        "GCA Team Responsibilities",
+        "team.html",
     ):
         assert_contains(text, expected, label)
     assert_not_contains(text, 'href="domain-email.json"', label)
@@ -3062,8 +2973,8 @@ def validate_zh_basescan_preflight_page(text: str) -> None:
         "本地 JSON/MD 文件不对外发布",
         "https://gcagochina.com/...",
         "通过后要给 BaseScan 的证据链接",
-        "tim-chen.html",
-        "team.html#tim-chen",
+        "team.html",
+        "team.html",
         "project-profile.html#basescanMapTitle",
         "Project Profile BaseScan reviewer map",
         "domain-email.html",
@@ -3077,7 +2988,7 @@ def validate_zh_basescan_preflight_page(text: str) -> None:
         "zh-basescan-submit.html",
         "中文 BaseScan 提交流程",
         "basescan-remediation.html",
-        GITHUB_REPO_URL,
+        PROJECT_PROFILE_PAGE_URL,
         "Base Mainnet GCA/USDT",
         "现在不要做这些",
         "不要重复提交",
@@ -3128,11 +3039,11 @@ def validate_zh_basescan_submit_page(text: str) -> None:
         "domain-email-evidence.html",
         "提交前确认",
         "readyForBaseScanResubmission",
-        "Tim Chen 职业资料",
-        "team.html#tim-chen",
+        "GCA 团队职责",
+        "team.html",
         "Project Profile 审核映射页",
         "project-profile.html#basescanMapTitle",
-        "官网、Project Profile 审核映射、白皮书、品牌资料、支持页、GitHub、Telegram、X、GCA/USDT 池",
+        "官网、Project Profile 审核映射、白皮书、品牌资料、支持页、项目资料页、Telegram、X、GCA/USDT 池",
         "Access / Claim Boundary",
         "100 credits 是账户服务记录",
         "10,000 GCA 会员权益不是自动领取或自助转账",
@@ -3223,8 +3134,8 @@ def validate_zh_basescan_handoff_page(text: str) -> None:
         "basescan-handoff.html",
         "domain-email-evidence.html",
         "readyForBaseScanResubmission",
-        "team.html#tim-chen",
-        "tim-chen.html",
+        "team.html",
+        "team.html",
         "project-profile.html#basescanMapTitle",
         "Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle",
         "领取边界",
@@ -3252,7 +3163,7 @@ def validate_zh_basescan_handoff_page(text: str) -> None:
         "Decimals: 18",
         "Total Supply: 1000000000",
         "Copy/Paste Evidence Links",
-        "GitHub source repository: https://github.com/timchen078/gca_token",
+        "Project profile: https://gcagochina.com/project-profile.html",
         "Telegram: https://t.me/gcagochinaofficial",
         "X: https://x.com/GCAAIGoChina",
         "Access portal: https://gcagochina.com/access.html",
@@ -3343,8 +3254,8 @@ def validate_zh_basescan_followup_page(text: str) -> None:
         "utility.html",
         "product.html",
         "roadmap.html",
-        "team.html#tim-chen",
-        "tim-chen.html",
+        "team.html",
+        "team.html",
         "project-profile.html#basescanMapTitle",
         "supply.html",
         "reserve-statement.html",
@@ -3637,7 +3548,7 @@ def validate_zh_faq_page(text: str) -> None:
         OFFICIAL_POOL_ADDRESS,
         "官方公开路线是 Base Mainnet 上的 GCA/USDT 池",
         "BaseScan 源码和部署钱包验证已完成",
-        "support@gcagochina.com、Tim Chen 公开职业资料和最终提交包已准备",
+        "support@gcagochina.com、GCA 团队职责和最终提交包已准备",
         "BaseScan 公开代币资料仍待官方发布",
         "为什么钱包里看不到 GCA",
         "为什么有些平台显示流通量是 10 亿",
@@ -4551,7 +4462,7 @@ def validate_zh_site_map_page(text: str) -> None:
         "onchain-proofs.html",
         "about.html",
         "team.html",
-        "tim-chen.html",
+        "team.html",
         "whitepaper.html",
         "brand-kit.html",
         X_URL,
@@ -4813,7 +4724,7 @@ def validate_site_map_page(text: str) -> None:
         "onchain-proofs.html",
         "about.html",
         "team.html",
-        "tim-chen.html",
+        "team.html",
         "whitepaper.html",
         "support.html",
         "brand-kit.html",
@@ -6496,7 +6407,7 @@ def validate_community_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong latestPostUrl")
     if x_launch.get("latestPostPublishedDate") != "2026-05-23":
         raise SiteCheckError(f"{label}: wrong latestPostPublishedDate")
-    if "Tim Chen public professional profile evidence, the domain email setup plan, public evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com mailbox are now ready" not in x_launch.get("currentStatusAfterLatestPost", ""):
+    if "GCA team responsibility evidence, the domain email setup plan, public evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com mailbox are now ready" not in x_launch.get("currentStatusAfterLatestPost", ""):
         raise SiteCheckError(f"{label}: missing current status after latest post")
     if "one clean owner resubmission while waiting for BaseScan review and publication" not in x_launch.get("currentStatusAfterLatestPost", ""):
         raise SiteCheckError(f"{label}: missing current domain mailbox boundary")
@@ -6632,7 +6543,7 @@ def validate_announcements_json(text: str) -> None:
     if not any(post.get("url") == LATEST_X_POST_URL for post in posts if isinstance(post, dict)):
         raise SiteCheckError(f"{label}: missing latest X post")
     latest_post = next((post for post in posts if isinstance(post, dict) and post.get("url") == LATEST_X_POST_URL), {})
-    if "Tim Chen public professional profile evidence, the domain email setup plan, public evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com mailbox are now ready" not in latest_post.get("currentStatusAfterPost", ""):
+    if "GCA team responsibility evidence, the domain email setup plan, public evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com mailbox are now ready" not in latest_post.get("currentStatusAfterPost", ""):
         raise SiteCheckError(f"{label}: missing latest post current status")
     if "one clean owner resubmission while waiting for BaseScan review and publication" not in latest_post.get("currentStatusAfterPost", ""):
         raise SiteCheckError(f"{label}: missing latest post domain mailbox boundary")
@@ -11809,7 +11720,7 @@ def validate_api_status_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong access API page")
     if links.get("dataRoom") != DATA_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong data room")
-    if links.get("githubWorkflow") != "https://github.com/timchen078/gca_token/actions/workflows/check-gca-registration-api.yml":
+    if links.get("githubWorkflow") != "https://gcagochina.com/api-status.html":
         raise SiteCheckError(f"{label}: wrong GitHub workflow URL")
     if links.get("memberAccessPage") != MEMBER_ACCESS_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong member access page")
@@ -13757,7 +13668,7 @@ def validate_project_profile_page(text: str) -> None:
         "1,000,000,000 GCA",
         "No post-deploy mint",
         "support@gcagochina.com",
-        "Tim Chen",
+        "Published roles and responsibilities",
         "Project Profile",
         "Token List Guide",
         "Member Program",
@@ -13769,7 +13680,7 @@ def validate_project_profile_page(text: str) -> None:
         "Website accessible and safe to visit",
         "Clear token and project information",
         "Placeholders and broken links",
-        "Founder and team transparency",
+        "Team responsibility transparency",
         "Sender email matches project domain",
         "Logo, social, and metadata URLs",
         "Source and deployer-wallet ownership are verified",
@@ -13777,7 +13688,7 @@ def validate_project_profile_page(text: str) -> None:
         "MX/SPF/DKIM/DMARC present",
         "tools/check_site_links.py",
         "tools/check_public_site.py",
-        "team.html#tim-chen",
+        "team.html",
         "domain-email-evidence.html",
     ):
         assert_contains(text, expected, label)
@@ -14096,18 +14007,18 @@ def validate_project_json(text: str) -> None:
         "website-accessible-safe",
         "clear-project-token-information",
         "placeholder-broken-link-review",
-        "founder-team-transparency",
+        "team-responsibility-transparency",
         "domain-email-match",
         "logo-social-metadata",
     }
     if set(reason_items_by_id) != expected_reason_ids:
         raise SiteCheckError(f"{label}: wrong BaseScan reviewer reason map ids")
-    founder_item = reason_items_by_id["founder-team-transparency"]
-    if founder_item.get("status") != "implemented-official-domain-equivalent":
-        raise SiteCheckError(f"{label}: wrong founder evidence status")
-    for expected_link in (f"{TEAM_PAGE_URL}#tim-chen", TIM_CHEN_PROFILE_PAGE_URL, GITHUB_REPO_URL, X_URL):
-        if expected_link not in founder_item.get("evidencePages", []):
-            raise SiteCheckError(f"{label}: missing founder evidence link {expected_link}")
+    team_item = reason_items_by_id["team-responsibility-transparency"]
+    if team_item.get("status") != "implemented-official-domain-equivalent":
+        raise SiteCheckError(f"{label}: wrong team responsibility evidence status")
+    for expected_link in (TEAM_PAGE_URL, PROJECT_PROFILE_PAGE_URL, X_URL):
+        if expected_link not in team_item.get("evidencePages", []):
+            raise SiteCheckError(f"{label}: missing team responsibility evidence link {expected_link}")
     domain_item = reason_items_by_id["domain-email-match"]
     if domain_item.get("status") != "implemented-domain-email-ready":
         raise SiteCheckError(f"{label}: wrong domain email reason status")
@@ -14166,8 +14077,8 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong domainEmailEvidenceChecklistData")
     if "public evidence checklist" not in status.get("baseScanTokenProfileLastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing domain email evidence checklist status")
-    if status.get("timChenProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
-        raise SiteCheckError(f"{label}: wrong Tim Chen professional profile")
+    if status.get("teamResponsibilities") != TEAM_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong GCA team responsibilities")
     if status.get("geckoTerminalTokenInfo") != "approved-2026-05-11":
         raise SiteCheckError(f"{label}: unexpected GeckoTerminal status")
     if external_reviews.get("lastUpdated") != "2026-08-10":
@@ -16681,7 +16592,7 @@ def validate_reviewer_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing final preflight requirement")
     handoff_ids = {item.get("id") for item in handoff.get("evidenceIndex", [])}
     for expected_id in (
-        "founder-team-transparency",
+        "team-responsibility-transparency",
         "project-profile-return-reason-map",
         "domain-email-plan",
         "domain-email-evidence-checklist",
@@ -16697,7 +16608,7 @@ def validate_reviewer_kit_json(text: str) -> None:
             raise SiteCheckError(f"{label}: missing BaseScan handoff evidence {expected_id}")
     handoff_text = json.dumps(handoff)
     for expected in (
-        TIM_CHEN_PROFILE_PAGE_URL,
+        TEAM_PAGE_URL,
         f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle",
         DOMAIN_EMAIL_PAGE_URL,
         DOMAIN_EMAIL_EVIDENCE_PAGE_URL,
@@ -16789,11 +16700,11 @@ def validate_reviewer_kit_page(text: str) -> None:
     assert_contains(text, "Current gate", label)
     assert_contains(text, "readyForBaseScanResubmission", label)
     assert_contains(text, "submit one clean owner-controlled request", label)
-    assert_contains(text, "Founder / team transparency", label)
+    assert_contains(text, "Team responsibility transparency", label)
     assert_contains(text, "Return-reason map", label)
     assert_contains(text, "Project Profile BaseScan reviewer map", label)
     assert_contains(text, "Team profile", label)
-    assert_contains(text, "Tim Chen professional profile", label)
+    assert_contains(text, "GCA team responsibilities", label)
     assert_contains(text, "Domain Email Gate", label)
     assert_contains(text, "Final preflight gate", label)
     assert_contains(text, "Daily Status Queue", label)
@@ -16883,10 +16794,10 @@ def validate_platform_replies_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong projectProfileBaseScanMap")
     if links.get("teamPage") != TEAM_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong teamPage")
-    if links.get("timChenProfessionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
-        raise SiteCheckError(f"{label}: wrong timChenProfessionalProfile")
-    if links.get("timChenProfessionalProfileData") != TIM_CHEN_PROFILE_URL:
-        raise SiteCheckError(f"{label}: wrong timChenProfessionalProfileData")
+    if links.get("teamResponsibilities") != TEAM_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong teamResponsibilities")
+    if links.get("teamResponsibilitiesData") != PROJECT_PROFILE_DATA_URL:
+        raise SiteCheckError(f"{label}: wrong teamResponsibilitiesData")
     if links.get("baseScanRemediationPage") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong baseScanRemediationPage")
     if links.get("baseScanRemediation") != BASESCAN_REMEDIATION_URL:
@@ -16948,7 +16859,7 @@ def validate_platform_replies_json(text: str) -> None:
     for expected in (
         "BaseScan returned the request again as information-insufficient on 2026-05-23",
         "Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle",
-        "Tim Chen professional profile: https://gcagochina.com/tim-chen.html",
+        "GCA team responsibilities: https://gcagochina.com/team.html",
         "Domain email setup plan: https://gcagochina.com/domain-email.html",
         "Domain email setup data: https://gcagochina.com/domain-email.json",
         "Domain email evidence checklist: https://gcagochina.com/domain-email-evidence.html",
@@ -17011,7 +16922,7 @@ def validate_platform_replies_page(text: str) -> None:
     assert_contains(text, "BaseScan Token Profile", label)
     assert_contains(text, "BaseScan returned the request again as information-insufficient on 2026-05-23", label)
     assert_contains(text, "Project profile and BaseScan reviewer map: https://gcagochina.com/project-profile.html#basescanMapTitle", label)
-    assert_contains(text, "Tim Chen professional profile: https://gcagochina.com/tim-chen.html", label)
+    assert_contains(text, "GCA team responsibilities: https://gcagochina.com/team.html", label)
     assert_contains(text, "BaseScan remediation tracker: https://gcagochina.com/basescan-remediation.html", label)
     assert_contains(text, "Domain email setup plan: https://gcagochina.com/domain-email.html", label)
     assert_contains(text, "Domain email setup data: https://gcagochina.com/domain-email.json", label)
@@ -17348,8 +17259,8 @@ def validate_external_reviews_json(text: str) -> None:
     if "Use support@gcagochina.com" not in email_alignment.get("baseScanUse", ""):
         raise SiteCheckError(f"{label}: missing email alignment boundary")
     base_scan_profile = reviews.get("baseScanTokenProfile", {})
-    if base_scan_profile.get("professionalProfile") != TIM_CHEN_PROFILE_PAGE_URL:
-        raise SiteCheckError(f"{label}: wrong professionalProfile")
+    if base_scan_profile.get("teamResponsibilities") != TEAM_PAGE_URL:
+        raise SiteCheckError(f"{label}: wrong teamResponsibilities")
     if base_scan_profile.get("projectProfileBaseScanMap") != f"{PROJECT_PROFILE_PAGE_URL}#basescanMapTitle":
         raise SiteCheckError(f"{label}: wrong projectProfileBaseScanMap")
     if base_scan_profile.get("domainEmailSetupPlan") != DOMAIN_EMAIL_PAGE_URL:
@@ -17424,7 +17335,7 @@ def validate_external_reviews_json(text: str) -> None:
         raise SiteCheckError(f"{label}: missing current BaseScan public profile observation")
     if "Token Rep remains Unknown" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing current BaseScan Token Rep observation")
-    if "Tim Chen official-domain professional profile evidence is published" not in base_scan_profile.get("lastCheckedResult", ""):
+    if "GCA team responsibility evidence is published" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan profile last checked result")
     if "Project Profile BaseScan reviewer map is published" not in base_scan_profile.get("lastCheckedResult", ""):
         raise SiteCheckError(f"{label}: missing BaseScan project profile map result")
@@ -17532,7 +17443,7 @@ def validate_external_reviews_page(text: str) -> None:
     assert_contains(text, "default preview image", label)
     assert_contains(text, "2026-08-11T18:56:43Z", label)
     assert_contains(text, "2026-08-12T06:37:31Z", label)
-    assert_contains(text, "tim-chen.html", label)
+    assert_contains(text, "team.html", label)
     assert_contains(text, "Project Profile Map", label)
     assert_contains(text, "project-profile.html#basescanMapTitle", label)
     assert_contains(text, "Domain Email Plan", label)
@@ -17685,7 +17596,7 @@ def validate_listing_readiness_page(text: str) -> None:
     assert_contains(text, "CoinGecko tracked listing request", label)
     assert_contains(text, "CoinMarketCap tracked listing request", label)
     assert_contains(text, "Returned again 2026-05-23; final package refreshed 2026-08-11; Handoff and Chinese owner flow ready for one support@gcagochina.com submission", label)
-    assert_contains(text, "Tim Chen profile, Project Profile reviewer map, domain email plan, evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com evidence are ready", label)
+    assert_contains(text, "GCA team responsibilities, Project Profile reviewer map, domain email plan, evidence checklist, activation evidence packet, BaseScan Handoff, Chinese owner flow, and support@gcagochina.com evidence are ready", label)
     assert_contains(text, "Project Profile reviewer map", label)
     assert_contains(text, "project-profile.html#basescanMapTitle", label)
     assert_contains(text, "Plan, public evidence checklist, and packet path published; mailbox active and evidence retained privately", label)
@@ -17693,7 +17604,7 @@ def validate_listing_readiness_page(text: str) -> None:
     assert_contains(text, "Final submission package generated 2026-08-11T18:56:43Z", label)
     assert_contains(text, "Domain Email Evidence Checklist", label)
     assert_contains(text, "domain-email-evidence.html", label)
-    assert_contains(text, "Tim Chen Professional Profile", label)
+    assert_contains(text, "GCA Team Responsibilities", label)
     assert_contains(text, "Approved 2026-05-11", label)
     assert_contains(text, "No artificial activity policy", label)
     assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
@@ -17770,8 +17681,6 @@ CHECKS: list[EndpointCheck] = [
     ("/unsubscribe.html", validate_unsubscribe_page),
     ("/about.html", validate_about_page),
     ("/team.html", validate_team_page),
-    ("/tim-chen.html", validate_tim_chen_profile_page),
-    ("/tim-chen.json", validate_tim_chen_profile_json),
     ("/domain-email.html", validate_domain_email_page),
     ("/domain-email.json", validate_domain_email_json),
     ("/domain-email-evidence.html", validate_domain_email_evidence_page),

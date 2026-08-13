@@ -40,7 +40,7 @@
     },
     {
       "action": "Run the local link-integrity check before deployment, then run its live HTTPS mode and tools/check_public_site.py after deployment.",
-      "evidence": "tools/check_site_links.py parsed 123 HTML pages and 5772 URL references, verified 216 unique internal targets, fragments, duplicate IDs, placeholder schemes, and safe external-link attributes, and found no errors.",
+      "evidence": "tools/check_site_links.py parsed 123 HTML pages and 5195 URL references, verified 224 unique internal targets, fragments, duplicate IDs, placeholder schemes, and safe external-link attributes, and found no errors.",
       "key": "placeholder-and-link-review",
       "links": [
         "https://gcagochina.com/data.html",
@@ -50,18 +50,18 @@
       "title": "No obvious placeholders or broken reviewer links"
     },
     {
-      "action": "Add LinkedIn only if BaseScan specifically requires a third-party social-network profile.",
-      "evidence": "Tim Chen is published on the team page and standalone official-domain professional profile with GitHub, X, Telegram, and role scope.",
-      "key": "founder-team-transparency",
+      "action": "If BaseScan specifically requests external organization evidence, publish an official organization profile on a recognized business network.",
+      "evidence": "GCA operating roles and responsibilities are published on the official domain with official X, Telegram, and project evidence links.",
+      "key": "team-responsibility-transparency",
       "links": [
         "https://gcagochina.com/team.html",
-        "https://gcagochina.com/tim-chen.html",
-        "https://github.com/timchen078/gca_token",
+        "https://gcagochina.com/team.html",
+        "https://gcagochina.com/project-profile.html",
         "https://t.me/gcagochinaofficial",
         "https://x.com/GCAAIGoChina"
       ],
       "status": "implemented-official-domain-equivalent",
-      "title": "Founder and team transparency"
+      "title": "Team responsibility transparency"
     },
     {
       "action": "Submit one clean BaseScan token-profile update from support@gcagochina.com, attaching the public evidence links and retaining private mailbox screenshots for reviewer follow-up.",
@@ -102,12 +102,12 @@
     },
     {
       "action": "Keep all public materials pointed to the GCA/USDT route, not the older WETH pilot pool.",
-      "evidence": "Telegram, X, GitHub, and the official Base Mainnet GCA/USDT market route are published. GeckoTerminal token information is approved.",
+      "evidence": "Telegram, X, project profile, and the official Base Mainnet GCA/USDT market route are published. GeckoTerminal token information is approved.",
       "key": "social-and-market-links",
       "links": [
         "https://t.me/gcagochinaofficial",
         "https://x.com/GCAAIGoChina",
-        "https://github.com/timchen078/gca_token",
+        "https://gcagochina.com/project-profile.html",
         "https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0",
         "https://dexscreener.com/base/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0"
       ],
@@ -136,8 +136,8 @@
     "errors": [],
     "ok": true,
     "pageCount": 123,
-    "referenceCount": 5772,
-    "uniqueInternalTargetCount": 216
+    "referenceCount": 5195,
+    "uniqueInternalTargetCount": 224
   },
   "status": "ready-for-owner-review",
   "targetDomainEmail": "support@gcagochina.com"
