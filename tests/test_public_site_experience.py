@@ -37,7 +37,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             prefix = "../" * depth
             page = path.read_text()
             expected_css = f'href="{prefix}assets/gca-site.css?v=20260812-3"'
-            expected_js = f'src="{prefix}assets/gca-site.js?v=20260812-2" defer'
+            expected_js = f'src="{prefix}assets/gca-site.js?v=20260813-1" defer'
             if expected_css not in page or expected_js not in page:
                 missing.append(relative.as_posix())
 
@@ -66,16 +66,21 @@ class PublicSiteExperienceTests(unittest.TestCase):
             "markets.html",
             "tools.html",
             "product.html",
-            "gca/member-access/",
+            "members.html",
             "about.html",
             "zh-cn.html",
             "zh-product.html",
+            "zh-members.html",
             "zh-markets.html",
             "zh-wallet-verify.html",
             "zh-support.html",
         ):
             self.assertIn(f'"{path}"', script)
 
+        self.assertIn('["Members", "members.html"]', script)
+        self.assertIn('["会员", "zh-members.html"]', script)
+        self.assertNotIn('["Members", "gca/member-access/"]', script)
+        self.assertNotIn('["会员", "gca/member-access/"]', script)
         self.assertIn('navLinks.replaceChildren()', script)
         self.assertIn('aria-current", "page"', script)
 
@@ -199,7 +204,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         for whitepaper in (page, chinese):
             self.assertIn('assets/gca-core.css?v=20260812-2', whitepaper)
             self.assertIn('assets/gca-site.css?v=20260812-3', whitepaper)
-            self.assertIn('assets/gca-site.js?v=20260812-2', whitepaper)
+            self.assertIn('assets/gca-site.js?v=20260813-1', whitepaper)
             self.assertNotIn("Tim Chen", whitepaper)
             self.assertNotIn("CEO", whitepaper)
 
