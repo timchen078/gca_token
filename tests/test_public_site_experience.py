@@ -188,21 +188,20 @@ class PublicSiteExperienceTests(unittest.TestCase):
             self.assertTrue(banner.exists(), name)
             self.assertLess(banner.stat().st_size, 400_000, name)
 
-    def test_whitepaper_uses_shared_mobile_navigation_and_wraps_long_links(self):
+    def test_whitepapers_use_shared_mobile_navigation(self):
         page = (SITE / "whitepaper.html").read_text()
         chinese = (SITE / "zh-whitepaper.html").read_text()
 
-        self.assertIn('<div class="nav-links">', page)
+        self.assertIn('<div class="nav-links"></div>', page)
         self.assertIn('aria-label="Primary"', page)
-        self.assertIn("article a {", page)
-        self.assertIn("overflow-wrap: anywhere;", page)
         self.assertIn('<div class="nav-links"></div>', chinese)
         self.assertIn('aria-label="主导航"', chinese)
-        self.assertIn('assets/gca-core.css?v=20260812-2', chinese)
-        self.assertIn('assets/gca-site.css?v=20260812-3', chinese)
-        self.assertIn('assets/gca-site.js?v=20260812-2', chinese)
-        self.assertNotIn("Tim Chen", chinese)
-        self.assertNotIn("CEO", chinese)
+        for whitepaper in (page, chinese):
+            self.assertIn('assets/gca-core.css?v=20260812-2', whitepaper)
+            self.assertIn('assets/gca-site.css?v=20260812-3', whitepaper)
+            self.assertIn('assets/gca-site.js?v=20260812-2', whitepaper)
+            self.assertNotIn("Tim Chen", whitepaper)
+            self.assertNotIn("CEO", whitepaper)
 
     def test_member_access_restores_non_sensitive_device_snapshot(self):
         page = (SITE / "gca" / "member-access" / "index.html").read_text()

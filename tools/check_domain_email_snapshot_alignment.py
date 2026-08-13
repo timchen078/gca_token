@@ -44,7 +44,6 @@ DEFAULT_MONITORED_FILES = [
     "site/status.html",
     "site/trust.html",
     "site/trust.json",
-    "site/whitepaper.html",
     "site/zh-domain-email.html",
 ]
 

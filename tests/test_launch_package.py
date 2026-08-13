@@ -7698,7 +7698,7 @@ class LaunchPackageTests(unittest.TestCase):
         wallet_warning = (ROOT / "site" / "wallet-warning.html").read_text()
         external = (ROOT / "site" / "external-reviews.html").read_text()
         brand = (ROOT / "site" / "brand-kit.html").read_text()
-        for page in (buy, markets, supply, security, risk, faq, utility, whitepaper, readiness, quality, wallet_warning, external, onchain, brand, member_ledger, roadmap, community, privacy, terms):
+        for page in (buy, markets, supply, security, risk, faq, utility, readiness, quality, wallet_warning, external, onchain, brand, member_ledger, roadmap, community, privacy, terms):
             self.assertIn('href="status.html"', page)
             self.assertIn('href="listing-kit.html"', page)
             self.assertIn('href="markets.html"', page)
@@ -7706,6 +7706,18 @@ class LaunchPackageTests(unittest.TestCase):
             self.assertIn('href="security.html"', page)
             self.assertIn('href="risk.html"', page)
             self.assertIn('href="faq.html"', page)
+        for internal_path in (
+            "status.html",
+            "listing-kit.html",
+            "technical-report.html",
+            "domain-email.html",
+            "member-benefit-transfer.html",
+            "release-gates.html",
+        ):
+            self.assertNotIn(f'href="{internal_path}"', whitepaper)
+        self.assertIn('href="markets.html"', whitepaper)
+        self.assertIn('href="supply.html"', whitepaper)
+        self.assertIn('href="security.html"', whitepaper)
         for page in (verify, support):
             self.assertNotIn('href="status.html"', page)
             self.assertNotIn('href="listing-kit.html"', page)
@@ -11691,7 +11703,27 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('href="whitepaper.html"', index)
         self.assertIn('href="zh-whitepaper.html"', chinese_index)
         self.assertIn('href="zh-whitepaper.html"', whitepaper)
-        self.assertIn("GCA Whitepaper", whitepaper)
+        self.assertIn("GCA Project Whitepaper", whitepaper)
+        self.assertIn("Narrative meets product. Product prioritizes risk control.", whitepaper)
+        self.assertIn("Three product lines. One official identity.", whitepaper)
+        self.assertIn("10 browser-based research and risk tools", whitepaper)
+        self.assertIn("100 GCA AI Quant Access credits", whitepaper)
+        self.assertIn("at least 1,000,000 GCA for 30 consecutive days", whitepaper)
+        self.assertIn("one-time 10,000 GCA member-benefit review", whitepaper)
+        self.assertIn("not automatic and not newly minted", whitepaper)
+        self.assertIn("Owner-held reserve", whitepaper)
+        self.assertIn("600,000,000 GCA", whitepaper)
+        self.assertIn(RESERVE_WALLET, whitepaper)
+        self.assertIn("not a lock, multisig, vesting contract, or burn address", whitepaper)
+        self.assertIn("No independent third-party audit report has been completed", whitepaper)
+        self.assertIn("mailto:support@gcagochina.com", whitepaper)
+        self.assertIn(TELEGRAM_URL, whitepaper)
+        self.assertIn(X_URL, whitepaper)
+        self.assertIn("GCA/USDT", whitepaper)
+        self.assertIn(OFFICIAL_POOL_ADDRESS, whitepaper)
+        self.assertIn(BASE_USDT_ADDRESS, whitepaper)
+        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, whitepaper)
+        self.assertIn(MAINNET_ADDRESS, whitepaper)
         self.assertIn("GCA 项目白皮书", chinese_whitepaper)
         self.assertIn("叙事连接产品，产品强调风险控制。", chinese_whitepaper)
         self.assertIn("10 项浏览器研究与风控工具", chinese_whitepaper)
@@ -11703,54 +11735,25 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Version 0.6", whitepaper)
         self.assertIn("Go China Access", index)
         self.assertIn("Go China Access", whitepaper)
-        self.assertIn("manually reviewed service delivery", whitepaper)
-        self.assertIn("Connected market-data and trading modules remain staged", whitepaper)
-        self.assertIn("account service requests", whitepaper)
-        self.assertIn("at-most-once credit settlement", whitepaper)
-        self.assertIn("ENTRY_READY signal review", whitepaper)
-        self.assertIn("one wallet holding at least 10,000 GCA", whitepaper)
-        self.assertIn("100 GCA AI Quant Access credits", whitepaper)
-        self.assertIn("one wallet buying and continuously holding at least 1,000,000 GCA for 30 days", whitepaper)
-        self.assertIn("GCA Member status", whitepaper)
-        self.assertIn("higher utility credit limits", whitepaper)
-        self.assertIn("one-time 10,000 GCA member benefit", whitepaper)
-        self.assertIn("member-benefit-transfer.html", whitepaper)
-        self.assertIn("manual member benefit transfer runbook", whitepaper)
-        self.assertIn("manual reserve transfer after approval", whitepaper)
-        self.assertIn("not automatic and not newly minted", whitepaper)
-        self.assertIn("Verified Utility Boundaries", whitepaper)
-        self.assertIn("deployer-wallet ownership verification are complete", whitepaper)
-        self.assertIn("Owner-held reserve", whitepaper)
-        self.assertIn("600,000,000 GCA", whitepaper)
-        self.assertIn(RESERVE_WALLET, whitepaper)
-        self.assertIn(RESERVE_TX, whitepaper)
-        self.assertIn(SECOND_RESERVE_TX, whitepaper)
-        self.assertIn("not a lock, vesting contract, or Safe multisig", whitepaper)
-        self.assertIn("mailto:support@gcagochina.com", whitepaper)
-        self.assertIn("https://gcagochina.com/buy.html", whitepaper)
-        self.assertIn("https://gcagochina.com/utility.html", whitepaper)
-        self.assertIn(TELEGRAM_URL, whitepaper)
-        self.assertIn("starter liquidity only", whitepaper)
-        self.assertIn("Third-party audit quote requests were submitted to QuillAudits, Hacken, and OpenZeppelin on 2026-05-10", whitepaper)
-        self.assertIn("then deferred by owner decision", whitepaper)
-        self.assertIn("GCA/USDT", whitepaper)
-        self.assertIn(OFFICIAL_POOL_ADDRESS, whitepaper)
-        self.assertIn(BASE_USDT_ADDRESS, whitepaper)
-        self.assertIn(OFFICIAL_UNISWAP_POOL_URL, whitepaper)
-        self.assertIn(OFFICIAL_DEXSCREENER_URL, whitepaper)
-        self.assertIn(OFFICIAL_GECKOTERMINAL_URL, whitepaper)
-        self.assertIn("GeckoTerminal token information was approved on 2026-05-11", whitepaper)
-        self.assertIn("returned again as information-insufficient on 2026-05-23", whitepaper)
-        self.assertIn('href="team.html">GCA team responsibilities</a> is now published', whitepaper)
-        self.assertIn("domain email setup plan", whitepaper)
-        self.assertIn("domain-email.html#snapshotTitle", whitepaper)
-        self.assertIn("public evidence checklist", whitepaper)
-        self.assertIn("domain-email-evidence.html", whitepaper)
-        self.assertIn("2026-05-30 DNS snapshot", whitepaper)
-        self.assertIn("MX/SPF/DKIM/DMARC present", whitepaper)
-        self.assertIn("MX/SPF/DKIM/DMARC present", whitepaper)
-        self.assertIn("readyForBaseScanEmailEvidence", whitepaper)
-        self.assertIn("project-domain email is ready", whitepaper)
+        for internal_only in (
+            "BaseScan Token Profile Status",
+            "information-insufficient",
+            "DNS snapshot",
+            "readyForBaseScanEmailEvidence",
+            "QuillAudits",
+            "Hacken",
+            "OpenZeppelin",
+            "project-profile.html",
+            "listing-kit.html",
+            "technical-report.html",
+            "domain-email.html",
+            "member-benefit-transfer.html",
+            "release-gates.html",
+            "Tim Chen",
+            "CEO",
+            "Founder",
+        ):
+            self.assertNotIn(internal_only, whitepaper)
         self.assertIn("returned again as information-insufficient on 2026-05-23", whitepaper_source)
         self.assertIn(DOMAIN_EMAIL_PAGE_URL, whitepaper_source)
         self.assertIn(DOMAIN_EMAIL_EVIDENCE_PAGE_URL, whitepaper_source)
@@ -11769,7 +11772,6 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("MX/SPF/DKIM/DMARC present", public_profile)
         self.assertIn("readyForBaseScanEmailEvidence", public_profile)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, whitepaper)
-        self.assertIn(MAINNET_ADDRESS, whitepaper)
 
     def test_telegram_pinned_buy_announcement_is_safe_to_post(self):
         pin = (ROOT / "launch" / "telegram_pinned_buy_announcement.md").read_text()

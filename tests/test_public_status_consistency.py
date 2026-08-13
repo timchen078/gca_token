@@ -302,7 +302,7 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             )
             for item in root.findall("sm:url", namespace)
         }
-        updated_paths = ("privacy.html", "whitepaper.html", "terms.html")
+        updated_paths = ("privacy.html", "terms.html")
         for path in updated_paths:
             url = f"https://gcagochina.com/{path}"
             self.assertEqual(sitemap.get(url), LAST_UPDATED, url)
@@ -319,6 +319,7 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             "zh-about.html",
             "team.html",
             "zh-team.html",
+            "whitepaper.html",
             "zh-whitepaper.html",
             "support.html",
             "zh-support.html",

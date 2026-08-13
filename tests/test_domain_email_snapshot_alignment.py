@@ -43,6 +43,10 @@ class DomainEmailSnapshotAlignmentTests(unittest.TestCase):
         self.assertEqual(report["summary"]["filesWithStaleSnapshotMarkers"], 0)
         self.assertEqual(report["summary"]["filesMissingCurrentSnapshotDate"], 0)
         self.assertEqual(report["summary"]["missingMonitoredFiles"], 0)
+        self.assertNotIn(
+            "site/whitepaper.html",
+            {record["path"] for record in report["records"]},
+        )
         self.assertTrue(report["boundaries"]["readOnly"])
         self.assertFalse(report["boundaries"]["writesPublicFiles"])
         self.assertFalse(report["boundaries"]["submitsBaseScanRequest"])

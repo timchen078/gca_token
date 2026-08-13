@@ -61,7 +61,7 @@ PUBLIC_INDEXABLE_LASTMOD = {
     "/zh-about.html": "2026-08-13",
     "/team.html": "2026-08-13",
     "/zh-team.html": "2026-08-13",
-    "/whitepaper.html": "2026-08-10",
+    "/whitepaper.html": "2026-08-13",
     "/zh-whitepaper.html": "2026-08-13",
     "/brand-kit.html": "2026-05-13",
     "/reserve-statement.html": "2026-05-16",
@@ -5038,37 +5038,81 @@ def validate_faq_page(text: str) -> None:
 def validate_whitepaper_page(text: str) -> None:
     label = "/whitepaper.html"
     assert_social_preview_meta(text, label, WHITEPAPER_PAGE_URL)
-    assert_contains(text, "GCA Whitepaper", label)
-    assert_contains(text, '<div class="nav-links">', label)
-    assert_contains(text, 'aria-label="Primary"', label)
-    assert_contains(text, "article a {", label)
-    assert_contains(text, "overflow-wrap: anywhere;", label)
-    assert_contains(text, "Version 0.6", label)
-    assert_contains(text, "Narrative meets risk control", label)
-    assert_contains(text, "not a wallet quote, executable price, buy/sell signal, transaction, or price forecast", label)
-    assert_contains(text, "account service requests, follow-ups, queued-request cancellation, delivery acknowledgement, reviewed service delivery, and at-most-once credit settlement are live through Workers + D1", label)
-    assert_contains(text, "Connected market-data and trading modules remain staged behind published release gates", label)
-    assert_contains(text, "The 10,000 GCA transfer itself remains manual reserve-wallet processing after approval", label)
-    assert_contains(text, "not as a yield product", label)
-    assert_contains(text, "not automatic and not newly minted", label)
-    assert_contains(text, "This is not a substitute for a third-party audit", label)
-    assert_contains(text, "no third-party audit has been completed", label)
-    assert_contains(text, "returned again as information-insufficient on 2026-05-23", label)
-    assert_contains(text, "domain-email.html#snapshotTitle", label)
-    assert_contains(text, "public evidence checklist", label)
-    assert_contains(text, "domain-email-evidence.html", label)
-    assert_contains_any(text, ("2026-05-25 DNS snapshot", "2026-05-30 DNS snapshot"), label, "DNS snapshot")
-    assert_contains(text, "MX/SPF/DKIM/DMARC present", label)
-    assert_contains(text, "readyForBaseScanEmailEvidence", label)
-    assert_contains(text, "support@gcagochina.com", label)
-    assert_contains(text, MAINNET_ADDRESS, label)
-    assert_contains(text, BASE_USDT_ADDRESS, label)
-    assert_contains(text, OFFICIAL_GECKOTERMINAL_URL, label)
-    assert_contains(text, OFFICIAL_DEXSCREENER_URL, label)
-    assert_contains(text, '<link rel="alternate" hreflang="en" href="https://gcagochina.com/whitepaper.html">', label)
-    assert_contains(text, '<link rel="alternate" hreflang="zh-CN" href="https://gcagochina.com/zh-whitepaper.html">', label)
-    assert_contains(text, 'href="zh-whitepaper.html"', label)
+    for expected in (
+        "GCA Project Whitepaper",
+        "Project whitepaper · Version 0.6",
+        "Go China Access",
+        "Narrative meets product. Product prioritizes risk control.",
+        "Three product lines. One official identity.",
+        "Fixed supply. One verifiable identity.",
+        "Allocation reporting is separate from onchain total supply.",
+        "GCA/USDT on Base.",
+        "Eligibility, records, and benefits are reviewed separately.",
+        "Technical facts and external assurance are separate.",
+        "The public product focuses on research and risk control.",
+        "Responsibilities, documentation, and official channels stay public.",
+        "10 browser-based research and risk tools",
+        "100 GCA AI Quant Access credits",
+        "10,000 GCA",
+        "1,000,000 GCA",
+        "30 consecutive days",
+        "one-time 10,000 GCA member-benefit review",
+        "400,000,000 GCA",
+        "600,000,000 GCA",
+        "Owner-held reserve",
+        "not locked",
+        "Uniswap v4 · 0.01%",
+        "No independent third-party audit report has been completed",
+        "not part of the current public product",
+        "support@gcagochina.com",
+        X_URL,
+        TELEGRAM_URL,
+        MAINNET_ADDRESS,
+        BASE_USDT_ADDRESS,
+        OFFICIAL_POOL_ADDRESS,
+        "product.html",
+        "verify.html",
+        "supply.html",
+        "markets.html",
+        "members.html",
+        "security.html",
+        "team.html",
+        "about.html",
+        "support.html",
+        "site-map.html",
+        '<link rel="alternate" hreflang="en" href="https://gcagochina.com/whitepaper.html">',
+        '<link rel="alternate" hreflang="zh-CN" href="https://gcagochina.com/zh-whitepaper.html">',
+        'href="zh-whitepaper.html"',
+    ):
+        assert_contains(text, expected, label)
+    for forbidden in (
+        "Tim Chen",
+        "CEO",
+        "Founder",
+        "Company",
+        "under construction",
+        "in progress",
+        "BaseScan Token Profile Status",
+        "information-insufficient",
+        "DNS snapshot",
+        "readyForBaseScanEmailEvidence",
+        "QuillAudits",
+        "Hacken",
+        "OpenZeppelin",
+        "project-profile.html",
+        "listing-kit.html",
+        "technical-report.html",
+        "domain-email.html",
+        "basescan-handoff.html",
+        "member-benefit-transfer.html",
+        "release-gates.html",
+        "data.html",
+        ".json",
+    ):
+        assert_not_contains(text, forbidden, label)
+    assert_no_public_data_room_terms(text, label)
     assert_current_pool_text(text, label)
+    assert_no_forbidden_public_claims(text, label)
 
 
 def validate_zh_whitepaper_page(text: str) -> None:
