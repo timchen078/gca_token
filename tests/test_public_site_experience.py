@@ -94,7 +94,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
             self.assertIn('https://t.me/gcagochinaofficial', page)
             self.assertIn('rel="alternate" hreflang="en"', page)
             self.assertIn('rel="alternate" hreflang="zh-CN"', page)
-            self.assertIn('class="hero-proof"', page)
+            self.assertIn('class="hero-carousel"', page)
+            self.assertEqual(page.count('data-carousel-slide'), 6)
+            self.assertEqual(page.count('data-carousel-dot='), 6)
+            self.assertIn('assets/gca-carousel.js', page)
 
         self.assertIn("10 browser tools", english)
         self.assertIn("Local-first", english)
@@ -102,9 +105,29 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("10 项浏览器工具", chinese)
         self.assertIn("本地优先", chinese)
         self.assertIn("只读", chinese)
-        self.assertIn(".hero-proof", stylesheet)
+        self.assertIn(".hero-carousel", stylesheet)
+        self.assertIn(".carousel-track", stylesheet)
+        self.assertIn(".carousel-dot.is-active", stylesheet)
         self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr));", stylesheet)
         self.assertIn(".tool-card {\n    min-height: 0;", stylesheet)
+
+        carousel = (SITE / "assets" / "gca-carousel.js").read_text()
+        self.assertIn("window.setInterval", carousel)
+        self.assertIn("prefers-reduced-motion", carousel)
+        self.assertIn('event.key === "ArrowRight"', carousel)
+        self.assertIn('Math.abs(distance) > 48', carousel)
+
+        for name in (
+            "go-china",
+            "quant-tools",
+            "risk-control",
+            "global-access",
+            "token",
+            "members",
+        ):
+            banner = SITE / "assets" / f"gca-banner-{name}.jpg"
+            self.assertTrue(banner.exists(), name)
+            self.assertLess(banner.stat().st_size, 400_000, name)
 
     def test_whitepaper_uses_shared_mobile_navigation_and_wraps_long_links(self):
         page = (SITE / "whitepaper.html").read_text()
