@@ -51,6 +51,7 @@ header nav {
 
 header .brand {
   flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 header .nav-links {
