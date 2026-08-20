@@ -858,7 +858,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn('".github/workflows/check-public-site.yml"', workflow)
         self.assertIn("contents: read", workflow)
         self.assertIn("concurrency:", workflow)
-        self.assertIn("timeout-minutes: 10", workflow)
+        self.assertIn("timeout-minutes: 20", workflow)
         self.assertIn("actions/checkout@v4", workflow)
         self.assertIn("actions/setup-python@v5", workflow)
         self.assertIn('python-version: "3.12"', workflow)

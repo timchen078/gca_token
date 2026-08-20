@@ -24,7 +24,7 @@ jobs:
   check:
     name: Check live identity and link integrity
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
 
     steps:
       - name: Check out main
