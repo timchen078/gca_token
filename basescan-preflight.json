@@ -48,7 +48,7 @@
     "Domain email snapshot alignment points platform packets to the current ready DNS snapshot.",
     "BaseScan reviewer artifacts reference the canonical 2026-08-12T06:37:31Z daily-status snapshot with zero pending file changes.",
     "BaseScan handoff artifacts reference the canonical final owner package with zero pending file changes.",
-    "Reviewer URLs are reachable: team, Tim Chen, whitepaper, brand kit, support, GitHub, platform replies, and official market route."
+    "Reviewer URLs are reachable: team, GCA Team, whitepaper, brand kit, support, GitHub, platform replies, and official market route."
   ],
   "commands": {
     "dnsCheck": "python3 tools/check_domain_email_dns.py --domain gcagochina.com --mailbox support --dkim-selector <provider-selector> --json",
@@ -61,8 +61,8 @@
     "finalDraft": "python3 tools/build_basescan_submission_package.py --json --require-ready --output-json launch/basescan_final_submission_package.json --output-md launch/basescan_final_submission_package.md"
   },
   "evidenceLinks": {
-    "timChenProfessionalProfile": "https://gcagochina.com/tim-chen.html",
-    "teamAnchor": "https://gcagochina.com/team.html#tim-chen",
+    "teamResponsibilities": "https://gcagochina.com/team.html",
+    "teamAnchor": "https://gcagochina.com/team.html",
     "domainEmailPlan": "https://gcagochina.com/domain-email.html",
     "domainEmailDnsWorksheet": "https://gcagochina.com/domain-email.html#worksheetTitle",
     "domainEmailEvidenceChecklist": "https://gcagochina.com/domain-email-evidence.html",
@@ -70,7 +70,7 @@
     "platformReplies": "https://gcagochina.com/platform-replies.html",
     "whitepaper": "https://gcagochina.com/whitepaper.html",
     "brandKit": "https://gcagochina.com/brand-kit.html",
-    "githubRepository": "https://github.com/timchen078/gca_token",
+    "projectProfileSource": "https://gcagochina.com/project-profile.html",
     "officialMarketRoute": "https://gcagochina.com/markets.html"
   },
   "doNotSubmitUntil": [

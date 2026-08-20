@@ -24,7 +24,7 @@
     },
     {
       "name": "Reviewer-ready public identity",
-      "description": "The verified contract, official-domain email evidence, Tim Chen public profile, BaseScan handoff, supply disclosures, and risk boundaries remain available from stable public URLs."
+      "description": "The verified contract, official-domain email evidence, GCA Team public profile, BaseScan handoff, supply disclosures, and risk boundaries remain available from stable public URLs."
     }
   ],
   "utilityHooks": [
@@ -90,7 +90,7 @@
   "trustSignals": [
     "BaseScan source verification and deployer-wallet ownership verification are complete.",
     "GeckoTerminal token information was approved on 2026-05-11.",
-    "The official-domain support email and public professional profile are published for reviewer use.",
+    "The official-domain support email and public team responsibility page are published for reviewer use.",
     "The official public market route remains the Base Mainnet Uniswap v4 GCA/USDT pool.",
     "The public account and reviewed-service workflows expose bounded, non-custodial states without public ledger reads.",
     "The market snapshot validates chain, token, quote asset, pool, and venue identity before rendering data."

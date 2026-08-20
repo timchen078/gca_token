@@ -3,26 +3,27 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GCA | Go China Access</title>
-    <meta name="description" content="GCA connects the Go China narrative with browser-based quant risk tools, member access, and a fixed-supply ERC-20 token on Base Mainnet.">
+    <title>GCA华智通 | Web3量化交易与产品投资</title>
+    <meta name="description" content="GCA华智通：Web3量化交易与产品投资。连接 Go China 宏观叙事、量化风控工具与资产通道。">
     <link rel="canonical" href="https://gcagochina.com/">
     <link rel="icon" type="image/svg+xml" href="https://gcagochina.com/assets/gca-logo.svg">
     <link rel="apple-touch-icon" href="https://gcagochina.com/assets/gca-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="GCA | Go China Access">
-    <meta property="og:title" content="GCA | Go China Access">
-    <meta property="og:description" content="Go China narrative research, browser-based quant risk tools, member access, and a fixed-supply token on Base Mainnet.">
+    <meta property="og:title" content="GCA华智通 | Web3量化交易与产品投资">
+    <meta property="og:description" content="GCA华智通：Web3量化交易与产品投资。连接 Go China 宏观叙事、量化风控工具与资产通道。">
     <meta property="og:url" content="https://gcagochina.com/">
     <meta property="og:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="GCA | Go China Access">
-    <meta name="twitter:description" content="Go China narrative research, browser-based quant risk tools, member access, and a fixed-supply token on Base Mainnet.">
+    <meta name="twitter:title" content="GCA华智通 | Web3量化交易与产品投资">
+    <meta name="twitter:description" content="GCA华智通：Web3量化交易与产品投资。连接 Go China 宏观叙事、量化风控工具与资产通道。">
     <meta name="twitter:image" content="https://gcagochina.com/assets/gca-social-card.png">
     <link rel="alternate" hreflang="en" href="https://gcagochina.com/">
     <link rel="alternate" hreflang="zh-CN" href="https://gcagochina.com/zh-cn.html">
     <link rel="alternate" hreflang="x-default" href="https://gcagochina.com/">
+    <link rel="preload" as="image" href="assets/gca-banner-go-china.jpg" fetchpriority="high">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -34,15 +35,9 @@
             "url": "https://gcagochina.com/",
             "logo": "https://gcagochina.com/assets/gca-logo.png",
             "email": "mailto:support@gcagochina.com",
-            "founder": {
-              "@type": "Person",
-              "name": "Tim Chen",
-              "url": "https://gcagochina.com/tim-chen.html"
-            },
             "sameAs": [
               "https://x.com/GCAAIGoChina",
-              "https://t.me/gcagochinaofficial",
-              "https://github.com/timchen078/gca_token"
+              "https://t.me/gcagochinaofficial"
             ]
           },
           {
@@ -56,9 +51,10 @@
         ]
       }
     </script>
-    <link rel="stylesheet" href="assets/gca-home.css?v=20260812-2">
+    <link rel="stylesheet" href="assets/gca-home.css?v=20260813-1">
     <link rel="stylesheet" href="assets/gca-site.css?v=20260812-3">
-    <script src="assets/gca-site.js?v=20260812-2" defer></script>
+    <script src="assets/gca-site.js?v=20260813-1" defer></script>
+    <script src="assets/gca-carousel.js?v=20260813-1" defer></script>
   </head>
   <body>
     <header>
@@ -72,25 +68,116 @@
     </header>
 
     <main id="main-content">
-      <section class="hero" aria-labelledby="title">
-        <img class="hero-art" src="assets/gca-logo.svg" alt="" aria-hidden="true">
-        <div class="shell">
-          <div class="hero-content">
-            <p class="eyebrow">Go China Access · Base Mainnet</p>
-            <h1 id="title">GCA</h1>
-            <p class="lead hero-copy">A bilingual Web3 research and risk-control platform connecting the Go China narrative, browser-based quant tools, structured member workflows, and a fixed-supply Base token under one verifiable identity.</p>
-            <div class="actions">
-              <a class="button primary" href="product.html">Open Risk Tools</a>
-              <a class="button accent" href="verify.html">Verify Token</a>
-              <a class="button" href="gca/member-access/">Member Access</a>
-            </div>
-            <div class="hero-proof" aria-label="Product characteristics">
-              <span><strong>10 browser tools</strong> ready to use</span>
-              <span><strong>Local-first</strong> private workspace</span>
-              <span><strong>Read-only</strong> wallet verification</span>
-            </div>
+      <section class="hero-carousel" data-carousel aria-label="GCA highlights" aria-roledescription="carousel">
+        <div class="carousel-viewport">
+          <div class="carousel-track" data-carousel-track>
+            <article class="carousel-slide is-active" data-carousel-slide aria-hidden="false" aria-labelledby="title">
+              <img class="carousel-image" src="assets/gca-banner-go-china.jpg" width="1500" height="500" alt="" fetchpriority="high">
+              <div class="shell carousel-shell">
+                <div class="carousel-copy">
+                  <p class="carousel-kicker">Go China Access · Base Mainnet</p>
+                  <h1 id="title">GCA</h1>
+                  <p class="carousel-lead">A bilingual Web3 research and risk-control platform connecting the Go China narrative with verifiable on-chain access.</p>
+                  <p class="carousel-meta"><strong>10 browser tools</strong> · <strong>Local-first</strong> · <strong>Read-only</strong></p>
+                  <div class="actions carousel-actions">
+                    <a class="button primary" href="product.html">Explore GCA</a>
+                    <a class="button" href="start.html">Start Here</a>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="carousel-slide" data-carousel-slide aria-hidden="true" aria-labelledby="quantBannerTitle">
+              <img class="carousel-image" src="assets/gca-banner-quant-tools.jpg" width="1500" height="500" alt="" loading="lazy">
+              <div class="shell carousel-shell">
+                <div class="carousel-copy">
+                  <p class="carousel-kicker">GCA AI Quant Access</p>
+                  <h2 id="quantBannerTitle">Tools for disciplined decisions.</h2>
+                  <p class="carousel-lead">Position sizing, entry review, backtesting, portfolio risk and trade journaling in one browser workflow.</p>
+                  <div class="actions carousel-actions">
+                    <a class="button primary" href="tools.html">Open Risk Tools</a>
+                    <a class="button" href="product.html">Product Overview</a>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="carousel-slide" data-carousel-slide aria-hidden="true" aria-labelledby="riskBannerTitle">
+              <img class="carousel-image" src="assets/gca-banner-risk-control.jpg" width="1500" height="500" alt="" loading="lazy">
+              <div class="shell carousel-shell">
+                <div class="carousel-copy">
+                  <p class="carousel-kicker">Risk before execution</p>
+                  <h2 id="riskBannerTitle">Risk first. Trade second.</h2>
+                  <p class="carousel-lead">Define position size, invalidation, exposure and execution conditions before treating a setup as ready.</p>
+                  <div class="actions carousel-actions">
+                    <a class="button primary" href="entry-ready.html">Run Entry Review</a>
+                    <a class="button" href="risk-calculator.html">Size a Position</a>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="carousel-slide" data-carousel-slide aria-hidden="true" aria-labelledby="marketBannerTitle">
+              <img class="carousel-image" src="assets/gca-banner-global-access.jpg" width="1500" height="500" alt="" loading="lazy">
+              <div class="shell carousel-shell">
+                <div class="carousel-copy">
+                  <p class="carousel-kicker">Official market route</p>
+                  <h2 id="marketBannerTitle">GCA/USDT on Base.</h2>
+                  <p class="carousel-lead">Use the published pool identity and verify the network, token contract and quote asset before every swap.</p>
+                  <div class="actions carousel-actions">
+                    <a class="button primary" href="buy.html">Open Buy Guide</a>
+                    <a class="button" href="markets.html">View Market</a>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="carousel-slide" data-carousel-slide aria-hidden="true" aria-labelledby="tokenBannerTitle">
+              <img class="carousel-image" src="assets/gca-banner-token.jpg" width="1500" height="500" alt="" loading="lazy">
+              <div class="shell carousel-shell">
+                <div class="carousel-copy">
+                  <p class="carousel-kicker">Fixed supply · public contract</p>
+                  <h2 id="tokenBannerTitle">Verify GCA on-chain.</h2>
+                  <p class="carousel-lead">1,000,000,000 GCA on Base Mainnet, with verified source code and no subsequent mint function.</p>
+                  <div class="actions carousel-actions">
+                    <a class="button primary" href="verify.html">Verify Token</a>
+                    <a class="button" href="supply.html">View Supply</a>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="carousel-slide" data-carousel-slide aria-hidden="true" aria-labelledby="memberBannerTitle">
+              <img class="carousel-image" src="assets/gca-banner-members.jpg" width="1500" height="500" alt="" loading="lazy">
+              <div class="shell carousel-shell">
+                <div class="carousel-copy">
+                  <p class="carousel-kicker">GCA Member</p>
+                  <h2 id="memberBannerTitle">One account. Clear access.</h2>
+                  <p class="carousel-lead">Register by email, verify a Base wallet through a read-only balance check, and follow a structured member workflow.</p>
+                  <div class="actions carousel-actions">
+                    <a class="button primary" href="gca/member-access/">Member Access</a>
+                    <a class="button" href="members.html">Membership Rules</a>
+                  </div>
+                </div>
+              </div>
+            </article>
           </div>
         </div>
+
+        <button class="carousel-arrow carousel-arrow-prev" type="button" data-carousel-prev aria-label="Previous banner" title="Previous banner"><span aria-hidden="true">‹</span></button>
+        <button class="carousel-arrow carousel-arrow-next" type="button" data-carousel-next aria-label="Next banner" title="Next banner"><span aria-hidden="true">›</span></button>
+        <div class="carousel-controls shell">
+          <div class="carousel-dots" role="tablist" aria-label="Choose a GCA banner">
+            <button class="carousel-dot is-active" type="button" role="tab" data-carousel-dot="0" aria-selected="true" aria-label="Show banner 1 of 6"></button>
+            <button class="carousel-dot" type="button" role="tab" data-carousel-dot="1" aria-selected="false" aria-label="Show banner 2 of 6"></button>
+            <button class="carousel-dot" type="button" role="tab" data-carousel-dot="2" aria-selected="false" aria-label="Show banner 3 of 6"></button>
+            <button class="carousel-dot" type="button" role="tab" data-carousel-dot="3" aria-selected="false" aria-label="Show banner 4 of 6"></button>
+            <button class="carousel-dot" type="button" role="tab" data-carousel-dot="4" aria-selected="false" aria-label="Show banner 5 of 6"></button>
+            <button class="carousel-dot" type="button" role="tab" data-carousel-dot="5" aria-selected="false" aria-label="Show banner 6 of 6"></button>
+          </div>
+          <span class="carousel-counter" data-carousel-counter aria-hidden="true">01 / 06</span>
+        </div>
+        <p class="visually-hidden" data-carousel-status aria-live="polite"></p>
       </section>
 
       <section class="fact-band" aria-label="GCA key facts">
@@ -108,8 +195,8 @@
             <span class="fact-value">GCA/USDT · Uniswap v4</span>
           </div>
           <div class="fact">
-            <span class="fact-label">Founder &amp; CEO</span>
-            <span class="fact-value">Tim Chen</span>
+            <span class="fact-label">Project Operations</span>
+            <span class="fact-value">Published responsibilities</span>
           </div>
         </div>
       </section>
@@ -259,12 +346,12 @@
           <div class="section-heading">
             <p class="eyebrow">Public verification</p>
             <h2 id="trustTitle">Facts first.</h2>
-            <p>The token identity, supply, reserve ownership, market route, team profile, and security boundaries are published as readable pages.</p>
+            <p>The token identity, supply, reserve ownership, market route, operating responsibilities, and security boundaries are published as readable pages.</p>
           </div>
           <div class="identity-list">
             <div class="identity-row"><span>Contract source</span><strong><a href="https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6#code">Verified on BaseScan</a></strong></div>
             <div class="identity-row"><span>Total supply</span><strong><a href="supply.html">Fixed at 1 billion GCA</a></strong></div>
-            <div class="identity-row"><span>Project lead</span><strong><a href="tim-chen.html">Tim Chen public profile</a></strong></div>
+            <div class="identity-row"><span>Project operations</span><strong><a href="team.html">Roles and responsibilities</a></strong></div>
             <div class="identity-row"><span>Security boundaries</span><strong><a href="security.html">Technical disclosures</a></strong></div>
             <div class="identity-row"><span>Official support</span><strong><a href="mailto:support@gcagochina.com">support@gcagochina.com</a></strong></div>
           </div>
@@ -303,9 +390,9 @@
             <a href="supply.html">Supply</a>
           </div>
           <div class="footer-links">
-            <p class="footer-title">Company</p>
+            <p class="footer-title">Project</p>
             <a href="about.html">About</a>
-            <a href="team.html">Team</a>
+            <a href="team.html">Operations</a>
             <a href="whitepaper.html">Whitepaper</a>
             <a href="support.html">Support</a>
             <a href="https://x.com/GCAAIGoChina">X / Twitter</a>

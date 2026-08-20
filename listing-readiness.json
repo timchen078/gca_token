@@ -26,7 +26,7 @@
     "verify": "https://gcagochina.com/verify.html",
     "status": "https://gcagochina.com/status.html",
     "teamPage": "https://gcagochina.com/team.html",
-    "timChenProfessionalProfile": "https://gcagochina.com/tim-chen.html",
+    "teamResponsibilities": "https://gcagochina.com/team.html",
     "baseScanRemediationPage": "https://gcagochina.com/basescan-remediation.html",
     "baseScanRemediation": "https://gcagochina.com/basescan-remediation.json",
     "baseScanHandoffPage": "https://gcagochina.com/basescan-handoff.html",
@@ -84,7 +84,7 @@
       "lastCheckedDate": "2026-08-12",
       "finalSubmissionPackageGeneratedAt": "2026-08-11T18:56:43Z",
       "dailyStatusGeneratedAt": "2026-08-12T06:37:31Z",
-      "evidence": "Read-only public BaseScan check on 2026-08-12 still shows Token Rep Unknown, no official gcagochina.com metadata, and the default preview image; contract source verification remains visible. The prior 2026-05-23 information-insufficient return remains unresolved. Tim Chen official-domain professional profile evidence is published, support@gcagochina.com is active, and the domain email setup plan, public evidence checklist, activation evidence packet, expanded BaseScan reply template, BaseScan Handoff copy blocks, and Chinese owner flow are published. The 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present and readyForBaseScanEmailEvidence is true. The final owner submission package was regenerated on 2026-08-11T18:56:43Z and the daily public status snapshot was refreshed on 2026-08-12T06:37:31Z."
+      "evidence": "Read-only public BaseScan check on 2026-08-12 still shows Token Rep Unknown, no official gcagochina.com metadata, and the default preview image; contract source verification remains visible. The prior 2026-05-23 information-insufficient return remains unresolved. GCA team responsibility evidence is published, support@gcagochina.com is active, and the domain email setup plan, public evidence checklist, activation evidence packet, expanded BaseScan reply template, BaseScan Handoff copy blocks, and Chinese owner flow are published. The 2026-05-30 DNS snapshot shows MX/SPF/DKIM/DMARC present and readyForBaseScanEmailEvidence is true. The final owner submission package was regenerated on 2026-08-11T18:56:43Z and the daily public status snapshot was refreshed on 2026-08-12T06:37:31Z."
     },
     {
       "id": "geckoterminal-token-info",
@@ -163,7 +163,7 @@
   "nextActions": [
     "Use the domain email setup plan at https://gcagochina.com/domain-email.html and evidence checklist at https://gcagochina.com/domain-email-evidence.html, keep support@gcagochina.com active, archive the activation evidence packet before the next BaseScan submission, and submit one clean BaseScan update from the official domain mailbox.",
     "Use the BaseScan Handoff at https://gcagochina.com/basescan-handoff.html and Chinese owner flow at https://gcagochina.com/zh-basescan-submit.html as the owner-side copy and checklist for that same clean submission.",
-    "Include the published Tim Chen professional profile URL https://gcagochina.com/tim-chen.html in the next BaseScan submission; add LinkedIn later if BaseScan specifically requires a third-party social-network profile.",
+    "Include the published GCA team responsibilities URL https://gcagochina.com/team.html in the next BaseScan submission; if BaseScan requests external organization evidence, publish an official organization profile on a recognized business network.",
     "Keep the GCA/USDT pool, website, logo, whitepaper, Telegram, X, and metadata files live.",
     "Grow legitimate public activity and liquidity depth before CoinGecko or CoinMarketCap submission.",
     "Use the market quality plan before presenting market-growth updates.",
