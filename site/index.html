@@ -31,7 +31,8 @@
           {
             "@type": "Organization",
             "@id": "https://gcagochina.com/#organization",
-            "name": "GCA | Go China Access",
+            "name": "GCA华智通",
+            "alternateName": ["GCA", "Go China Access", "GCA Huazhitong"],
             "url": "https://gcagochina.com/",
             "logo": "https://gcagochina.com/assets/gca-logo.png",
             "email": "mailto:support@gcagochina.com",
@@ -43,7 +44,8 @@
           {
             "@type": "WebSite",
             "@id": "https://gcagochina.com/#website",
-            "name": "GCA | Go China Access",
+            "name": "GCA华智通",
+            "alternateName": "Go China Access",
             "url": "https://gcagochina.com/",
             "publisher": { "@id": "https://gcagochina.com/#organization" },
             "inLanguage": ["en", "zh-CN"]
@@ -51,17 +53,18 @@
         ]
       }
     </script>
-    <link rel="stylesheet" href="assets/gca-home.css?v=20260813-1">
+    <link rel="stylesheet" href="assets/gca-home.css?v=20260814-1">
     <link rel="stylesheet" href="assets/gca-site.css?v=20260812-3">
     <script src="assets/gca-site.js?v=20260813-1" defer></script>
     <script src="assets/gca-carousel.js?v=20260813-1" defer></script>
+    <script src="assets/market-snapshot.js?v=20260811-1" defer></script>
   </head>
   <body>
     <header>
       <nav class="shell" aria-label="Primary">
-        <a class="brand" href="index.html" aria-label="GCA home">
+        <a class="brand" href="index.html" aria-label="GCA Huazhitong home">
           <img src="assets/gca-logo.svg" alt="GCA logo">
-          <span>GCA</span>
+          <span>GCA华智通</span>
         </a>
         <div class="nav-links"></div>
       </nav>
@@ -75,7 +78,7 @@
               <img class="carousel-image" src="assets/gca-banner-go-china.jpg" width="1500" height="500" alt="" fetchpriority="high">
               <div class="shell carousel-shell">
                 <div class="carousel-copy">
-                  <p class="carousel-kicker">Go China Access · Base Mainnet</p>
+                  <p class="carousel-kicker">GCA华智通 · Go China Access · Base Mainnet</p>
                   <h1 id="title">GCA</h1>
                   <p class="carousel-lead">A bilingual Web3 research and risk-control platform connecting the Go China narrative with verifiable on-chain access.</p>
                   <p class="carousel-meta"><strong>10 browser tools</strong> · <strong>Local-first</strong> · <strong>Read-only</strong></p>
@@ -201,6 +204,72 @@
         </div>
       </section>
 
+      <section class="entry-section" aria-labelledby="entryTitle">
+        <div class="shell">
+          <div class="entry-heading">
+            <div>
+              <p class="eyebrow">Start with GCA</p>
+              <h2 id="entryTitle">Choose your path.</h2>
+            </div>
+            <p>Use the public product without an account, verify the token independently, or open the member account workflow. Each path has a separate purpose and a clear next step.</p>
+          </div>
+          <div class="entry-grid">
+            <article class="entry-path">
+              <span class="entry-index" aria-hidden="true">01</span>
+              <div>
+                <p class="entry-label">Product</p>
+                <h3>Use the risk tools</h3>
+                <p>Plan position size, review entry conditions, test a return series, and record completed trades in your browser.</p>
+              </div>
+              <p class="entry-proof">10 tools · Local-first · No account required</p>
+              <a class="entry-link" href="tools.html">Open the tool suite <span aria-hidden="true">→</span></a>
+            </article>
+            <article class="entry-path">
+              <span class="entry-index" aria-hidden="true">02</span>
+              <div>
+                <p class="entry-label">Token</p>
+                <h3>Verify GCA on-chain</h3>
+                <p>Confirm the Base network, official contract, fixed supply, verified source code, and GCA/USDT pool before interacting.</p>
+              </div>
+              <p class="entry-proof">Base Mainnet · 1 billion fixed supply</p>
+              <a class="entry-link" href="verify.html">Verify the token <span aria-hidden="true">→</span></a>
+            </article>
+            <article class="entry-path">
+              <span class="entry-index" aria-hidden="true">03</span>
+              <div>
+                <p class="entry-label">Member</p>
+                <h3>Manage member access</h3>
+                <p>Create an email account, run a read-only Base wallet balance check, and track eligibility from one controlled page.</p>
+              </div>
+              <p class="entry-proof">Email account · Read-only wallet check</p>
+              <a class="entry-link" href="gca/member-access/">Open member access <span aria-hidden="true">→</span></a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="film-section" aria-labelledby="filmTitle">
+        <div class="shell film-layout">
+          <div class="film-copy">
+            <p class="eyebrow">GCA Brand Film</p>
+            <h2 id="filmTitle">Go China Access, in one minute.</h2>
+            <p>See how GCA connects a fixed-supply Base Mainnet token with bilingual research, verified member access, and a non-custodial product direction.</p>
+            <div class="film-facts" aria-label="Video details">
+              <span>00:59</span>
+              <span>English voice-over</span>
+              <span>English captions</span>
+            </div>
+          </div>
+          <div class="film-player">
+            <video controls preload="none" playsinline poster="media/GCA-Go-China-Access-EN-cover.png" aria-label="GCA Go China Access brand film with English voice-over">
+              <source src="media/GCA-Go-China-Access-EN-web-1080p.mp4" type="video/mp4">
+              <track kind="captions" src="media/GCA-Go-China-Access-EN.vtt" srclang="en" label="English" default>
+              Your browser does not support HTML video. <a href="media/GCA-Go-China-Access-EN-web-1080p.mp4">Download the GCA brand film</a>.
+            </video>
+          </div>
+        </div>
+      </section>
+
       <section class="section" id="product" aria-labelledby="productTitle">
         <div class="shell">
           <div class="section-heading">
@@ -314,29 +383,50 @@
         </div>
       </section>
 
-      <section class="section market-band" id="market" aria-labelledby="marketTitle">
-        <div class="shell split">
-          <div>
-            <p class="eyebrow">Official market route</p>
-            <h2 id="marketTitle">GCA/USDT on Base</h2>
-            <p class="lead">Use the official pool identity below when checking market data or opening a swap. Confirm the network, token contract, quote asset, and wallet prompt before every interaction.</p>
-            <div class="actions">
-              <a class="button primary" href="buy.html">Buy Guide</a>
-              <a class="button" href="markets.html">Market Details</a>
-              <a class="button" href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0">GeckoTerminal</a>
+      <section class="section market-band" id="market" aria-labelledby="marketTitle" data-gca-market-snapshot>
+        <div class="shell">
+          <div class="split">
+            <div>
+              <p class="eyebrow">Official market route</p>
+              <h2 id="marketTitle">GCA/USDT on Base</h2>
+              <p class="lead">Use the official pool identity below when checking market data or opening a swap. Confirm the network, token contract, quote asset, and wallet prompt before every interaction.</p>
+              <div class="actions">
+                <a class="button primary" href="buy.html">Buy Guide</a>
+                <a class="button" href="markets.html">Market Details</a>
+                <a class="button" href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0">GeckoTerminal</a>
+              </div>
+            </div>
+            <div class="contract-block">
+              <p class="eyebrow">Canonical identity</p>
+              <p><strong>GCA contract</strong></p>
+              <p class="contract-address">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</p>
+              <p><strong>GCA/USDT pool</strong></p>
+              <p class="pool-address">0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</p>
+              <div class="actions">
+                <button class="button" type="button" id="copyContract">Copy Contract</button>
+                <button class="button" type="button" id="addToken">Add to MetaMask</button>
+              </div>
+              <p class="command-status" id="commandStatus" aria-live="polite"></p>
             </div>
           </div>
-          <div class="contract-block">
-            <p class="eyebrow">Canonical identity</p>
-            <p><strong>GCA contract</strong></p>
-            <p class="contract-address">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</p>
-            <p><strong>GCA/USDT pool</strong></p>
-            <p class="pool-address">0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</p>
-            <div class="actions">
-              <button class="button" type="button" id="copyContract">Copy Contract</button>
-              <button class="button" type="button" id="addToken">Add to MetaMask</button>
+          <div class="home-market-snapshot" aria-labelledby="homeMarketSnapshotTitle">
+            <div class="home-market-header">
+              <div>
+                <p class="eyebrow">Live official pool</p>
+                <h3 id="homeMarketSnapshotTitle">Read-only GCA/USDT snapshot</h3>
+              </div>
+              <button class="button" type="button" data-market-action>Refresh snapshot</button>
             </div>
-            <p class="command-status" id="commandStatus" aria-live="polite"></p>
+            <p class="home-market-summary pending" role="status" aria-live="polite" data-market-summary>Loading official pool data</p>
+            <div class="home-market-grid" aria-label="Live official GCA pool snapshot">
+              <div class="home-market-metric"><span>GCA price</span><strong data-market-field="price">Loading</strong></div>
+              <div class="home-market-metric"><span>Pool reserve</span><strong data-market-field="reserve">Loading</strong></div>
+              <div class="home-market-metric"><span>24h volume</span><strong data-market-field="volume">Loading</strong></div>
+              <div class="home-market-metric"><span>24h trades</span><strong data-market-field="trades">Loading</strong></div>
+              <div class="home-market-metric"><span>24h change</span><strong data-market-field="change">Loading</strong></div>
+              <div class="home-market-metric"><span>Observed at</span><strong data-market-field="source">Loading</strong></div>
+            </div>
+            <p class="home-market-foot">Browser-time GeckoTerminal data for the exact official pool. Confirm the current swap details and price impact in your wallet.</p>
           </div>
         </div>
       </section>
@@ -374,7 +464,7 @@
       <div class="shell">
         <div class="footer-grid">
           <div>
-            <p class="footer-title">GCA · Go China Access</p>
+            <p class="footer-title">GCA华智通 · Go China Access</p>
             <p>Browser-based risk tools, member workflows, and a fixed-supply token on Base Mainnet.</p>
           </div>
           <div class="footer-links">
@@ -439,7 +529,7 @@
                 address: CONTRACT,
                 symbol: "GCA",
                 decimals: 18,
-                image: new URL("assets/gca-logo.svg", window.location.href).href
+                image: new URL("assets/gca-token-icon.png", window.location.href).href
               }
             }
           });

@@ -31,7 +31,8 @@
           {
             "@type": "Organization",
             "@id": "https://gcagochina.com/#organization",
-            "name": "GCA | Go China Access",
+            "name": "GCA华智通",
+            "alternateName": ["GCA", "Go China Access", "GCA Huazhitong"],
             "url": "https://gcagochina.com/",
             "logo": "https://gcagochina.com/assets/gca-logo.png",
             "email": "mailto:support@gcagochina.com",
@@ -43,7 +44,8 @@
           {
             "@type": "WebSite",
             "@id": "https://gcagochina.com/#website",
-            "name": "GCA | Go China Access",
+            "name": "GCA华智通",
+            "alternateName": "Go China Access",
             "url": "https://gcagochina.com/",
             "publisher": { "@id": "https://gcagochina.com/#organization" },
             "inLanguage": ["en", "zh-CN"]
@@ -51,17 +53,18 @@
         ]
       }
     </script>
-    <link rel="stylesheet" href="assets/gca-home.css?v=20260813-1">
+    <link rel="stylesheet" href="assets/gca-home.css?v=20260814-1">
     <link rel="stylesheet" href="assets/gca-site.css?v=20260812-3">
     <script src="assets/gca-site.js?v=20260813-1" defer></script>
     <script src="assets/gca-carousel.js?v=20260813-1" defer></script>
+    <script src="assets/market-snapshot.js?v=20260811-1" defer></script>
   </head>
   <body lang="zh-CN">
     <header>
       <nav class="shell" aria-label="Primary">
         <a class="brand" href="zh-cn.html" aria-label="GCA 中文首页">
           <img src="assets/gca-logo.svg" alt="GCA logo">
-          <span>GCA</span>
+          <span>GCA华智通</span>
         </a>
         <div class="nav-links"></div>
       </nav>
@@ -75,7 +78,7 @@
               <img class="carousel-image" src="assets/gca-banner-go-china.jpg" width="1500" height="500" alt="" fetchpriority="high">
               <div class="shell carousel-shell">
                 <div class="carousel-copy">
-                  <p class="carousel-kicker">Go China Access · Base Mainnet</p>
+                  <p class="carousel-kicker">GCA华智通 · Go China Access · Base Mainnet</p>
                   <h1 id="title">GCA</h1>
                   <p class="carousel-lead">面向中英文用户的 Web3 研究与量化风控平台，连接 Go China 宏观叙事与可验证的链上入口。</p>
                   <p class="carousel-meta"><strong>10 项浏览器工具</strong> · <strong>本地优先</strong> · <strong>只读</strong></p>
@@ -201,6 +204,72 @@
         </div>
       </section>
 
+      <section class="entry-section" aria-labelledby="entryTitle">
+        <div class="shell">
+          <div class="entry-heading">
+            <div>
+              <p class="eyebrow">开始使用 GCA</p>
+              <h2 id="entryTitle">选择你的入口。</h2>
+            </div>
+            <p>无需账户即可使用公开产品，也可以独立核验代币，或进入会员账户流程。每个入口用途独立，下一步清晰明确。</p>
+          </div>
+          <div class="entry-grid">
+            <article class="entry-path">
+              <span class="entry-index" aria-hidden="true">01</span>
+              <div>
+                <p class="entry-label">产品</p>
+                <h3>使用量化风控工具</h3>
+                <p>在浏览器中计算仓位、复核入场条件、测试收益序列并记录已完成交易。</p>
+              </div>
+              <p class="entry-proof">10 项工具 · 本地优先 · 无需注册</p>
+              <a class="entry-link" href="tools.html">打开工具中心 <span aria-hidden="true">→</span></a>
+            </article>
+            <article class="entry-path">
+              <span class="entry-index" aria-hidden="true">02</span>
+              <div>
+                <p class="entry-label">代币</p>
+                <h3>独立核验链上 GCA</h3>
+                <p>交互前核对 Base 网络、官方合约、固定总量、已验证源码与 GCA/USDT 池。</p>
+              </div>
+              <p class="entry-proof">Base 主网 · 固定总量 10 亿枚</p>
+              <a class="entry-link" href="zh-wallet-verify.html">验证代币信息 <span aria-hidden="true">→</span></a>
+            </article>
+            <article class="entry-path">
+              <span class="entry-index" aria-hidden="true">03</span>
+              <div>
+                <p class="entry-label">会员</p>
+                <h3>管理会员访问资格</h3>
+                <p>使用邮箱创建账户，通过只读方式检查 Base 钱包余额，并在同一页面跟踪资格。</p>
+              </div>
+              <p class="entry-proof">邮箱账户 · 钱包只读验证</p>
+              <a class="entry-link" href="gca/member-access/">进入会员中心 <span aria-hidden="true">→</span></a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="film-section" aria-labelledby="filmTitle">
+        <div class="shell film-layout">
+          <div class="film-copy">
+            <p class="eyebrow">GCA 品牌影片</p>
+            <h2 id="filmTitle">一分钟了解 Go China Access。</h2>
+            <p>了解 GCA 如何连接 Base 主网固定总量代币、双语研究、链上验证会员入口与非托管产品方向。</p>
+            <div class="film-facts" aria-label="视频信息">
+              <span>00:59</span>
+              <span>普通话配音</span>
+              <span>中文字幕</span>
+            </div>
+          </div>
+          <div class="film-player">
+            <video controls preload="none" playsinline poster="media/GCA-Go-China-Access-cover.png" aria-label="GCA Go China Access 普通话品牌宣传片">
+              <source src="media/GCA-Go-China-Access-ZH-web-1080p.mp4" type="video/mp4">
+              <track kind="captions" src="media/GCA-Go-China-Access-ZH.vtt" srclang="zh-CN" label="简体中文" default>
+              你的浏览器不支持视频播放。<a href="media/GCA-Go-China-Access-ZH-web-1080p.mp4">下载 GCA 品牌影片</a>。
+            </video>
+          </div>
+        </div>
+      </section>
+
       <section class="section" id="product" aria-labelledby="productTitle">
         <div class="shell">
           <div class="section-heading">
@@ -314,29 +383,50 @@
         </div>
       </section>
 
-      <section class="section market-band" id="market" aria-labelledby="marketTitle">
-        <div class="shell split">
-          <div>
-            <p class="eyebrow">官方市场路线</p>
-            <h2 id="marketTitle">Base 上的 GCA/USDT</h2>
-            <p class="lead">查看市场数据或打开兑换前，请核对网络、代币合约、USDT 地址、池地址和钱包确认内容。</p>
-            <div class="actions">
-              <a class="button primary" href="zh-buy.html">购买说明</a>
-              <a class="button" href="zh-markets.html">市场详情</a>
-              <a class="button" href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0">GeckoTerminal</a>
+      <section class="section market-band" id="market" aria-labelledby="marketTitle" data-gca-market-snapshot>
+        <div class="shell">
+          <div class="split">
+            <div>
+              <p class="eyebrow">官方市场路线</p>
+              <h2 id="marketTitle">Base 上的 GCA/USDT</h2>
+              <p class="lead">查看市场数据或打开兑换前，请核对网络、代币合约、USDT 地址、池地址和钱包确认内容。</p>
+              <div class="actions">
+                <a class="button primary" href="zh-buy.html">购买说明</a>
+                <a class="button" href="zh-markets.html">市场详情</a>
+                <a class="button" href="https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0">GeckoTerminal</a>
+              </div>
+            </div>
+            <div class="contract-block">
+              <p class="eyebrow">官方身份</p>
+              <p><strong>GCA 合约</strong></p>
+              <p class="contract-address">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</p>
+              <p><strong>GCA/USDT 池</strong></p>
+              <p class="pool-address">0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</p>
+              <div class="actions">
+                <button class="button" type="button" id="copyContract">复制合约</button>
+                <button class="button" type="button" id="addToken">添加到 MetaMask</button>
+              </div>
+              <p class="command-status" id="commandStatus" aria-live="polite"></p>
             </div>
           </div>
-          <div class="contract-block">
-            <p class="eyebrow">官方身份</p>
-            <p><strong>GCA 合约</strong></p>
-            <p class="contract-address">0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6</p>
-            <p><strong>GCA/USDT 池</strong></p>
-            <p class="pool-address">0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0</p>
-            <div class="actions">
-              <button class="button" type="button" id="copyContract">复制合约</button>
-              <button class="button" type="button" id="addToken">添加到 MetaMask</button>
+          <div class="home-market-snapshot" aria-labelledby="homeMarketSnapshotTitle">
+            <div class="home-market-header">
+              <div>
+                <p class="eyebrow">官方池实时数据</p>
+                <h3 id="homeMarketSnapshotTitle">GCA/USDT 只读快照</h3>
+              </div>
+              <button class="button" type="button" data-market-action>刷新快照</button>
             </div>
-            <p class="command-status" id="commandStatus" aria-live="polite"></p>
+            <p class="home-market-summary pending" role="status" aria-live="polite" data-market-summary>正在读取官方池数据</p>
+            <div class="home-market-grid" aria-label="GCA 官方池实时快照">
+              <div class="home-market-metric"><span>GCA 美元价格</span><strong data-market-field="price">读取中</strong></div>
+              <div class="home-market-metric"><span>池储备估值</span><strong data-market-field="reserve">读取中</strong></div>
+              <div class="home-market-metric"><span>24 小时成交量</span><strong data-market-field="volume">读取中</strong></div>
+              <div class="home-market-metric"><span>24 小时交易笔数</span><strong data-market-field="trades">读取中</strong></div>
+              <div class="home-market-metric"><span>24 小时价格变化</span><strong data-market-field="change">读取中</strong></div>
+              <div class="home-market-metric"><span>观察时间</span><strong data-market-field="source">读取中</strong></div>
+            </div>
+            <p class="home-market-foot">数据由浏览器按官方池身份从 GeckoTerminal 读取；兑换前仍需在钱包内核对当前参数和价格影响。</p>
           </div>
         </div>
       </section>
@@ -374,7 +464,7 @@
       <div class="shell">
         <div class="footer-grid">
           <div>
-            <p class="footer-title">GCA · Go China Access</p>
+            <p class="footer-title">GCA华智通 · Go China Access</p>
             <p>浏览器风险工具、会员工作流与 Base Mainnet 固定总量代币。</p>
           </div>
           <div class="footer-links">
@@ -439,7 +529,7 @@
                 address: CONTRACT,
                 symbol: "GCA",
                 decimals: 18,
-                image: new URL("assets/gca-logo.svg", window.location.href).href
+                image: new URL("assets/gca-token-icon.png", window.location.href).href
               }
             }
           });

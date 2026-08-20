@@ -151,7 +151,8 @@ class PublicSiteExperienceTests(unittest.TestCase):
             self.assertIn('<script type="application/ld+json">', page)
             self.assertIn('"@type": "Organization"', page)
             self.assertIn('"@type": "WebSite"', page)
-            self.assertIn('"name": "GCA | Go China Access"', page)
+            self.assertIn('"name": "GCA华智通"', page)
+            self.assertIn('"alternateName": ["GCA", "Go China Access", "GCA Huazhitong"]', page)
             self.assertNotIn('"@type": "Person"', page)
             self.assertIn('mailto:support@gcagochina.com', page)
             self.assertIn('https://x.com/GCAAIGoChina', page)
@@ -192,6 +193,88 @@ class PublicSiteExperienceTests(unittest.TestCase):
             banner = SITE / "assets" / f"gca-banner-{name}.jpg"
             self.assertTrue(banner.exists(), name)
             self.assertLess(banner.stat().st_size, 400_000, name)
+
+    def test_homepages_publish_lazy_loaded_accessible_brand_film(self):
+        english = (SITE / "index.html").read_text()
+        chinese = (SITE / "zh-cn.html").read_text()
+        stylesheet = (SITE / "assets" / "gca-home.css").read_text()
+
+        for page in (english, chinese):
+            self.assertIn('class="film-section"', page)
+            self.assertIn('<video controls preload="none" playsinline', page)
+            self.assertIn('kind="captions"', page)
+            self.assertNotIn('<video autoplay', page)
+
+        self.assertIn('poster="media/GCA-Go-China-Access-EN-cover.png"', english)
+        self.assertIn('src="media/GCA-Go-China-Access-EN-web-1080p.mp4"', english)
+        self.assertIn('src="media/GCA-Go-China-Access-EN.vtt"', english)
+        self.assertIn('srclang="en"', english)
+        self.assertIn('English voice-over', english)
+
+        self.assertIn('poster="media/GCA-Go-China-Access-cover.png"', chinese)
+        self.assertIn('src="media/GCA-Go-China-Access-ZH-web-1080p.mp4"', chinese)
+        self.assertIn('src="media/GCA-Go-China-Access-ZH.vtt"', chinese)
+        self.assertIn('srclang="zh-CN"', chinese)
+        self.assertIn('普通话配音', chinese)
+
+        for filename in (
+            "GCA-Go-China-Access-cover.png",
+            "GCA-Go-China-Access-ZH-web-1080p.mp4",
+            "GCA-Go-China-Access-ZH.vtt",
+            "GCA-Go-China-Access-EN-cover.png",
+            "GCA-Go-China-Access-EN-web-1080p.mp4",
+            "GCA-Go-China-Access-EN.vtt",
+        ):
+            asset = SITE / "media" / filename
+            self.assertTrue(asset.is_file(), filename)
+            self.assertGreater(asset.stat().st_size, 0, filename)
+
+        self.assertIn(".film-layout", stylesheet)
+        self.assertIn("aspect-ratio: 16 / 9;", stylesheet)
+        self.assertIn(".film-player video", stylesheet)
+
+    def test_homepages_offer_three_clear_first_visit_paths(self):
+        english = (SITE / "index.html").read_text()
+        chinese = (SITE / "zh-cn.html").read_text()
+        stylesheet = (SITE / "assets" / "gca-home.css").read_text()
+
+        for page in (english, chinese):
+            self.assertIn('class="entry-section"', page)
+            self.assertEqual(page.count('class="entry-path"'), 3)
+            self.assertEqual(page.count('class="entry-index"'), 3)
+            self.assertIn('href="tools.html"', page)
+            self.assertIn('href="gca/member-access/"', page)
+            self.assertLess(page.index('class="entry-section"'), page.index('class="film-section"'))
+
+        self.assertIn("Choose your path.", english)
+        self.assertIn('href="verify.html"', english)
+        self.assertIn("No account required", english)
+        self.assertIn("选择你的入口。", chinese)
+        self.assertIn('href="zh-wallet-verify.html"', chinese)
+        self.assertIn("无需注册", chinese)
+        self.assertIn(".entry-grid", stylesheet)
+        self.assertIn("grid-template-columns: repeat(3, minmax(0, 1fr));", stylesheet)
+
+    def test_homepages_publish_identity_pinned_read_only_market_snapshot(self):
+        english = (SITE / "index.html").read_text()
+        chinese = (SITE / "zh-cn.html").read_text()
+        stylesheet = (SITE / "assets" / "gca-home.css").read_text()
+
+        for page in (english, chinese):
+            self.assertIn('data-gca-market-snapshot', page)
+            self.assertIn('assets/market-snapshot.js?v=20260811-1', page)
+            self.assertIn('data-market-action', page)
+            for field in ("price", "reserve", "volume", "trades", "change", "source"):
+                self.assertIn(f'data-market-field="{field}"', page)
+            self.assertIn("0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0", page)
+
+        self.assertIn("Read-only GCA/USDT snapshot", english)
+        self.assertIn("Browser-time GeckoTerminal data", english)
+        self.assertIn("GCA/USDT 只读快照", chinese)
+        self.assertIn("由浏览器按官方池身份从 GeckoTerminal 读取", chinese)
+        self.assertIn(".home-market-grid", stylesheet)
+        self.assertIn(".home-market-summary.good", stylesheet)
+        self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr));", stylesheet)
 
     def test_whitepapers_use_shared_mobile_navigation(self):
         page = (SITE / "whitepaper.html").read_text()
