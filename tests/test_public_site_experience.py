@@ -291,6 +291,28 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn(".entry-grid", stylesheet)
         self.assertIn("grid-template-columns: repeat(3, minmax(0, 1fr));", stylesheet)
 
+    def test_homepages_surface_only_available_project_entry_points(self):
+        english = (SITE / "index.html").read_text()
+        chinese = (SITE / "zh-cn.html").read_text()
+        stylesheet = (SITE / "assets" / "gca-home.css").read_text()
+
+        for page in (english, chinese):
+            self.assertIn('class="available-section"', page)
+            self.assertEqual(page.count('class="available-item"'), 3)
+            self.assertIn('href="radar.html"', page)
+            self.assertIn('href="tools.html"', page)
+            self.assertIn('href="gca/member-access/"', page)
+            self.assertLess(page.index('class="film-section"'), page.index('class="available-section"'))
+            self.assertLess(page.index('class="available-section"'), page.index('id="product"'))
+            self.assertNotIn("Coming soon", page)
+            self.assertNotIn("即将上线", page)
+
+        self.assertIn("Use the project, not just the narrative.", english)
+        self.assertIn("不只讲叙事，直接使用项目。", chinese)
+        self.assertIn(".available-grid", stylesheet)
+        self.assertIn(".available-status::before", stylesheet)
+        self.assertIn(".available-link", stylesheet)
+
     def test_homepages_publish_identity_pinned_read_only_market_snapshot(self):
         english = (SITE / "index.html").read_text()
         chinese = (SITE / "zh-cn.html").read_text()
