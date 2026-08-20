@@ -23,6 +23,10 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("width: 100%;", stylesheet)
         self.assertIn("Skip to main content", script)
         self.assertIn("跳到主要内容", script)
+        self.assertIn('brand: "GCA华智通"', script)
+        self.assertIn("brandLabel.textContent = labels.brand", script)
+        self.assertIn("brandLink.setAttribute(\"aria-label\", labels.home)", script)
+        self.assertIn("white-space: nowrap;", stylesheet)
         self.assertIn('viewer.searchParams.set("source", target.href)', script)
         self.assertIn('rel = "noopener noreferrer"', script)
 
@@ -83,6 +87,30 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertNotIn('["会员", "gca/member-access/"]', script)
         self.assertIn('navLinks.replaceChildren()', script)
         self.assertIn('aria-current", "page"', script)
+
+    def test_primary_pages_publish_consistent_huazhitong_branding(self):
+        pages = (
+            "index.html",
+            "start.html",
+            "product.html",
+            "tools.html",
+            "members.html",
+            "verify.html",
+            "about.html",
+            "support.html",
+            "whitepaper.html",
+            "zh-cn.html",
+            "zh-product.html",
+            "zh-members.html",
+            "zh-wallet-verify.html",
+            "zh-about.html",
+            "zh-support.html",
+            "zh-whitepaper.html",
+        )
+
+        for name in pages:
+            page = (SITE / name).read_text()
+            self.assertIn("<span>GCA华智通</span>", page, name)
 
     def test_primary_identity_pages_use_project_language_and_hide_review_workspaces(self):
         english_pages = {

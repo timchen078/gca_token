@@ -10,6 +10,8 @@
         menu: "打开主菜单",
         close: "关闭主菜单",
         top: "返回顶部",
+        brand: "GCA华智通",
+        home: "GCA华智通中文首页",
         links: [
           ["首页", "zh-cn.html"],
           ["产品", "zh-product.html"],
@@ -26,6 +28,8 @@
         menu: "Open main menu",
         close: "Close main menu",
         top: "Back to top",
+        brand: "GCA华智通",
+        home: "GCA Huazhitong home",
         links: [
           ["Home", "index.html"],
           ["Product", "product.html"],
@@ -51,6 +55,13 @@
   const nav = document.querySelector("header nav");
   const navLinks = nav && nav.querySelector(".nav-links");
   let menuButton = null;
+
+  if (nav) {
+    const brandLink = nav.querySelector(".brand");
+    const brandLabel = brandLink && brandLink.querySelector("span");
+    if (brandLabel) brandLabel.textContent = labels.brand;
+    if (brandLink) brandLink.setAttribute("aria-label", labels.home);
+  }
 
   const normalizePath = (value) => {
     const path = value.replace(/\/index\.html$/, "/").replace(/\/$/, "");
