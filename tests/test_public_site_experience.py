@@ -233,13 +233,13 @@ class PublicSiteExperienceTests(unittest.TestCase):
             self.assertIn('kind="captions"', page)
             self.assertNotIn('<video autoplay', page)
 
-        self.assertIn('poster="media/GCA-Go-China-Access-EN-cover.png"', english)
+        self.assertIn('poster="media/GCA-Go-China-Access-EN-cover.jpg"', english)
         self.assertIn('src="media/GCA-Go-China-Access-EN-web-1080p.mp4"', english)
         self.assertIn('src="media/GCA-Go-China-Access-EN.vtt"', english)
         self.assertIn('srclang="en"', english)
         self.assertIn('English voice-over', english)
 
-        self.assertIn('poster="media/GCA-Go-China-Access-cover.png"', chinese)
+        self.assertIn('poster="media/GCA-Go-China-Access-cover.jpg"', chinese)
         self.assertIn('src="media/GCA-Go-China-Access-ZH-web-1080p.mp4"', chinese)
         self.assertIn('src="media/GCA-Go-China-Access-ZH.vtt"', chinese)
         self.assertIn('srclang="zh-CN"', chinese)
@@ -247,15 +247,23 @@ class PublicSiteExperienceTests(unittest.TestCase):
 
         for filename in (
             "GCA-Go-China-Access-cover.png",
+            "GCA-Go-China-Access-cover.jpg",
             "GCA-Go-China-Access-ZH-web-1080p.mp4",
             "GCA-Go-China-Access-ZH.vtt",
             "GCA-Go-China-Access-EN-cover.png",
+            "GCA-Go-China-Access-EN-cover.jpg",
             "GCA-Go-China-Access-EN-web-1080p.mp4",
             "GCA-Go-China-Access-EN.vtt",
         ):
             asset = SITE / "media" / filename
             self.assertTrue(asset.is_file(), filename)
             self.assertGreater(asset.stat().st_size, 0, filename)
+
+        for filename in (
+            "GCA-Go-China-Access-cover.jpg",
+            "GCA-Go-China-Access-EN-cover.jpg",
+        ):
+            self.assertLess((SITE / "media" / filename).stat().st_size, 300_000, filename)
 
         self.assertIn(".film-layout", stylesheet)
         self.assertIn("aspect-ratio: 16 / 9;", stylesheet)
