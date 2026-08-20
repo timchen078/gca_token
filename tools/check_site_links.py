@@ -27,6 +27,7 @@ DEFAULT_BASE_URL = "https://gcagochina.com/"
 DEFAULT_TIMEOUT_SECONDS = 20.0
 DEFAULT_MAX_WORKERS = 6
 MAX_REMOTE_RESPONSE_BYTES = 4 * 1024 * 1024
+VIDEO_TARGET_SUFFIXES = {".mov", ".mp4", ".webm"}
 USER_AGENT = "GCA-Site-Link-Integrity/1.0"
 PLACEHOLDER_HOSTS = {
     "example.com",
@@ -320,10 +321,11 @@ def scan_site(
 
 def fetch_internal_target(base_url: str, target: str, timeout: float, context: ssl.SSLContext) -> str | None:
     url = urljoin(base_url, target.lstrip("/"))
+    is_video = Path(urlsplit(target).path).suffix.lower() in VIDEO_TARGET_SUFFIXES
     request = Request(
         url,
-        method="GET",
-        headers={"Accept": "*/*", "User-Agent": USER_AGENT},
+        method="HEAD" if is_video else "GET",
+        headers={"Accept": "video/*" if is_video else "*/*", "User-Agent": USER_AGENT},
     )
     try:
         with urlopen(request, timeout=timeout, context=context) as response:
@@ -334,7 +336,11 @@ def fetch_internal_target(base_url: str, target: str, timeout: float, context: s
                 return f"{target}: HTTP {status}"
             if final.scheme != "https" or final.hostname != expected_host:
                 return f"{target}: redirected outside the official HTTPS origin to {response.geturl()}"
-            if len(response.read(MAX_REMOTE_RESPONSE_BYTES + 1)) > MAX_REMOTE_RESPONSE_BYTES:
+            if is_video:
+                content_type = response.headers.get("Content-Type", "").partition(";")[0].strip().lower()
+                if not content_type.startswith("video/"):
+                    return f"{target}: unexpected video content type {content_type or 'missing'}"
+            elif len(response.read(MAX_REMOTE_RESPONSE_BYTES + 1)) > MAX_REMOTE_RESPONSE_BYTES:
                 return f"{target}: response exceeds {MAX_REMOTE_RESPONSE_BYTES} bytes"
     except HTTPError as error:
         return f"{target}: HTTP {error.code}"

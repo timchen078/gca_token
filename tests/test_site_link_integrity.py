@@ -2,9 +2,9 @@ import ssl
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
-from tools.check_site_links import build_ssl_context, scan_site
+from tools.check_site_links import build_ssl_context, fetch_internal_target, scan_site
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,6 +12,42 @@ SITE = ROOT / "site"
 
 
 class SiteLinkIntegrityTests(unittest.TestCase):
+    def test_live_video_check_uses_headers_without_downloading_the_asset(self):
+        response = MagicMock()
+        response.status = 200
+        response.geturl.return_value = "https://gcagochina.com/media/launch.mp4"
+        response.headers = {"Content-Type": "video/mp4", "Content-Length": "18327492"}
+        response.__enter__.return_value = response
+
+        with patch("tools.check_site_links.urlopen", return_value=response) as open_url:
+            error = fetch_internal_target(
+                "https://gcagochina.com/",
+                "/media/launch.mp4",
+                30,
+                ssl.create_default_context(),
+            )
+
+        self.assertIsNone(error)
+        self.assertEqual(open_url.call_args.args[0].get_method(), "HEAD")
+        response.read.assert_not_called()
+
+    def test_live_video_check_rejects_non_video_content(self):
+        response = MagicMock()
+        response.status = 200
+        response.geturl.return_value = "https://gcagochina.com/media/launch.mp4"
+        response.headers = {"Content-Type": "text/html"}
+        response.__enter__.return_value = response
+
+        with patch("tools.check_site_links.urlopen", return_value=response):
+            error = fetch_internal_target(
+                "https://gcagochina.com/",
+                "/media/launch.mp4",
+                30,
+                ssl.create_default_context(),
+            )
+
+        self.assertEqual(error, "/media/launch.mp4: unexpected video content type text/html")
+
     def test_live_tls_context_uses_certifi_when_available(self):
         try:
             import certifi
