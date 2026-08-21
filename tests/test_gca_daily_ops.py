@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 from tools import run_gca_daily_ops as daily_ops_module
 from tools.build_gca_daily_status_snapshot import build_snapshot
-from tools.run_gca_daily_ops import emit_github_failure_annotations, run_daily_ops
+from tools.run_gca_daily_ops import emit_github_observation_annotations, run_daily_ops
 
 
 BASESCAN_BLOCKED_OUTPUT = json.dumps({
@@ -176,12 +176,13 @@ MARKET_HEALTH_SUMMARY = {
 class GcaDailyOpsTests(unittest.TestCase):
     def test_github_annotations_include_only_failed_public_observations(self):
         stream = io.StringIO()
-        emitted = emit_github_failure_annotations(
+        emitted = emit_github_observation_annotations(
             {
                 "steps": [
                     {
                         "id": "public-site",
                         "ok": False,
+                        "blocksSummaryOk": True,
                         "returnCode": 1,
                         "stderrTail": "HTTP 503\nretry 100%",
                     },
@@ -192,9 +193,14 @@ class GcaDailyOpsTests(unittest.TestCase):
                         "stderrTail": "private-member-detail",
                     },
                     {
-                        "id": "official-pool-market-health",
-                        "ok": True,
-                        "returnCode": 0,
+                        "id": "basescan-public-profile-status",
+                        "ok": False,
+                        "blocksSummaryOk": False,
+                        "returnCode": 2,
+                        "statusSummary": {
+                            "status": "check-failed",
+                            "error": "BaseScan returned HTTP 403",
+                        },
                     },
                 ]
             },
@@ -202,14 +208,16 @@ class GcaDailyOpsTests(unittest.TestCase):
         )
 
         output = stream.getvalue()
-        self.assertEqual(emitted, 1)
+        self.assertEqual(emitted, 2)
         self.assertIn("::error title=GCA public check failed: public-site::", output)
+        self.assertIn("::warning title=GCA public check failed: basescan-public-profile-status::", output)
+        self.assertIn("BaseScan returned HTTP 403", output)
         self.assertIn("HTTP 503%0Aretry 100%25", output)
         self.assertNotIn("private-member-detail", output)
 
     def test_github_annotations_skip_successful_public_observations(self):
         stream = io.StringIO()
-        emitted = emit_github_failure_annotations(
+        emitted = emit_github_observation_annotations(
             {"steps": [{"id": "public-site", "ok": True, "returnCode": 0}]},
             stream=stream,
         )

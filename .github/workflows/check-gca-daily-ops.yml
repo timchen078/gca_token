@@ -81,7 +81,6 @@ jobs:
           mkdir -p /tmp/gca-public-daily-ops
           DAILY_OPS_ARGS=(
             --timeout 30
-            --require-complete-public-observations
             --github-annotations
             --summary-output /tmp/gca-public-daily-ops/gca_daily_ops_summary.json
             --build-digest

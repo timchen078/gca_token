@@ -87,7 +87,7 @@ def github_command_escape(value: Any) -> str:
     return str(value).replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
 
 
-def emit_github_failure_annotations(summary: dict[str, Any], *, stream: Any = sys.stdout) -> int:
+def emit_github_observation_annotations(summary: dict[str, Any], *, stream: Any = sys.stdout) -> int:
     """Expose public-observation failures without publishing private member data."""
     emitted = 0
     for step in summary.get("steps", []):
@@ -100,10 +100,11 @@ def emit_github_failure_annotations(summary: dict[str, Any], *, stream: Any = sy
         status = str(status_summary.get("status") or "failed")
         detail = str(status_summary.get("error") or step.get("stderrTail") or "public check returned a non-zero status")
         detail = truncate(detail.strip(), 1200)
+        level = "error" if step.get("blocksSummaryOk", True) else "warning"
         title = f"GCA public check failed: {step_id}"
         message = f"status={status}; returnCode={step.get('returnCode')}; detail={detail}"
         print(
-            f"::error title={github_command_escape(title)}::{github_command_escape(message)}",
+            f"::{level} title={github_command_escape(title)}::{github_command_escape(message)}",
             file=stream,
         )
         emitted += 1
@@ -914,8 +915,8 @@ def main(argv: list[str] | None = None) -> int:
         daily_status_html_output=args.daily_status_html_output,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True))
-    if args.github_annotations and not summary["ok"]:
-        emit_github_failure_annotations(summary)
+    if args.github_annotations:
+        emit_github_observation_annotations(summary)
     return 0 if summary["ok"] else 1
 
 
