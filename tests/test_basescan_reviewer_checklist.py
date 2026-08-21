@@ -35,7 +35,7 @@ class BaseScanReviewerChecklistTests(unittest.TestCase):
         self.assertEqual(items["social-and-market-links"]["status"], "implemented")
         self.assertIn("https://gcagochina.com/team.html", items["team-responsibility-transparency"]["links"])
         self.assertIn("https://gcagochina.com/domain-email.html#worksheetTitle", items["sender-domain-email"]["links"])
-        self.assertIn("https://gcagochina.com/assets/gca-logo.svg", items["brand-logo-whitepaper"]["links"])
+        self.assertIn("https://gcagochina.com/assets/gca-token-icon.svg", items["brand-logo-whitepaper"]["links"])
         self.assertIn("https://www.geckoterminal.com/base/pools/", " ".join(items["social-and-market-links"]["links"]))
 
         self.assertIn("python3 tools/check_basescan_resubmission_readiness.py --json --require-ready", report["preflightCommands"])

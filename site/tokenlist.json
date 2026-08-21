@@ -1,10 +1,10 @@
 {
   "name": "GCA Official Token List",
-  "timestamp": "2026-05-14T00:00:00+07:00",
+  "timestamp": "2026-08-13T00:00:00+07:00",
   "version": {
     "major": 1,
     "minor": 0,
-    "patch": 0
+    "patch": 1
   },
   "keywords": [
     "gca",
@@ -19,8 +19,9 @@
       "name": "GCA",
       "symbol": "GCA",
       "decimals": 18,
-      "logoURI": "https://gcagochina.com/assets/gca-logo.png",
+      "logoURI": "https://gcagochina.com/assets/gca-token-icon.png",
       "extensions": {
+        "logoVersion": "2026-08-13-orbit",
         "projectName": "Go China Access",
         "website": "https://gcagochina.com/",
         "projectProfilePage": "https://gcagochina.com/project-profile.html",

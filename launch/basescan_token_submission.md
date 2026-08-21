@@ -21,7 +21,7 @@ BaseScan token updates must be submitted through the official BaseScan token upd
 - Token standard: ERC-20
 - Source code status: verified
 - Deployer: `0x18d007bcb6be029f8ccd7cb13e324aa21891092d`
-- Logo source file: `brand/gca-logo.svg`
+- Token icon source file: `brand/gca-token-icon.svg`
 - Website: `https://gcagochina.com/`
 - Whitepaper source file: `docs/whitepaper.md`
 - Utility thesis page: `https://gcagochina.com/utility.html`
@@ -41,7 +41,7 @@ GCA is a fixed-supply ERC-20 token deployed on Base Mainnet and a concept-stage 
 ## Submission-Ready Public Fields
 
 - Official website URL: `https://gcagochina.com/`
-- Public logo download URL: `https://gcagochina.com/assets/gca-logo.svg`
+- Public token icon download URL: `https://gcagochina.com/assets/gca-token-icon.svg`
 - Public whitepaper URL: `https://gcagochina.com/whitepaper.html`
 - Public utility thesis URL: `https://gcagochina.com/utility.html`
 - Public product spec URL: `https://gcagochina.com/product.html`

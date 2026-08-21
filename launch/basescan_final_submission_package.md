@@ -87,7 +87,7 @@ Contract Address: 0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 Project Name: GCA
 Project Website: https://gcagochina.com/
 Project Email Address: support@gcagochina.com
-32x32 SVG Logo: https://gcagochina.com/assets/gca-logo.svg
+32x32 SVG Logo: https://gcagochina.com/assets/gca-token-icon.svg
 Project Description: GCA is a fixed-supply ERC-20 token deployed on Base Mainnet and a concept-stage Go China Access community focused on the Go China macro narrative, bilingual Web3 education, public market research, and non-custodial risk tooling. The project publishes live account and member intake, ten browser-only public risk and research tools, and device-key service requests that enter a manual review and delivery workflow. Credits are deducted only after prior approval and completed delivery, at most once per request. The browser tools do not fetch live market data, connect exchanges, or place orders; connected market-data and trading modules remain staged behind release gates. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
 Project Sector: Web3 education and non-custodial trading risk tools
 Network: Base Mainnet / chainId 8453
@@ -150,7 +150,7 @@ Not automatic: No automatic token claim, no self-service member-benefit transfer
 2. Project Name: `GCA`
 3. Project Website: `https://gcagochina.com/`
 4. Project Email Address: `support@gcagochina.com`
-5. Link to download a 32x32 SVG icon logo: `https://gcagochina.com/assets/gca-logo.svg`
+5. Link to download a 32x32 SVG icon logo: `https://gcagochina.com/assets/gca-token-icon.svg`
 6. Project Description: GCA is a fixed-supply ERC-20 token deployed on Base Mainnet and a concept-stage Go China Access community focused on the Go China macro narrative, bilingual Web3 education, public market research, and non-custodial risk tooling. The project publishes live account and member intake, ten browser-only public risk and research tools, and device-key service requests that enter a manual review and delivery workflow. Credits are deducted only after prior approval and completed delivery, at most once per request. The browser tools do not fetch live market data, connect exchanges, or place orders; connected market-data and trading modules remain staged behind release gates. The contract created 1,000,000,000 GCA at deployment and includes no post-deployment minting, burning, taxes, blacklist, or admin controls.
 7. Project Sector: Web3 education and non-custodial trading risk tools
 

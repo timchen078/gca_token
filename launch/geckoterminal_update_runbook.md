@@ -25,8 +25,8 @@ This runbook records the accurate GeckoTerminal token information update request
 Do not submit a duplicate request after approval unless GeckoTerminal asks for a correction or the official project details change. Keep these public links live:
 
 1. The website opens over HTTPS at `https://gcagochina.com/`.
-2. The logo opens publicly at `https://gcagochina.com/assets/gca-logo.svg`.
-3. The PNG logo opens publicly at `https://gcagochina.com/assets/gca-logo.png`.
+2. The token icon opens publicly at `https://gcagochina.com/assets/gca-token-icon.svg`.
+3. The PNG token icon opens publicly at `https://gcagochina.com/assets/gca-token-icon.png`.
 4. The whitepaper opens publicly at `https://gcagochina.com/whitepaper.html`.
 5. The BaseScan contract page opens at `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`.
 6. The official Telegram link is available at `https://t.me/gcagochinaofficial`.
@@ -41,7 +41,7 @@ These steps were completed from the owner's browser session on 2026-05-09:
 2. Opened the `Update Token Info` form.
 3. Filled the form using `launch/geckoterminal_form_values.json`.
 4. Left social link fields blank because the official Telegram channel and current official X profile did not exist yet.
-5. Uploaded `site/assets/gca-logo.png` as the icon image.
+5. Uploaded `site/assets/gca-token-icon.png` as the icon image.
 6. Submitted with the regular, no-fee pass.
 7. Confirmed `support@gcagochina.com` by OTP.
 8. Recorded GeckoTerminal's successful submission message in `launch/launch_status.md`.
@@ -53,8 +53,8 @@ GCA, short for Go China Access, is a fixed-supply ERC-20 token on Base Mainnet. 
 ## Submit These Links
 
 - Website: `https://gcagochina.com/`
-- Logo: `https://gcagochina.com/assets/gca-logo.svg`
-- Logo PNG for upload: `https://gcagochina.com/assets/gca-logo.png`
+- Token icon: `https://gcagochina.com/assets/gca-token-icon.svg`
+- Token icon PNG for upload: `https://gcagochina.com/assets/gca-token-icon.png`
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
 - Utility thesis: `https://gcagochina.com/utility.html`
 - Access layer JSON: `https://gcagochina.com/utility.json`
@@ -91,7 +91,7 @@ Hello GeckoTerminal team,
 I am submitting accurate token information for GCA on Base Mainnet.
 
 Official website: https://gcagochina.com/
-Official logo: https://gcagochina.com/assets/gca-logo.svg
+Official token icon: https://gcagochina.com/assets/gca-token-icon.svg
 Whitepaper: https://gcagochina.com/whitepaper.html
 BaseScan contract: https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6
 Pool: https://www.geckoterminal.com/base/pools/0xfe6a598bf738d7eec9640897064ca3a490128d3d447ced96077aef8e9dd1c1d0

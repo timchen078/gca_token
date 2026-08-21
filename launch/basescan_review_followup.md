@@ -56,7 +56,7 @@ BaseScan replied that it could not process the token update request because the 
 - Product spec remains live: `https://gcagochina.com/product.html`
 - Credits catalog remains live: `https://gcagochina.com/credits.html`
 - Product release gates remain live: `https://gcagochina.com/release-gates.html`
-- Public logo remains live: `https://gcagochina.com/assets/gca-logo.svg`
+- Public token icon remains live: `https://gcagochina.com/assets/gca-token-icon.svg`
 - Public whitepaper remains live: `https://gcagochina.com/whitepaper.html`
 - Brand kit remains live: `https://gcagochina.com/brand-kit.html`
 - Community kit remains live: `https://gcagochina.com/community.html`
@@ -162,7 +162,7 @@ Official verify page: https://gcagochina.com/verify.html
 Project status: https://gcagochina.com/status.html
 Product spec: https://gcagochina.com/product.html
 Product release gates: https://gcagochina.com/release-gates.html
-Official logo: https://gcagochina.com/assets/gca-logo.svg
+Official token icon: https://gcagochina.com/assets/gca-token-icon.svg
 Brand kit: https://gcagochina.com/brand-kit.html
 Whitepaper: https://gcagochina.com/whitepaper.html
 External review status: https://gcagochina.com/external-reviews.html

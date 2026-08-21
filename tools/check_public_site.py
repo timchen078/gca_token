@@ -40,8 +40,8 @@ PUBLIC_INDEXABLE_LASTMOD = {
     "/gca/member-access/": "2026-07-24",
     "/members.html": "2026-08-12",
     "/zh-members.html": "2026-08-13",
-    "/markets.html": "2026-08-11",
-    "/zh-markets.html": "2026-08-11",
+    "/markets.html": "2026-08-13",
+    "/zh-markets.html": "2026-08-13",
     "/buy.html": "2026-05-11",
     "/zh-buy.html": "2026-05-19",
     "/liquidity.html": "2026-05-16",
@@ -64,9 +64,9 @@ PUBLIC_INDEXABLE_LASTMOD = {
     "/zh-team.html": "2026-08-13",
     "/whitepaper.html": "2026-08-13",
     "/zh-whitepaper.html": "2026-08-13",
-    "/brand-kit.html": "2026-05-13",
+    "/brand-kit.html": "2026-08-13",
     "/reserve-statement.html": "2026-05-16",
-    "/tokenlist.html": "2026-06-03",
+    "/tokenlist.html": "2026-08-13",
     "/radar.html": "2026-08-11",
     "/radar-issue-006.html": "2026-08-11",
     "/radar-issue-005.html": "2026-06-14",
@@ -86,6 +86,10 @@ DAILY_REFERENCE_DATE_FIELDS = {
     "baseScanTokenProfileLastCheckedDate",
 }
 MAINNET_ADDRESS = "0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6"
+WEBSITE_LOGO_SVG_URL = "https://gcagochina.com/assets/gca-logo.svg"
+WEBSITE_LOGO_PNG_URL = "https://gcagochina.com/assets/gca-logo.png"
+TOKEN_ICON_SVG_URL = "https://gcagochina.com/assets/gca-token-icon.svg"
+TOKEN_ICON_PNG_URL = "https://gcagochina.com/assets/gca-token-icon.png"
 X_URL = "https://x.com/GCAAIGoChina"
 TELEGRAM_URL = "https://t.me/gcagochinaofficial"
 FIRST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2054660559124255151"
@@ -1674,7 +1678,7 @@ def validate_basescan_remediation_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != BASESCAN_REMEDIATION_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
-    if payload.get("lastUpdated") != "2026-08-10":
+    if payload.get("lastUpdated") != "2026-08-13":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") not in {
         "basescan-ready-for-owner-resubmission",
@@ -2093,6 +2097,8 @@ def validate_basescan_handoff_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong schema")
     if payload.get("pageUrl") != BASESCAN_HANDOFF_PAGE_URL:
         raise SiteCheckError(f"{label}: wrong pageUrl")
+    if payload.get("lastUpdated") != "2026-08-13":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("status") not in {
         "blocked-until-domain-email-evidence-and-final-preflight-pass",
         "ready-for-owner-resubmission",
@@ -3197,7 +3203,7 @@ def validate_zh_basescan_submit_page(text: str) -> None:
         "Token Symbol: GCA",
         "Decimals: 18",
         "Total Supply: 1000000000",
-        "https://gcagochina.com/assets/gca-logo.svg",
+        TOKEN_ICON_SVG_URL,
         "https://gcagochina.com/support.html",
         "提交后要保存什么",
         "BaseScan ticket",
@@ -3288,7 +3294,7 @@ def validate_zh_basescan_handoff_page(text: str) -> None:
         "Not automatic: No automatic token claim",
         "Copy/Paste Basic Information",
         "Project Email Address: support@gcagochina.com",
-        "32x32 SVG Logo: https://gcagochina.com/assets/gca-logo.svg",
+        f"32x32 SVG Logo: {TOKEN_ICON_SVG_URL}",
         "Project Description: GCA is a fixed-supply ERC-20 token deployed on Base Mainnet",
         "Token Symbol: GCA",
         "Decimals: 18",
@@ -13899,6 +13905,8 @@ def validate_brand_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-brand-kit-published":
         raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("lastUpdated") != "2026-08-13":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
@@ -13913,16 +13921,18 @@ def validate_brand_kit_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong geckoTerminal")
     if market.get("dexScreener") != OFFICIAL_DEXSCREENER_URL:
         raise SiteCheckError(f"{label}: wrong dexScreener")
-    if logo_assets.get("svg", {}).get("url") != "https://gcagochina.com/assets/gca-logo.svg":
+    if logo_assets.get("svg", {}).get("url") != TOKEN_ICON_SVG_URL:
         raise SiteCheckError(f"{label}: wrong svg logo")
     if logo_assets.get("svg", {}).get("width") != 32:
         raise SiteCheckError(f"{label}: wrong svg width")
-    if logo_assets.get("png", {}).get("url") != "https://gcagochina.com/assets/gca-logo.png":
+    if logo_assets.get("png", {}).get("url") != TOKEN_ICON_PNG_URL:
         raise SiteCheckError(f"{label}: wrong png logo")
     if logo_assets.get("png", {}).get("width") != 512:
         raise SiteCheckError(f"{label}: wrong png width")
     if visual.get("primaryInk") != "#111111":
         raise SiteCheckError(f"{label}: wrong primary ink")
+    if visual.get("orbitGreen") != "#0A976B":
+        raise SiteCheckError(f"{label}: wrong orbit green")
     if links.get("brandKit") != BRAND_KIT_URL:
         raise SiteCheckError(f"{label}: wrong brandKit link")
     if links.get("tokenList") != "https://gcagochina.com/tokenlist.json":
@@ -13940,11 +13950,12 @@ def validate_brand_kit_page(text: str) -> None:
     assert_contains(text, "GCA Brand Kit", label)
     assert_contains(text, "Brand References", label)
     assert_no_public_data_room_terms(text, label)
-    assert_contains(text, "Logo SVG", label)
-    assert_contains(text, "Logo PNG", label)
+    assert_contains(text, "Token Icon SVG", label)
+    assert_contains(text, "Token Icon PNG", label)
     assert_contains(text, "32 x 32", label)
     assert_contains(text, "512 x 512", label)
     assert_contains(text, "#111111", label)
+    assert_contains(text, "#0A976B", label)
     assert_contains(text, "#D71920", label)
     assert_contains(text, "#0052FF", label)
     assert_contains(text, "Base Mainnet / 8453", label)
@@ -13984,7 +13995,7 @@ def validate_project_profile_page(text: str) -> None:
         "Placeholders and broken links",
         "Team responsibility transparency",
         "Sender email matches project domain",
-        "Logo, social, and metadata URLs",
+        "Token icon, social, and metadata URLs",
         "Source and deployer-wallet ownership are verified",
         "not approved until BaseScan publishes it",
         "MX/SPF/DKIM/DMARC present",
@@ -14020,7 +14031,7 @@ def validate_tokenlist_page(text: str) -> None:
         MAINNET_ADDRESS,
         "Token symbol",
         "Decimals",
-        "assets/gca-logo.png",
+        "assets/gca-token-icon.png",
         "Official Market Route",
         "Token Safety",
         "Official Resources",
@@ -14092,6 +14103,16 @@ def validate_project_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("lastUpdated") != "2026-08-11":
         raise SiteCheckError(f"{label}: wrong lastUpdated")
+    if payload.get("logoSvgUrl") != TOKEN_ICON_SVG_URL:
+        raise SiteCheckError(f"{label}: wrong token SVG icon")
+    if payload.get("logoPngUrl") != TOKEN_ICON_PNG_URL:
+        raise SiteCheckError(f"{label}: wrong token PNG icon")
+    if payload.get("logoVersion") != "2026-08-13-orbit":
+        raise SiteCheckError(f"{label}: wrong logoVersion")
+    if payload.get("brandKit", {}).get("logoSvgUrl") != TOKEN_ICON_SVG_URL:
+        raise SiteCheckError(f"{label}: wrong brand kit token SVG icon")
+    if payload.get("brandKit", {}).get("logoPngUrl") != TOKEN_ICON_PNG_URL:
+        raise SiteCheckError(f"{label}: wrong brand kit token PNG icon")
     if payload.get("memberProgramRulesUrl") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRulesUrl")
     if payload.get("memberLedgerPageUrl") != MEMBER_LEDGER_PAGE_URL:
@@ -14338,7 +14359,7 @@ def validate_project_json(text: str) -> None:
     if "check_public_site.py" not in placeholder_item.get("checkCommand", ""):
         raise SiteCheckError(f"{label}: missing public site check command in reason map")
     logo_item = reason_items_by_id["logo-social-metadata"]
-    for expected_link in ("https://gcagochina.com/assets/gca-logo.svg", BRAND_KIT_PAGE_URL, WHITEPAPER_PAGE_URL):
+    for expected_link in (TOKEN_ICON_SVG_URL, BRAND_KIT_PAGE_URL, WHITEPAPER_PAGE_URL):
         if expected_link not in logo_item.get("evidencePages", []):
             raise SiteCheckError(f"{label}: missing logo/social metadata evidence link {expected_link}")
     if "pending until BaseScan publishes it" not in reason_map.get("currentBoundary", ""):
@@ -14776,6 +14797,10 @@ def validate_tokenlist_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong address")
     if token.get("symbol") != "GCA":
         raise SiteCheckError(f"{label}: wrong symbol")
+    if token.get("logoURI") != TOKEN_ICON_PNG_URL:
+        raise SiteCheckError(f"{label}: wrong token icon")
+    if extensions.get("logoVersion") != "2026-08-13-orbit":
+        raise SiteCheckError(f"{label}: wrong logoVersion")
     if extensions.get("officialPair") != "GCA/USDT":
         raise SiteCheckError(f"{label}: wrong officialPair")
     if extensions.get("officialPool") != OFFICIAL_POOL_ADDRESS:
@@ -15060,6 +15085,14 @@ def validate_well_known_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong chainId")
     if token.get("contractAddress") != MAINNET_ADDRESS:
         raise SiteCheckError(f"{label}: wrong contractAddress")
+    if payload.get("lastUpdated") != "2026-08-13":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
+    if urls.get("logoSvg") != TOKEN_ICON_SVG_URL:
+        raise SiteCheckError(f"{label}: wrong token SVG icon")
+    if urls.get("logoPng") != TOKEN_ICON_PNG_URL:
+        raise SiteCheckError(f"{label}: wrong token PNG icon")
+    if urls.get("logoVersion") != "2026-08-13-orbit":
+        raise SiteCheckError(f"{label}: wrong logoVersion")
     if urls.get("memberProgramRules") != MEMBER_PROGRAM_URL:
         raise SiteCheckError(f"{label}: wrong memberProgramRules")
     if urls.get("memberLedgerPage") != MEMBER_LEDGER_PAGE_URL:
@@ -17083,6 +17116,8 @@ def validate_platform_replies_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong pageUrl")
     if payload.get("status") != "public-platform-reply-kit-published":
         raise SiteCheckError(f"{label}: wrong status")
+    if payload.get("lastUpdated") != "2026-08-13":
+        raise SiteCheckError(f"{label}: wrong lastUpdated")
     if payload.get("chainId") != 8453:
         raise SiteCheckError(f"{label}: wrong chainId")
     if payload.get("contractAddress") != MAINNET_ADDRESS:
@@ -17191,6 +17226,13 @@ def validate_platform_replies_json(text: str) -> None:
     ):
         if expected not in basescan_body:
             raise SiteCheckError(f"{label}: BaseScan template missing {expected}")
+    metadata_body = "\n".join(templates.get("metadataCorrection", {}).get("body", []))
+    for expected in (
+        f"Token icon SVG: {TOKEN_ICON_SVG_URL}",
+        f"Token icon PNG: {TOKEN_ICON_PNG_URL}",
+    ):
+        if expected not in metadata_body:
+            raise SiteCheckError(f"{label}: metadata template missing {expected}")
     local_package_body = "\n".join(templates.get("localReviewPackageHandoff", {}).get("body", []))
     for expected in (
         "redacted-public",

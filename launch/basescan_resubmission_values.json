@@ -129,8 +129,8 @@
   "tokenListUrl": "https://gcagochina.com/tokenlist.json",
   "wellKnownTokenIdentityUrl": "https://gcagochina.com/.well-known/gca-token.json",
   "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
-  "logoSvgUrl": "https://gcagochina.com/assets/gca-logo.svg",
-  "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
+  "logoSvgUrl": "https://gcagochina.com/assets/gca-token-icon.svg",
+  "logoPngUrl": "https://gcagochina.com/assets/gca-token-icon.png",
   "officialEmail": "support@gcagochina.com",
   "domainEmailRecommendedBeforeNextSubmission": false,
   "recommendedDomainEmailExamples": [

@@ -141,7 +141,7 @@ BaseScan Handoff copy blocks: https://gcagochina.com/basescan-handoff.html
 Chinese owner submission flow: https://gcagochina.com/zh-basescan-submit.html
 BaseScan remediation: https://gcagochina.com/basescan-remediation.html
 Project profile: https://gcagochina.com/project-profile.html
-Official logo: https://gcagochina.com/assets/gca-logo.svg
+Official token icon: https://gcagochina.com/assets/gca-token-icon.svg
 Brand kit: https://gcagochina.com/brand-kit.html
 Whitepaper: https://gcagochina.com/whitepaper.html
 Community kit: https://gcagochina.com/community.html

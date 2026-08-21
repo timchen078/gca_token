@@ -5,7 +5,7 @@ This package prepares GCA information for token data and DEX discovery platforms
 ## Current Readiness
 
 - Official website: live at `https://gcagochina.com/`
-- Official logo: live at `https://gcagochina.com/assets/gca-logo.svg`
+- Official token icon: live at `https://gcagochina.com/assets/gca-token-icon.svg`
 - Whitepaper: live at `https://gcagochina.com/whitepaper.html`
 - Brand kit page: `https://gcagochina.com/brand-kit.html`
 - Brand kit JSON: `https://gcagochina.com/brand-kit.json`
@@ -140,8 +140,8 @@ This package prepares GCA information for token data and DEX discovery platforms
 - Credits catalog JSON: `https://gcagochina.com/credits.json`
 - Release gates: `https://gcagochina.com/release-gates.html`
 - Release gates JSON: `https://gcagochina.com/release-gates.json`
-- Logo SVG: `https://gcagochina.com/assets/gca-logo.svg`
-- Logo PNG: `https://gcagochina.com/assets/gca-logo.png`
+- Token icon SVG: `https://gcagochina.com/assets/gca-token-icon.svg`
+- Token icon PNG: `https://gcagochina.com/assets/gca-token-icon.png`
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
 - BaseScan contract: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - BaseScan reserve transfer 1: `https://basescan.org/tx/0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67`

@@ -57,8 +57,8 @@ This package records the current BaseScan token information remediation state. T
 - Token list JSON: `https://gcagochina.com/tokenlist.json`
 - Well-known token identity: `https://gcagochina.com/.well-known/gca-token.json`
 - Whitepaper: `https://gcagochina.com/whitepaper.html`
-- Logo SVG: `https://gcagochina.com/assets/gca-logo.svg`
-- Logo PNG: `https://gcagochina.com/assets/gca-logo.png`
+- Token icon SVG: `https://gcagochina.com/assets/gca-token-icon.svg`
+- Token icon PNG: `https://gcagochina.com/assets/gca-token-icon.png`
 - Official Telegram: `https://t.me/gcagochinaofficial`
 - Official X: `https://x.com/GCAAIGoChina`
 - Official email: `support@gcagochina.com`
@@ -129,7 +129,7 @@ Do not describe the reserve as locked, vested, or multisig-controlled unless cus
 Used for the 2026-05-13 resubmission:
 
 1. Confirm `https://gcagochina.com/` loads over HTTPS.
-2. Confirm `https://gcagochina.com/assets/gca-logo.svg` loads and is the 32x32 SVG logo.
+2. Confirm `https://gcagochina.com/assets/gca-token-icon.svg` loads and is the 32x32 SVG token icon.
 3. Confirm the official email `support@gcagochina.com` is visible on the website support page.
 4. Include the official Telegram and X links.
 5. Include the whitepaper, listing kit, product spec, and release gates URLs.

@@ -14,6 +14,10 @@ RESERVE_TX = "0x4c342e1f4c969d0a73018637b778d5a76bd05f54749ff1fd2d19327fd5c01c67
 SECOND_RESERVE_TX = "0xfffb674448abdbd3af45bb0a30c48e5fbb0e675542b971f031381254b5dc5317"
 TELEGRAM_URL = "https://t.me/gcagochinaofficial"
 X_URL = "https://x.com/GCAAIGoChina"
+WEBSITE_LOGO_SVG_URL = "https://gcagochina.com/assets/gca-logo.svg"
+WEBSITE_LOGO_PNG_URL = "https://gcagochina.com/assets/gca-logo.png"
+TOKEN_ICON_SVG_URL = "https://gcagochina.com/assets/gca-token-icon.svg"
+TOKEN_ICON_PNG_URL = "https://gcagochina.com/assets/gca-token-icon.png"
 FIRST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2054660559124255151"
 LATEST_X_POST_URL = "https://x.com/GCAAIGoChina/status/2058090599535030302"
 SWAP_TEST_BUY_TX = "0xf79e52ea56a299a30c2d297be99c970295864ed262c01fdcb7e3f60ca669b040"
@@ -995,15 +999,38 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn("secrets.", workflow)
         self.assertNotIn("mnemonic", workflow.lower())
 
-    def test_logo_matches_basescan_size_target(self):
-        logo = (ROOT / "brand" / "gca-logo.svg").read_text()
+    def test_website_logo_and_token_icon_are_separate_assets(self):
+        from PIL import Image, ImageChops
+
+        website_logo = (ROOT / "brand" / "gca-logo.svg").read_text()
+        token_icon = (ROOT / "brand" / "gca-token-icon.svg").read_text()
         social_svg = (ROOT / "brand" / "gca-social-card.svg").read_text()
         social_png = (ROOT / "brand" / "gca-social-card.png").read_bytes()
-        self.assertIn('width="32"', logo)
-        self.assertIn('height="32"', logo)
-        self.assertIn("GCA token logo", logo)
-        self.assertTrue((ROOT / "brand" / "gca-logo.png").exists())
-        self.assertTrue((ROOT / "site" / "assets" / "gca-logo.png").exists())
+        self.assertIn('width="32"', website_logo)
+        self.assertIn('height="32"', website_logo)
+        self.assertIn("GCA token logo", website_logo)
+        self.assertIn('width="32"', token_icon)
+        self.assertIn('height="32"', token_icon)
+        self.assertIn("GCA token profile icon", token_icon)
+        self.assertIn("#0A976B", token_icon)
+        self.assertEqual(website_logo, (ROOT / "site" / "assets" / "gca-logo.svg").read_text())
+        self.assertEqual(token_icon, (ROOT / "site" / "assets" / "gca-token-icon.svg").read_text())
+        for path in (
+            ROOT / "brand" / "gca-logo.png",
+            ROOT / "site" / "assets" / "gca-logo.png",
+            ROOT / "brand" / "gca-token-icon.png",
+            ROOT / "site" / "assets" / "gca-token-icon.png",
+        ):
+            with Image.open(path).convert("RGB") as image:
+                self.assertEqual(image.size, (512, 512))
+                background = Image.new("RGB", image.size, image.getpixel((511, 511)))
+                bounds = ImageChops.difference(image, background).getbbox()
+                self.assertIsNotNone(bounds)
+                left, top, right, bottom = bounds
+                self.assertGreater(right - left, 240)
+                self.assertGreater(bottom - top, 240)
+                self.assertLess(abs((left + right) / 2 - 256), 32)
+                self.assertLess(abs((top + bottom) / 2 - 256), 32)
         self.assertIn('width="1200"', social_svg)
         self.assertIn('height="630"', social_svg)
         self.assertIn("GCA social preview card", social_svg)
@@ -1012,6 +1039,13 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(social_png[:8], b"\x89PNG\r\n\x1a\n")
         self.assertEqual(int.from_bytes(social_png[16:20], "big"), 1200)
         self.assertEqual(int.from_bytes(social_png[20:24], "big"), 630)
+
+        for page_name in ("index.html", "zh-cn.html", "buy.html"):
+            page = (ROOT / "site" / page_name).read_text()
+            with self.subTest(page=page_name):
+                self.assertIn('src="assets/gca-logo.svg"', page)
+                self.assertIn('image: new URL("assets/gca-token-icon.png", window.location.href).href', page)
+                self.assertNotIn('image: new URL("assets/gca-logo.svg", window.location.href).href', page)
 
     def test_public_html_pages_publish_social_preview_metadata(self):
         html_paths = sorted((ROOT / "site").rglob("*.html"))
@@ -1810,7 +1844,7 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertEqual(data["schema"], BASESCAN_REMEDIATION_URL)
         self.assertEqual(data["pageUrl"], BASESCAN_REMEDIATION_PAGE_URL)
-        self.assertEqual(data["lastUpdated"], "2026-08-10")
+        self.assertEqual(data["lastUpdated"], "2026-08-13")
         self.assertEqual(data["status"], "basescan-ready-for-owner-resubmission")
         self.assertEqual(data["chainId"], 8453)
         self.assertEqual(data["contractAddress"], MAINNET_ADDRESS)
@@ -2111,6 +2145,7 @@ class LaunchPackageTests(unittest.TestCase):
 
         self.assertEqual(data["schema"], BASESCAN_HANDOFF_URL)
         self.assertEqual(data["pageUrl"], BASESCAN_HANDOFF_PAGE_URL)
+        self.assertEqual(data["lastUpdated"], "2026-08-13")
         self.assertEqual(data["status"], "ready-for-owner-resubmission")
         self.assertEqual(data["chainId"], 8453)
         self.assertEqual(data["contractAddress"], MAINNET_ADDRESS)
@@ -2386,7 +2421,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Token Symbol: GCA", page)
         self.assertIn("Decimals: 18", page)
         self.assertIn("Total Supply: 1000000000", page)
-        self.assertIn("https://gcagochina.com/assets/gca-logo.svg", page)
+        self.assertIn(TOKEN_ICON_SVG_URL, page)
         self.assertIn("BaseScan ticket", page)
         self.assertIn("签名记录", page)
         self.assertIn("不要说已通过", page)
@@ -2450,7 +2485,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Not automatic: No automatic token claim", page)
         self.assertIn("Copy/Paste Basic Information", page)
         self.assertIn("Project Email Address: support@gcagochina.com", page)
-        self.assertIn("32x32 SVG Logo: https://gcagochina.com/assets/gca-logo.svg", page)
+        self.assertIn(f"32x32 SVG Logo: {TOKEN_ICON_SVG_URL}", page)
         self.assertIn("Token Symbol: GCA", page)
         self.assertIn("Decimals: 18", page)
         self.assertIn("Total Supply: 1000000000", page)
@@ -2543,7 +2578,10 @@ class LaunchPackageTests(unittest.TestCase):
         security = (ROOT / "site" / ".well-known" / "security.txt").read_text()
 
         self.assertEqual(identity["schema"], WELL_KNOWN_TOKEN_URL)
-        self.assertEqual(identity["lastUpdated"], "2026-06-14")
+        self.assertEqual(identity["lastUpdated"], "2026-08-13")
+        self.assertEqual(identity["officialUrls"]["logoSvg"], TOKEN_ICON_SVG_URL)
+        self.assertEqual(identity["officialUrls"]["logoPng"], TOKEN_ICON_PNG_URL)
+        self.assertEqual(identity["officialUrls"]["logoVersion"], "2026-08-13-orbit")
         self.assertEqual(identity["network"]["name"], "Base Mainnet")
         self.assertEqual(identity["network"]["chainId"], 8453)
         self.assertEqual(identity["token"]["contractAddress"], MAINNET_ADDRESS)
@@ -8220,8 +8258,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(project["brandKit"]["status"], "public-brand-kit-published")
         self.assertEqual(project["brandKit"]["pageUrl"], BRAND_KIT_PAGE_URL)
         self.assertEqual(project["brandKit"]["url"], BRAND_KIT_URL)
-        self.assertEqual(project["brandKit"]["logoSvgUrl"], "https://gcagochina.com/assets/gca-logo.svg")
-        self.assertEqual(project["brandKit"]["logoPngUrl"], "https://gcagochina.com/assets/gca-logo.png")
+        self.assertEqual(project["logoSvgUrl"], TOKEN_ICON_SVG_URL)
+        self.assertEqual(project["logoPngUrl"], TOKEN_ICON_PNG_URL)
+        self.assertEqual(project["logoVersion"], "2026-08-13-orbit")
+        self.assertEqual(project["brandKit"]["logoSvgUrl"], TOKEN_ICON_SVG_URL)
+        self.assertEqual(project["brandKit"]["logoPngUrl"], TOKEN_ICON_PNG_URL)
         self.assertEqual(project["platformStatus"]["baseScanTokenProfile"], "ready-for-owner-resubmission")
         self.assertEqual(project["platformStatus"]["baseScanTokenProfileLastCheckedDate"], "2026-08-12")
         self.assertIn("Read-only public BaseScan check on 2026-08-12", project["platformStatus"]["baseScanTokenProfileLastCheckedResult"])
@@ -8714,8 +8755,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn("Platform-Only Evidence Path", page)
         self.assertNotIn("Data Room", page)
         self.assertNotIn('href="data.html"', page)
-        self.assertIn("Logo SVG", page)
-        self.assertIn("Logo PNG", page)
+        self.assertIn("Token Icon SVG", page)
+        self.assertIn("Token Icon PNG", page)
         self.assertIn("Social Card", page)
         self.assertIn("32 x 32", page)
         self.assertIn("512 x 512", page)
@@ -8723,6 +8764,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(SOCIAL_CARD_PNG_URL, page)
         self.assertIn(SOCIAL_CARD_SVG_URL, page)
         self.assertIn("#111111", page)
+        self.assertIn("#0A976B", page)
         self.assertIn("#D71920", page)
         self.assertIn("#0052FF", page)
         self.assertIn("Base Mainnet / 8453", page)
@@ -8745,11 +8787,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(kit["officialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
         self.assertEqual(kit["officialMarket"]["geckoTerminal"], OFFICIAL_GECKOTERMINAL_URL)
         self.assertEqual(kit["officialMarket"]["dexScreener"], OFFICIAL_DEXSCREENER_URL)
-        self.assertEqual(kit["logoAssets"]["svg"]["url"], "https://gcagochina.com/assets/gca-logo.svg")
+        self.assertEqual(kit["logoAssets"]["svg"]["url"], TOKEN_ICON_SVG_URL)
         self.assertEqual(kit["logoAssets"]["svg"]["format"], "image/svg+xml")
         self.assertEqual(kit["logoAssets"]["svg"]["width"], 32)
         self.assertEqual(kit["logoAssets"]["svg"]["height"], 32)
-        self.assertEqual(kit["logoAssets"]["png"]["url"], "https://gcagochina.com/assets/gca-logo.png")
+        self.assertEqual(kit["logoAssets"]["png"]["url"], TOKEN_ICON_PNG_URL)
         self.assertEqual(kit["logoAssets"]["png"]["format"], "image/png")
         self.assertEqual(kit["logoAssets"]["png"]["width"], 512)
         self.assertEqual(kit["logoAssets"]["png"]["height"], 512)
@@ -8762,6 +8804,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(kit["logoAssets"]["socialCardSvg"]["width"], 1200)
         self.assertEqual(kit["logoAssets"]["socialCardSvg"]["height"], 630)
         self.assertEqual(kit["visualIdentity"]["primaryInk"], "#111111")
+        self.assertEqual(kit["visualIdentity"]["orbitGreen"], "#0A976B")
         self.assertEqual(kit["visualIdentity"]["accentRed"], "#D71920")
         self.assertEqual(kit["visualIdentity"]["baseBlue"], "#0052FF")
         self.assertEqual(kit["officialLinks"]["brandKitPage"], BRAND_KIT_PAGE_URL)
@@ -9249,6 +9292,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(replies["schema"], PLATFORM_REPLIES_URL)
         self.assertEqual(replies["pageUrl"], PLATFORM_REPLIES_PAGE_URL)
         self.assertEqual(replies["status"], "public-platform-reply-kit-published")
+        self.assertEqual(replies["lastUpdated"], "2026-08-13")
         self.assertEqual(replies["chainId"], 8453)
         self.assertEqual(replies["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(replies["officialEmail"], "support@gcagochina.com")
@@ -9281,6 +9325,9 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(replies["officialMarket"]["quoteAssetAddress"], BASE_USDT_ADDRESS)
         self.assertEqual(replies["officialMarket"]["geckoTerminal"], OFFICIAL_GECKOTERMINAL_URL)
         self.assertEqual(replies["officialMarket"]["dexScreener"], OFFICIAL_DEXSCREENER_URL)
+        metadata_body = "\n".join(replies["replyTemplates"]["metadataCorrection"]["body"])
+        self.assertIn(f"Token icon SVG: {TOKEN_ICON_SVG_URL}", metadata_body)
+        self.assertIn(f"Token icon PNG: {TOKEN_ICON_PNG_URL}", metadata_body)
         self.assertIn("walletWarningReviewer", replies["replyTemplates"])
         self.assertIn("baseScanProfile", replies["replyTemplates"])
         self.assertIn("metadataCorrection", replies["replyTemplates"])
@@ -10158,8 +10205,8 @@ class LaunchPackageTests(unittest.TestCase):
     def test_token_list_json_is_official_and_conservative(self):
         tokenlist = json.loads((ROOT / "site" / "tokenlist.json").read_text())
         self.assertEqual(tokenlist["name"], "GCA Official Token List")
-        self.assertEqual(tokenlist["timestamp"], "2026-05-14T00:00:00+07:00")
-        self.assertEqual(tokenlist["version"], {"major": 1, "minor": 0, "patch": 0})
+        self.assertEqual(tokenlist["timestamp"], "2026-08-13T00:00:00+07:00")
+        self.assertEqual(tokenlist["version"], {"major": 1, "minor": 0, "patch": 1})
         self.assertIn("base", tokenlist["keywords"])
         self.assertEqual(len(tokenlist["tokens"]), 1)
 
@@ -10169,9 +10216,10 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(token["name"], "GCA")
         self.assertEqual(token["symbol"], "GCA")
         self.assertEqual(token["decimals"], 18)
-        self.assertEqual(token["logoURI"], "https://gcagochina.com/assets/gca-logo.png")
+        self.assertEqual(token["logoURI"], TOKEN_ICON_PNG_URL)
 
         extensions = token["extensions"]
+        self.assertEqual(extensions["logoVersion"], "2026-08-13-orbit")
         self.assertEqual(extensions["website"], "https://gcagochina.com/")
         self.assertEqual(extensions["verify"], VERIFY_PAGE_URL)
         self.assertEqual(extensions["statusPage"], "https://gcagochina.com/status.html")
@@ -10504,7 +10552,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Project Profile BaseScan reviewer map", submission)
         self.assertIn("https://gcagochina.com/project-profile.html#basescanMapTitle", submission)
         self.assertIn("https://gcagochina.com/zh-basescan-submit.html", submission)
-        self.assertIn("Public logo download URL", submission)
+        self.assertIn("Public token icon download URL", submission)
         self.assertIn(RELEASE_GATES_PAGE_URL, submission)
         self.assertNotIn("https://x.com/GCAgochina", submission)
         self.assertNotIn("Official contact email: `cxy070800@gmail.com`", submission)
@@ -10567,7 +10615,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(values["website"], "https://gcagochina.com/")
         self.assertEqual(values["utilityThesisUrl"], "https://gcagochina.com/utility.html")
-        self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
+        self.assertEqual(values["logoUrl"], TOKEN_ICON_SVG_URL)
         self.assertEqual(values["whitepaperUrl"], "https://gcagochina.com/whitepaper.html")
         self.assertEqual(values["officialEmail"], "support@gcagochina.com")
         self.assertIn("Official public project email", values["officialEmailNote"])
@@ -10674,7 +10722,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(BRAND_KIT_PAGE_URL, package)
         self.assertIn(COMMUNITY_PAGE_URL, package)
         self.assertIn(EXTERNAL_REVIEW_PAGE_URL, package)
-        self.assertIn("32x32 SVG logo", package)
+        self.assertIn("32x32 SVG token icon", package)
         self.assertIn("sign again if BaseScan asks", package)
         self.assertIn(OFFICIAL_POOL_ADDRESS, package)
         self.assertNotIn(OLD_WETH_POOL_ADDRESS, package)
@@ -11242,7 +11290,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(RELEASE_GATES_PAGE_URL, package)
         self.assertIn(RELEASE_GATES_URL, package)
         self.assertIn("GCA AI Quant Access", package)
-        self.assertIn("https://gcagochina.com/assets/gca-logo.svg", package)
+        self.assertIn(TOKEN_ICON_SVG_URL, package)
         self.assertIn("https://gcagochina.com/whitepaper.html", package)
         self.assertIn(OFFICIAL_DEXSCREENER_URL, package)
         self.assertIn(OFFICIAL_GECKOTERMINAL_URL, package)
@@ -11321,7 +11369,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["releaseGatesPageUrl"], RELEASE_GATES_PAGE_URL)
         self.assertEqual(values["releaseGatesUrl"], RELEASE_GATES_URL)
         self.assertEqual(values["releaseGatesStatus"], "public-release-gates-published")
-        self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
+        self.assertEqual(values["logoUrl"], TOKEN_ICON_SVG_URL)
         self.assertEqual(values["productSpecPositioning"]["status"], "public-product-spec-published")
         self.assertEqual(values["productSpecPositioning"]["currentStage"], PRODUCT_STAGE)
         self.assertTrue(values["productSpecPositioning"]["publicAccountUiLive"])
@@ -11650,7 +11698,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn(OFFICIAL_SWAP_URL, runbook)
         self.assertIn("GCA/USDT", runbook)
         self.assertIn("https://gcagochina.com/", runbook)
-        self.assertIn("https://gcagochina.com/assets/gca-logo.svg", runbook)
+        self.assertIn(TOKEN_ICON_SVG_URL, runbook)
         self.assertIn("https://gcagochina.com/whitepaper.html", runbook)
         self.assertIn("https://gcagochina.com/utility.html", runbook)
         self.assertIn(PRODUCT_PAGE_URL, runbook)
@@ -11670,8 +11718,8 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["chainId"], 8453)
         self.assertEqual(values["contractAddress"], MAINNET_ADDRESS)
         self.assertEqual(values["website"], "https://gcagochina.com/")
-        self.assertEqual(values["logoUrl"], "https://gcagochina.com/assets/gca-logo.svg")
-        self.assertEqual(values["logoPngUrl"], "https://gcagochina.com/assets/gca-logo.png")
+        self.assertEqual(values["logoUrl"], TOKEN_ICON_SVG_URL)
+        self.assertEqual(values["logoPngUrl"], TOKEN_ICON_PNG_URL)
         self.assertEqual(values["utilityThesisUrl"], "https://gcagochina.com/utility.html")
         self.assertEqual(values["productSpecPageUrl"], PRODUCT_PAGE_URL)
         self.assertEqual(values["productSpecUrl"], PRODUCT_URL)

@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/brand-kit.json",
   "pageUrl": "https://gcagochina.com/brand-kit.html",
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-08-13",
   "status": "public-brand-kit-published",
   "projectName": "GCA",
   "conceptExpansion": "Go China Access",
@@ -19,14 +19,14 @@
   },
   "logoAssets": {
     "svg": {
-      "url": "https://gcagochina.com/assets/gca-logo.svg",
+      "url": "https://gcagochina.com/assets/gca-token-icon.svg",
       "format": "image/svg+xml",
       "width": 32,
       "height": 32,
       "purpose": "BaseScan and compact token profile logo"
     },
     "png": {
-      "url": "https://gcagochina.com/assets/gca-logo.png",
+      "url": "https://gcagochina.com/assets/gca-token-icon.png",
       "format": "image/png",
       "width": 512,
       "height": 512,
@@ -49,6 +49,7 @@
   },
   "visualIdentity": {
     "primaryInk": "#111111",
+    "orbitGreen": "#0A976B",
     "background": "#FFFFFF",
     "accentRed": "#D71920",
     "baseBlue": "#0052FF",
