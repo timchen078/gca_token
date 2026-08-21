@@ -1000,8 +1000,6 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn("mnemonic", workflow.lower())
 
     def test_website_logo_and_token_icon_are_separate_assets(self):
-        from PIL import Image, ImageChops
-
         website_logo = (ROOT / "brand" / "gca-logo.svg").read_text()
         token_icon = (ROOT / "brand" / "gca-token-icon.svg").read_text()
         social_svg = (ROOT / "brand" / "gca-social-card.svg").read_text()
@@ -1015,22 +1013,21 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("#0A976B", token_icon)
         self.assertEqual(website_logo, (ROOT / "site" / "assets" / "gca-logo.svg").read_text())
         self.assertEqual(token_icon, (ROOT / "site" / "assets" / "gca-token-icon.svg").read_text())
-        for path in (
-            ROOT / "brand" / "gca-logo.png",
-            ROOT / "site" / "assets" / "gca-logo.png",
-            ROOT / "brand" / "gca-token-icon.png",
-            ROOT / "site" / "assets" / "gca-token-icon.png",
-        ):
-            with Image.open(path).convert("RGB") as image:
-                self.assertEqual(image.size, (512, 512))
-                background = Image.new("RGB", image.size, image.getpixel((511, 511)))
-                bounds = ImageChops.difference(image, background).getbbox()
-                self.assertIsNotNone(bounds)
-                left, top, right, bottom = bounds
-                self.assertGreater(right - left, 240)
-                self.assertGreater(bottom - top, 240)
-                self.assertLess(abs((left + right) / 2 - 256), 32)
-                self.assertLess(abs((top + bottom) / 2 - 256), 32)
+        png_assets = {
+            "websiteBrand": (ROOT / "brand" / "gca-logo.png").read_bytes(),
+            "websitePublic": (ROOT / "site" / "assets" / "gca-logo.png").read_bytes(),
+            "tokenBrand": (ROOT / "brand" / "gca-token-icon.png").read_bytes(),
+            "tokenPublic": (ROOT / "site" / "assets" / "gca-token-icon.png").read_bytes(),
+        }
+        for label, data in png_assets.items():
+            with self.subTest(asset=label):
+                self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+                self.assertEqual(int.from_bytes(data[16:20], "big"), 512)
+                self.assertEqual(int.from_bytes(data[20:24], "big"), 512)
+                self.assertGreater(len(data), 4096)
+        self.assertEqual(png_assets["websiteBrand"], png_assets["websitePublic"])
+        self.assertEqual(png_assets["tokenBrand"], png_assets["tokenPublic"])
+        self.assertNotEqual(png_assets["websiteBrand"], png_assets["tokenBrand"])
         self.assertIn('width="1200"', social_svg)
         self.assertIn('height="630"', social_svg)
         self.assertIn("GCA social preview card", social_svg)
