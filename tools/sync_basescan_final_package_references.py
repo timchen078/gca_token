@@ -50,7 +50,6 @@ DEFAULT_TARGET_FILES = [
     "site/reviewer-kit.html",
     "site/reviewer-kit.json",
     "site/roadmap.html",
-    "site/terms.html",
     "site/token-safety.html",
     "site/trust.html",
     "site/trust.json",
@@ -231,7 +230,13 @@ def update_handoff_payload(
             "python3 tools/sync_basescan_final_package_references.py --check --json"
         ),
     }
-    payload["lastUpdated"] = str(package.get("generatedAt") or "").split("T", 1)[0]
+    package_date = str(package.get("generatedAt") or "").split("T", 1)[0]
+    current_date = str(payload.get("lastUpdated") or "")
+    payload["lastUpdated"] = (
+        max(current_date, package_date)
+        if re.fullmatch(r"20\d{2}-\d{2}-\d{2}", current_date)
+        else package_date
+    )
     return payload
 
 

@@ -20,6 +20,9 @@ class BaseScanFinalPackageReferenceSyncTests(unittest.TestCase):
     def test_public_verification_page_is_not_an_internal_sync_target(self):
         self.assertNotIn("site/verify.html", DEFAULT_TARGET_FILES)
 
+    def test_public_participation_terms_are_not_an_internal_sync_target(self):
+        self.assertNotIn("site/terms.html", DEFAULT_TARGET_FILES)
+
     def write_fixture(self, root: Path) -> tuple[Path, Path]:
         launch = root / "launch"
         launch.mkdir(parents=True, exist_ok=True)
@@ -146,6 +149,35 @@ class BaseScanFinalPackageReferenceSyncTests(unittest.TestCase):
         self.assertEqual(report["summary"]["filesChanged"], 1)
         self.assertFalse(report["writeMode"])
         self.assertEqual(current, f"Final package: {OLD_TIMESTAMP}")
+
+    def test_sync_does_not_regress_a_newer_handoff_last_updated_date(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            package_path, values_path = self.write_fixture(root)
+            site = root / "site"
+            site.mkdir(parents=True, exist_ok=True)
+            handoff_path = site / "basescan-handoff.json"
+            handoff_path.write_text(
+                json.dumps({
+                    "lastUpdated": "2026-08-13",
+                    "finalSubmissionPackage": {
+                        "generatedAt": OLD_TIMESTAMP,
+                        "copyPasteContent": {},
+                    },
+                }),
+                encoding="utf-8",
+            )
+
+            report = synchronize_references(
+                root=root,
+                package_path=package_path,
+                values_path=values_path,
+                target_files=["site/basescan-handoff.json"],
+            )
+            handoff = json.loads(handoff_path.read_text(encoding="utf-8"))
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(handoff["lastUpdated"], "2026-08-13")
 
     def test_missing_target_is_reported(self):
         with tempfile.TemporaryDirectory() as temp_dir:
