@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" role="img" aria-labelledby="title desc">
+  <title id="title">GCA token profile icon</title>
+  <desc id="desc">Black geometric G encircled by a green orbital ring for GCA on Base Mainnet.</desc>
+  <metadata id="version">2026-08-13-orbit</metadata>
+  <rect width="32" height="32" fill="#FFFFFF"/>
+  <g transform="rotate(24 16 16)">
+    <ellipse cx="16" cy="16" rx="13.25" ry="9.15" fill="none" stroke="#0A976B" stroke-width="2.35"/>
+    <path d="M6.2 10.3C9.3 5.6 18.5 5.2 25.4 9.5C31.2 13.1 32.1 19.2 28.2 23.5C30.2 19.8 28.2 15.3 23.5 12.4C18.1 9.1 11.5 8.9 7.8 12.2Z" fill="#171717"/>
+  </g>
+  <path d="M18.2 8.1A8.1 8.1 0 1 0 23.9 22V14.6h-7.4v3.45h3.65v2.25a5.05 5.05 0 1 1-1.95-8.72c1.65 0 3.15.77 4.11 1.96l2.68-2.18A8.07 8.07 0 0 0 18.2 8.1Z" fill="#171717"/>
+</svg>

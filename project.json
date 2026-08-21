@@ -113,14 +113,15 @@
   "utilityThesisUrl": "https://gcagochina.com/utility.html",
   "utilityThesisJsonUrl": "https://gcagochina.com/utility.json",
   "whitepaperUrl": "https://gcagochina.com/whitepaper.html",
-  "logoSvgUrl": "https://gcagochina.com/assets/gca-logo.svg",
-  "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
+  "logoSvgUrl": "https://gcagochina.com/assets/gca-token-icon.svg",
+  "logoPngUrl": "https://gcagochina.com/assets/gca-token-icon.png",
+  "logoVersion": "2026-08-13-orbit",
   "brandKit": {
     "status": "public-brand-kit-published",
     "pageUrl": "https://gcagochina.com/brand-kit.html",
     "url": "https://gcagochina.com/brand-kit.json",
-    "logoSvgUrl": "https://gcagochina.com/assets/gca-logo.svg",
-    "logoPngUrl": "https://gcagochina.com/assets/gca-logo.png",
+    "logoSvgUrl": "https://gcagochina.com/assets/gca-token-icon.svg",
+    "logoPngUrl": "https://gcagochina.com/assets/gca-token-icon.png",
     "logoSvgSize": "32x32",
     "logoPngSize": "512x512"
   },
@@ -293,7 +294,7 @@
         "returnReason": "missing or inconsistent logo, social, whitepaper, or project metadata links",
         "status": "implemented",
         "evidencePages": [
-          "https://gcagochina.com/assets/gca-logo.svg",
+          "https://gcagochina.com/assets/gca-token-icon.svg",
           "https://gcagochina.com/brand-kit.html",
           "https://gcagochina.com/community.html",
           "https://gcagochina.com/whitepaper.html",

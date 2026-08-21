@@ -1,7 +1,7 @@
 {
   "schema": "https://gcagochina.com/basescan-remediation.json",
   "pageUrl": "https://gcagochina.com/basescan-remediation.html",
-  "lastUpdated": "2026-08-10",
+  "lastUpdated": "2026-08-13",
   "projectName": "GCA",
   "tokenSymbol": "GCA",
   "network": "Base Mainnet",
@@ -35,8 +35,8 @@
     "platformRepliesPage": "https://gcagochina.com/platform-replies.html",
     "platformRepliesData": "https://gcagochina.com/platform-replies.json",
     "brandKit": "https://gcagochina.com/brand-kit.html",
-    "logoSvg": "https://gcagochina.com/assets/gca-logo.svg",
-    "logoPng": "https://gcagochina.com/assets/gca-logo.png",
+    "logoSvg": "https://gcagochina.com/assets/gca-token-icon.svg",
+    "logoPng": "https://gcagochina.com/assets/gca-token-icon.png",
     "telegram": "https://t.me/gcagochinaofficial",
     "x": "https://x.com/GCAAIGoChina",
     "projectProfileSource": "https://gcagochina.com/project-profile.html"
