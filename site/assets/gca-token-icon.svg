@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" role="img" aria-labelledby="title desc">
   <title id="title">GCA token profile icon</title>
   <desc id="desc">Black geometric G encircled by a green orbital ring for GCA on Base Mainnet.</desc>
+  <metadata id="version">2026-08-13-orbit</metadata>
   <rect width="32" height="32" fill="#FFFFFF"/>
   <g transform="rotate(24 16 16)">
     <ellipse cx="16" cy="16" rx="13.25" ry="9.15" fill="none" stroke="#0A976B" stroke-width="2.35"/>
