@@ -83,6 +83,33 @@ def truncate(text: str, limit: int = 6000) -> str:
     return text[-limit:]
 
 
+def github_command_escape(value: Any) -> str:
+    return str(value).replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+
+
+def emit_github_failure_annotations(summary: dict[str, Any], *, stream: Any = sys.stdout) -> int:
+    """Expose public-observation failures without publishing private member data."""
+    emitted = 0
+    for step in summary.get("steps", []):
+        if not isinstance(step, dict):
+            continue
+        step_id = str(step.get("id") or "")
+        if step_id not in PUBLIC_OBSERVATION_STEP_IDS or step.get("ok") is True:
+            continue
+        status_summary = step.get("statusSummary") if isinstance(step.get("statusSummary"), dict) else {}
+        status = str(status_summary.get("status") or "failed")
+        detail = str(status_summary.get("error") or step.get("stderrTail") or "public check returned a non-zero status")
+        detail = truncate(detail.strip(), 1200)
+        title = f"GCA public check failed: {step_id}"
+        message = f"status={status}; returnCode={step.get('returnCode')}; detail={detail}"
+        print(
+            f"::error title={github_command_escape(title)}::{github_command_escape(message)}",
+            file=stream,
+        )
+        emitted += 1
+    return emitted
+
+
 def default_runner(command: Sequence[str], cwd: Path, timeout: float) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         list(command),
@@ -832,6 +859,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--digest-output", type=Path, default=DEFAULT_DIGEST_OUTPUT, help="Markdown operator digest output path.")
     parser.add_argument("--digest-json-output", type=Path, default=DEFAULT_DIGEST_JSON_OUTPUT, help="JSON operator digest output path.")
     parser.add_argument(
+        "--github-annotations",
+        action="store_true",
+        help="On failure, emit GitHub Actions annotations for public observation checks only.",
+    )
+    parser.add_argument(
         "--update-public-status",
         action="store_true",
         help=(
@@ -882,6 +914,8 @@ def main(argv: list[str] | None = None) -> int:
         daily_status_html_output=args.daily_status_html_output,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True))
+    if args.github_annotations and not summary["ok"]:
+        emit_github_failure_annotations(summary)
     return 0 if summary["ok"] else 1
 
 

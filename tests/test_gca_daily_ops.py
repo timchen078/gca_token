@@ -1,3 +1,4 @@
+import io
 import json
 import subprocess
 import sys
@@ -8,7 +9,7 @@ from unittest.mock import patch
 
 from tools import run_gca_daily_ops as daily_ops_module
 from tools.build_gca_daily_status_snapshot import build_snapshot
-from tools.run_gca_daily_ops import run_daily_ops
+from tools.run_gca_daily_ops import emit_github_failure_annotations, run_daily_ops
 
 
 BASESCAN_BLOCKED_OUTPUT = json.dumps({
@@ -173,6 +174,49 @@ MARKET_HEALTH_SUMMARY = {
 
 
 class GcaDailyOpsTests(unittest.TestCase):
+    def test_github_annotations_include_only_failed_public_observations(self):
+        stream = io.StringIO()
+        emitted = emit_github_failure_annotations(
+            {
+                "steps": [
+                    {
+                        "id": "public-site",
+                        "ok": False,
+                        "returnCode": 1,
+                        "stderrTail": "HTTP 503\nretry 100%",
+                    },
+                    {
+                        "id": "member-access-ops",
+                        "ok": False,
+                        "returnCode": 1,
+                        "stderrTail": "private-member-detail",
+                    },
+                    {
+                        "id": "official-pool-market-health",
+                        "ok": True,
+                        "returnCode": 0,
+                    },
+                ]
+            },
+            stream=stream,
+        )
+
+        output = stream.getvalue()
+        self.assertEqual(emitted, 1)
+        self.assertIn("::error title=GCA public check failed: public-site::", output)
+        self.assertIn("HTTP 503%0Aretry 100%25", output)
+        self.assertNotIn("private-member-detail", output)
+
+    def test_github_annotations_skip_successful_public_observations(self):
+        stream = io.StringIO()
+        emitted = emit_github_failure_annotations(
+            {"steps": [{"id": "public-site", "ok": True, "returnCode": 0}]},
+            stream=stream,
+        )
+
+        self.assertEqual(emitted, 0)
+        self.assertEqual(stream.getvalue(), "")
+
     def test_daily_ops_public_only_runs_site_and_api_checks(self):
         seen = []
 

@@ -950,6 +950,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("mkdir -p /tmp/gca-public-daily-ops", workflow)
         self.assertIn("--summary-output /tmp/gca-public-daily-ops/gca_daily_ops_summary.json", workflow)
         self.assertIn("--require-complete-public-observations", workflow)
+        self.assertIn("--github-annotations", workflow)
         self.assertIn("--build-digest", workflow)
         self.assertIn("--digest-output /tmp/gca-public-daily-ops/gca_operator_digest.md", workflow)
         self.assertIn("--digest-json-output /tmp/gca-public-daily-ops/gca_operator_digest.json", workflow)
