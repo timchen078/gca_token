@@ -57,10 +57,10 @@ jobs:
 
     steps:
       - name: Check out main
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -88,20 +88,31 @@ jobs:
             --digest-json-output /tmp/gca-public-daily-ops/gca_operator_digest.json
           )
 
-          for attempt in {1..20}; do
+          MAX_ATTEMPTS=3
+          for attempt in $(seq 1 "$MAX_ATTEMPTS"); do
             if python tools/run_gca_daily_ops.py "${DAILY_OPS_ARGS[@]}"; then
               exit 0
             fi
 
-            echo "GCA public daily ops check is not ready yet; retrying in 15 seconds (${attempt}/20)."
+            cp /tmp/gca-public-daily-ops/gca_daily_ops_summary.json \
+              "/tmp/gca-public-daily-ops/gca_daily_ops_summary_attempt_${attempt}.json" || true
+            cp /tmp/gca-public-daily-ops/gca_operator_digest.json \
+              "/tmp/gca-public-daily-ops/gca_operator_digest_attempt_${attempt}.json" || true
+            cp /tmp/gca-public-daily-ops/gca_operator_digest.md \
+              "/tmp/gca-public-daily-ops/gca_operator_digest_attempt_${attempt}.md" || true
+
+            if [ "$attempt" -eq "$MAX_ATTEMPTS" ]; then
+              echo "GCA public daily ops check failed after ${MAX_ATTEMPTS} attempts."
+              exit 1
+            fi
+
+            echo "GCA public daily ops check is not ready yet; retrying in 15 seconds (${attempt}/${MAX_ATTEMPTS})."
             sleep 15
           done
 
-          python tools/run_gca_daily_ops.py "${DAILY_OPS_ARGS[@]}"
-
       - name: Upload daily ops artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: gca-public-daily-ops
           if-no-files-found: ignore
