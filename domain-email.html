@@ -422,7 +422,7 @@
           </div>
           <div class="card">
             <h3>Public Switch Checker</h3>
-            <p class="note">After the public files are manually switched, run <code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>. It blocks if any critical support, project, or BaseScan file still publishes the old Outlook contact instead of <code>support@gcagochina.com</code>.</p>
+            <p class="note">After the public files are switched, run <code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>. It blocks if any critical support, project, or BaseScan file publishes a non-domain contact instead of <code>support@gcagochina.com</code>.</p>
           </div>
           <div class="card">
             <h3>Snapshot Alignment Checker</h3>
@@ -486,7 +486,7 @@
 
       <section class="section panel" aria-labelledby="currentSwitchTitle">
         <p class="eyebrow">Current Preflight Snapshot</p>
-	        <h2 id="currentSwitchTitle">0 Critical Files Still Publish The Old Outlook Email</h2>
+	        <h2 id="currentSwitchTitle">0 Critical Files Publish A Non-Domain Contact</h2>
 	        <p class="note">The latest read-only BaseScan preflight shows that the public switch is complete. Support, website, BaseScan package, and reviewer-facing files now publish <code>support@gcagochina.com</code>.</p>
         <div class="list">
           <div class="row"><span>Support and intake</span><strong><code>site/support.html</code>, <code>site/support.json</code>, <code>site/zh-support.html</code>, <code>site/register.html</code>, and <code>site/members.html</code>.</strong></div>
@@ -519,7 +519,7 @@
           <li><code>support@gcagochina.com</code> can receive external email.</li>
           <li><code>support@gcagochina.com</code> can send authenticated external email.</li>
           <li>The website publishes the same domain email used for the BaseScan request.</li>
-          <li><code>tools/check_domain_email_public_switch.py --json --require-switched</code> passes with no critical file still publishing the old Outlook email.</li>
+          <li><code>tools/check_domain_email_public_switch.py --json --require-switched</code> passes with every critical file using the official project-domain contact.</li>
           <li>The next BaseScan package includes GCA Team's team responsibilities at <code>https://gcagochina.com/team.html</code>.</li>
         </ul>
 	        <p class="note">Submission policy: send the next clean BaseScan update from <code>support@gcagochina.com</code> and keep private mailbox evidence ready if the reviewer asks for it.</p>

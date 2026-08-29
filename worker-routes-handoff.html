@@ -432,37 +432,37 @@
         <div class="panel">
           <h2>Gate 1 Command</h2>
           <p class="note">Safe before deploy. It does not write D1 data, deploy Workers, read user ledgers, or print secrets.</p>
-          <pre>cd /Users/abc/Desktop/gca_token
+          <pre>cd /path/to/gca_token
 python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth</pre>
         </div>
         <div class="panel">
           <h2>Gate 2 Command</h2>
           <p class="note">Run only after the read-only readiness gate passes.</p>
-          <pre>cd /Users/abc/Desktop/gca_token/cloudflare/gca-registration-worker
+          <pre>cd /path/to/gca_token/cloudflare/gca-registration-worker
 npx wrangler d1 migrations apply gca_registration --remote</pre>
         </div>
         <div class="panel">
           <h2>Gate 3 Command</h2>
           <p class="note">Run only after remote D1 migrations succeed.</p>
-          <pre>cd /Users/abc/Desktop/gca_token/cloudflare/gca-registration-worker
+          <pre>cd /path/to/gca_token/cloudflare/gca-registration-worker
 npx wrangler deploy</pre>
         </div>
         <div class="panel">
           <h2>Gate 4 Command</h2>
           <p class="note">Public route check; no admin token required and no write test record.</p>
-          <pre>cd /Users/abc/Desktop/gca_token
+          <pre>cd /path/to/gca_token
 python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes</pre>
         </div>
         <div class="panel">
           <h2>Gate 5 Command</h2>
           <p class="note">Local operator check. Keep <code>ADMIN_READ_TOKEN</code> in the ignored token file and do not paste it into chat, commits, logs, or public pages.</p>
-          <pre>cd /Users/abc/Desktop/gca_token
+          <pre>cd /path/to/gca_token
 python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes</pre>
         </div>
         <div class="panel">
           <h2>Optional Export After Success</h2>
           <p class="note">Internal operator artifact only. Do not publish full user records.</p>
-          <pre>cd /Users/abc/Desktop/gca_token
+          <pre>cd /path/to/gca_token
 python3 tools/export_cloudflare_member_access.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 100 --include-service-routes --output .gca_access_data/cloudflare_member_access_export.json</pre>
         </div>
       </section>

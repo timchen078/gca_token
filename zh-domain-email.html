@@ -505,13 +505,13 @@
 
       <section class="section panel" aria-labelledby="switchPlanTitle">
         <p class="eyebrow">邮箱切换清单</p>
-        <h2 id="switchPlanTitle">复核官网是否还残留旧邮箱引用</h2>
-        <p class="note"><code>support@gcagochina.com</code> 已经可收可发。重提 BaseScan 前，用这个只读工具扫描官网、launch 资料、docs 和会员后端联系邮箱常量，确认没有残留旧 Outlook 邮箱。</p>
+        <h2 id="switchPlanTitle">复核官网是否统一使用域名邮箱</h2>
+        <p class="note"><code>support@gcagochina.com</code> 已经可收可发。重提 BaseScan 前，用这个只读工具扫描官网、launch 资料、docs 和会员后端联系邮箱常量，确认没有非域名联系邮箱。</p>
         <div class="list">
           <div class="row"><span>JSON 清单</span><strong><code>python3 tools/build_domain_email_switch_plan.py --json</code></strong></div>
           <div class="row"><span>Markdown 清单</span><strong><code>python3 tools/build_domain_email_switch_plan.py --markdown</code></strong></div>
           <div class="row"><span>保存给自己</span><strong><code>python3 tools/build_domain_email_switch_plan.py --output-json launch/domain_email_switch_plan.json --output-md launch/domain_email_switch_plan.md</code></strong></div>
-          <div class="row"><span>切换后检查</span><strong><code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>，如果关键文件还出现旧 Outlook 邮箱，就不要复提 BaseScan。</strong></div>
+          <div class="row"><span>切换后检查</span><strong><code>python3 tools/check_domain_email_public_switch.py --json --require-switched</code>，如果关键文件还出现非域名联系邮箱，就不要复提 BaseScan。</strong></div>
           <div class="row"><span>最终预检</span><strong><code>tools/check_basescan_resubmission_readiness.py</code> 和 <code>tools/build_basescan_submission_package.py</code> 已经接入这个公开邮箱切换门槛。</strong></div>
           <div class="row"><span>边界</span><strong>这个工具不会改文件、不会发邮件、不会写 DNS、不会提交 BaseScan、不会操作钱包或合约。</strong></div>
         </div>
@@ -531,14 +531,14 @@
 
       <section class="section panel" aria-labelledby="currentSwitchTitle">
         <p class="eyebrow">当前预检快照</p>
-        <h2 id="currentSwitchTitle">旧 Outlook 邮箱残留数量为 0</h2>
-        <p class="note">当前公开邮箱切换检查已经通过：关键官网、launch、BaseScan 资料不再发布旧 Outlook 邮箱，并且统一使用 <code>support@gcagochina.com</code>。</p>
+        <h2 id="currentSwitchTitle">非域名联系邮箱残留数量为 0</h2>
+        <p class="note">当前公开邮箱切换检查已经通过：关键官网、launch、BaseScan 资料统一使用 <code>support@gcagochina.com</code>。</p>
         <div class="list">
           <div class="row"><span>支持和注册入口</span><strong><code>site/support.html</code>、<code>site/support.json</code>、<code>site/zh-support.html</code>、<code>site/register.html</code>、<code>site/members.html</code>。</strong></div>
           <div class="row"><span>项目和上币资料</span><strong><code>site/project.json</code>、<code>site/listing-kit.html</code>、<code>site/basescan-remediation.html</code>、<code>site/basescan-remediation.json</code>、<code>site/external-reviews.json</code>。</strong></div>
           <div class="row"><span>复审提交包</span><strong><code>launch/basescan_form_values.json</code>、<code>launch/basescan_resubmission_values.json</code>、<code>launch/basescan_resubmission_package.md</code>、<code>launch/external_review_followup_tracker.json</code>、<code>launch/external_review_followup_tracker.md</code>。</strong></div>
           <div class="row"><span>已含目标邮箱</span><strong><code>site/reviewer-kit.json</code> 已经包含目标域名邮箱，并继续作为审核员证据索引。</strong></div>
-          <div class="row"><span>最终检查</span><strong>重提前仍必须让 <code>tools/check_domain_email_public_switch.py --json --require-switched</code> 显示旧邮箱文件数量为 0，再准备 BaseScan 复审包。</strong></div>
+          <div class="row"><span>最终检查</span><strong>重提前仍必须让 <code>tools/check_domain_email_public_switch.py --json --require-switched</code> 确认关键文件只使用官方域名邮箱，再准备 BaseScan 复审包。</strong></div>
         </div>
       </section>
 
