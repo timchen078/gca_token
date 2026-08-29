@@ -1,11 +1,11 @@
 # Base Sepolia Deployment
 
-This workspace is separate from `/Users/abc/Desktop/web3_radar`.
+This workspace is separate from `/path/to/web3_radar`.
 
 ## One-Time Setup
 
 ```bash
-cd /Users/abc/Desktop/gca_token
+cd /path/to/gca_token
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements-token-dev.txt
 .venv/bin/python token/scripts/build_gca_artifact.py
@@ -37,7 +37,7 @@ The script refuses to deploy unless the connected network reports chain ID `8453
 If you prefer not to export a private key, use the local MetaMask deployment page:
 
 ```bash
-cd /Users/abc/Desktop/gca_token
+cd /path/to/gca_token
 .venv/bin/python -m http.server 5177 --bind 127.0.0.1
 ```
 
@@ -57,7 +57,7 @@ Then open `http://127.0.0.1:5177/tools/metamask_deploy.html`, connect MetaMask, 
 After you create a separate GitHub repository for this token project:
 
 ```bash
-cd /Users/abc/Desktop/gca_token
+cd /path/to/gca_token
 git remote add origin git@github.com:<owner>/<repo>.git
 git push -u origin main
 ```

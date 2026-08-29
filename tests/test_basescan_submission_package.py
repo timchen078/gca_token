@@ -79,8 +79,8 @@ READY_PREFLIGHT = {
         "readyForBaseScanPublicEmailAlignment": True,
         "targetDomainEmail": "support@gcagochina.com",
         "currentEmail": "support@gcagochina.com",
-        "legacyEmail": "GCAgochina@outlook.com",
-        "forbiddenLegacyEmails": ["GCAgochina@outlook.com", "cxy070800@gmail.com"],
+        "legacyEmail": "redacted-legacy-contact@example.invalid",
+        "forbiddenLegacyEmails": ["redacted-legacy-contact@example.invalid", "redacted-personal-contact@example.invalid"],
         "summary": {
             "filesStillUsingCurrentEmail": 0,
             "filesPublishingForbiddenLegacyEmail": 0,
@@ -181,7 +181,7 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertEqual(package["publicEmailGuard"]["filesPublishingForbiddenLegacyEmail"], 0)
         self.assertEqual(package["publicEmailGuard"]["forbiddenLegacyEmailCount"], 2)
         self.assertIn("redacted-non-domain-legacy-inbox", package["publicEmailGuard"]["forbiddenLegacyEmailLabels"])
-        self.assertNotIn("cxy070800@gmail.com", json.dumps(package))
+        self.assertNotIn("redacted-personal-contact@example.invalid", json.dumps(package))
         self.assertEqual(len(package["reviewerRemediationSummary"]), 4)
         self.assertIn("sender email did not match", package["reviewerRemediationSummary"][1]["returnReason"])
         self.assertIn("support@gcagochina.com", package["reviewerRemediationSummary"][1]["response"])
@@ -205,7 +205,7 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/project-profile.html#basescanMapTitle", markdown)
         self.assertIn("Files publishing forbidden legacy email: `0`", markdown)
         self.assertIn("redacted-non-domain-legacy-inbox", markdown)
-        self.assertNotIn("cxy070800@gmail.com", markdown)
+        self.assertNotIn("redacted-personal-contact@example.invalid", markdown)
         self.assertIn("Return reason: team responsibility transparency", markdown)
         self.assertIn("Copy/Paste Reviewer Comment", markdown)
         self.assertIn("Copy/Paste Basic Information", markdown)
@@ -287,7 +287,7 @@ class BaseScanSubmissionPackageTests(unittest.TestCase):
             temp_path = Path(temp)
             values_path = temp_path / "values.json"
             evidence_path = temp_path / "evidence.json"
-            values = {**READY_VALUES, "nextSubmissionReady": False, "officialEmail": "GCAgochina@outlook.com"}
+            values = {**READY_VALUES, "nextSubmissionReady": False, "officialEmail": "redacted-legacy-contact@example.invalid"}
             values_path.write_text(json.dumps(values), encoding="utf-8")
             evidence_path.write_text(json.dumps(READY_EVIDENCE), encoding="utf-8")
 

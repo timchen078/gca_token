@@ -18,7 +18,7 @@
   "evidenceDirectory": "launch/domain_email_evidence",
   "evidenceDirectoryIgnoredByGit": true,
   "generatedAt": "2026-06-04T10:15:31Z",
-  "previousPublicEmail": "GCAgochina@outlook.com",
+  "previousPublicEmail": "redacted-legacy-contact@example.invalid",
   "project": "GCA",
   "publicClaimBoundaries": [
     "Do not publish private mailbox screenshots while stating support@gcagochina.com evidence is archived privately.",
@@ -86,7 +86,7 @@
     "support@gcagochina.com cannot send authenticated replies with the visible sender set to the domain email.",
     "MX/SPF/DKIM/DMARC DNS checks are not ready.",
     "Any required evidence file is missing.",
-    "Public support/BaseScan files still publish the previous email GCAgochina@outlook.com after the switch.",
+    "Public support/BaseScan files still publish the previous email redacted-legacy-contact@example.invalid after the switch.",
     "BaseScan resubmission preflight reports readyForBaseScanResubmission false."
   ],
   "targetDomainEmail": "support@gcagochina.com"

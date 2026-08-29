@@ -8,7 +8,7 @@
     "writesPublicFiles": false
   },
   "currentEmail": "support@gcagochina.com",
-  "legacyEmail": "GCAgochina@outlook.com",
+  "legacyEmail": "redacted-legacy-contact@example.invalid",
   "patchPreview": {
     "appliesChanges": false,
     "command": "python3 tools/build_domain_email_switch_plan.py --patch",

@@ -1,6 +1,6 @@
 # Base Mainnet Deployment
 
-This workspace is separate from `/Users/abc/Desktop/web3_radar`.
+This workspace is separate from `/path/to/web3_radar`.
 
 ## Network
 
@@ -22,7 +22,7 @@ This workspace is separate from `/Users/abc/Desktop/web3_radar`.
 Use the mainnet-only MetaMask deployment page so no private key is exported:
 
 ```bash
-cd /Users/abc/Desktop/gca_token
+cd /path/to/gca_token
 .venv/bin/python -m http.server 5177 --bind 127.0.0.1
 ```
 

@@ -1,7 +1,7 @@
 # GCA Token Workspace
 
 This is the standalone workspace for the GCA fixed-supply token.
-It is intentionally separate from `/Users/abc/Desktop/web3_radar`.
+It is intentionally separate from `/path/to/web3_radar`.
 
 See `token/README.md` for token parameters, safety notes, and deployment flow.
 

@@ -64,7 +64,7 @@ class DomainEmailSwitchPlanTests(unittest.TestCase):
 
         self.assertIn("# GCA Domain Email Public Switch Plan", markdown)
         self.assertIn("Current public email: `support@gcagochina.com`", markdown)
-        self.assertIn("Legacy email scanned: `GCAgochina@outlook.com`", markdown)
+        self.assertIn("Legacy email scanned: `redacted-legacy-contact@example.invalid`", markdown)
         self.assertIn("Target domain email: `support@gcagochina.com`", markdown)
         self.assertIn("## Required Preconditions", markdown)
         self.assertIn("## Patch Preview", markdown)

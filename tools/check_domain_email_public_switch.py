@@ -17,11 +17,11 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = ROOT / "site" / "domain-email.json"
-DEFAULT_CURRENT_EMAIL = "GCAgochina@outlook.com"
+DEFAULT_CURRENT_EMAIL = "redacted-legacy-contact@example.invalid"
 DEFAULT_TARGET_EMAIL = "support@gcagochina.com"
 DEFAULT_FORBIDDEN_LEGACY_EMAILS = (
     DEFAULT_CURRENT_EMAIL,
-    "cxy070800@gmail.com",
+    "redacted-personal-contact@example.invalid",
 )
 
 

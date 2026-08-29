@@ -3,7 +3,7 @@
 ## Project Scope
 
 This workspace is only for the GCA fixed-supply token project.
-Do not mix it with `/Users/abc/Desktop/web3_radar` or any trading-system code.
+Do not mix it with `/path/to/web3_radar` or any trading-system code.
 
 ## Token Safety Rules
 

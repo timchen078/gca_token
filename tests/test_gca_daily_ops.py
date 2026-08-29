@@ -750,13 +750,13 @@ class GcaDailyOpsTests(unittest.TestCase):
                 "oldEmailFilePaths": [
                     "site/support.html",
                     "site/project.json",
-                    "/Users/abc/Desktop/gca_token/site/private.html",
+                    "/path/to/gca_token/site/private.html",
                     "../outside.json",
                 ],
                 "forbiddenLegacyEmailFilePaths": [
                     "site/support.html",
                     "site/project.json",
-                    "/Users/abc/Desktop/gca_token/site/private.html",
+                    "/path/to/gca_token/site/private.html",
                     "../outside.json",
                 ],
                 "missingTargetEmailFilePaths": ["site/external-reviews.json"],
@@ -772,31 +772,31 @@ class GcaDailyOpsTests(unittest.TestCase):
                     "id": "public-site",
                     "ok": True,
                     "blocksSummaryOk": True,
-                    "command": "/Users/abc/Desktop/gca_token/.venv/bin/python tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20",
+                    "command": "/path/to/gca_token/.venv/bin/python tools/check_public_site.py --base-url https://gcagochina.com/ --timeout 20",
                 },
                 {
                     "id": "registration-api-public",
                     "ok": True,
                     "blocksSummaryOk": True,
-                    "command": "/Users/abc/Desktop/gca_token/.venv/bin/python tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 20",
+                    "command": "/path/to/gca_token/.venv/bin/python tools/check_gca_registration_api.py --base-url https://gca-registration-api.gcagochina.workers.dev --public-only --timeout 20",
                 },
                 {
                     "id": "official-pool-market-health",
                     "ok": True,
                     "blocksSummaryOk": False,
-                    "command": "/Users/abc/Desktop/gca_token/.venv/bin/python tools/check_gca_market_health.py --json --timeout 20",
+                    "command": "/path/to/gca_token/.venv/bin/python tools/check_gca_market_health.py --json --timeout 20",
                 },
                 {
                     "id": "basescan-public-profile-status",
                     "ok": True,
                     "blocksSummaryOk": False,
-                    "command": "/Users/abc/Desktop/gca_token/.venv/bin/python tools/check_basescan_public_profile.py --json --timeout 20",
+                    "command": "/path/to/gca_token/.venv/bin/python tools/check_basescan_public_profile.py --json --timeout 20",
                 },
                 {
                     "id": "basescan-resubmission-preflight-status",
                     "ok": True,
                     "blocksSummaryOk": False,
-                    "command": "/Users/abc/Desktop/gca_token/.venv/bin/python tools/check_basescan_resubmission_readiness.py --skip-url-checks --json",
+                    "command": "/path/to/gca_token/.venv/bin/python tools/check_basescan_resubmission_readiness.py --skip-url-checks --json",
                 },
             ],
         }
@@ -843,8 +843,8 @@ class GcaDailyOpsTests(unittest.TestCase):
             self.assertIn("<code>filesPublishingForbiddenLegacyEmail</code> as 3 tracked files", page)
             self.assertIn("<code>site/support.html</code>", page)
             self.assertIn("<code>site/external-reviews.json</code>", page)
-            self.assertNotIn("/Users/abc", serialized)
-            self.assertNotIn("cxy070800@gmail.com", serialized + page)
+            self.assertNotIn("/Users/", serialized)
+            self.assertNotIn("redacted-personal-contact@example.invalid", serialized + page)
             self.assertNotIn('href="daily-status.json"', page)
 
 

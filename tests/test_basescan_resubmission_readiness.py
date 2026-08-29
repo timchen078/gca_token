@@ -108,7 +108,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
     def test_report_blocks_when_values_and_evidence_are_not_ready(self):
         values = ready_values()
         values["nextSubmissionReady"] = False
-        values["officialEmail"] = "GCAgochina@outlook.com"
+        values["officialEmail"] = "redacted-legacy-contact@example.invalid"
 
         report = build_readiness_report(
             values=values,
@@ -274,7 +274,7 @@ class BaseScanResubmissionReadinessTests(unittest.TestCase):
             daily_status_reference_path = temp_path / "daily-status-reference.json"
             values = ready_values()
             values["nextSubmissionReady"] = False
-            values["officialEmail"] = "GCAgochina@outlook.com"
+            values["officialEmail"] = "redacted-legacy-contact@example.invalid"
             values_path.write_text(json.dumps(values), encoding="utf-8")
             evidence_path.write_text(json.dumps({"readyForBaseScanResubmission": False}), encoding="utf-8")
             switch_path.write_text(json.dumps({"readyForBaseScanPublicEmailAlignment": False}), encoding="utf-8")

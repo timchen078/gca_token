@@ -246,7 +246,7 @@ class LaunchPackageTests(unittest.TestCase):
 
     def test_public_site_text_files_do_not_publish_legacy_personal_gmail(self):
         offenders = []
-        legacy_email = "cxy070800@gmail.com"
+        legacy_email = "redacted-personal-contact@example.invalid"
         text_suffixes = {".css", ".html", ".js", ".json", ".svg", ".txt", ".xml"}
         for path in (ROOT / "site").rglob("*"):
             if path.suffix not in text_suffixes:
@@ -1464,11 +1464,11 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("blocks stale DNS snapshot dates", page)
         self.assertIn("Cloudflare Email Routing only", page)
         self.assertIn("Ready Means All Five Are True", page)
-        self.assertIn("no critical file still publishing the old Outlook email", page)
+        self.assertIn("every critical file using the official project-domain contact", page)
         self.assertIn("Switch Plan Generator", page)
         self.assertIn("Find Every Public Email Reference Before Switching", page)
         self.assertIn("Current Preflight Snapshot", page)
-        self.assertIn("0 Critical Files Still Publish The Old Outlook Email", page)
+        self.assertIn("0 Critical Files Publish A Non-Domain Contact", page)
         self.assertIn("site/project.json", page)
         self.assertIn("launch/basescan_resubmission_package.md", page)
         self.assertIn("site/reviewer-kit.json", page)
@@ -1585,10 +1585,10 @@ class LaunchPackageTests(unittest.TestCase):
         public_switch_checker = data["operatorPublicSwitchChecker"]
         self.assertEqual(public_switch_checker["tool"], "tools/check_domain_email_public_switch.py")
         self.assertIn("--require-switched", public_switch_checker["command"])
-        self.assertIn("no longer publish the previous public email", public_switch_checker["purpose"])
+        self.assertIn("publish only the official project-domain contact", public_switch_checker["purpose"])
         self.assertIn("support@gcagochina.com", public_switch_checker["purpose"])
         self.assertIn("domain email switch plan has been reviewed", public_switch_checker["runAfter"])
-        self.assertIn("any critical file still contains the previous public email", public_switch_checker["blocksWhen"])
+        self.assertIn("any critical file still contains a non-domain contact email", public_switch_checker["blocksWhen"])
         self.assertIn("tools/check_basescan_resubmission_readiness.py", public_switch_checker["enforcedBy"])
         self.assertIn("tools/build_basescan_submission_package.py", public_switch_checker["enforcedBy"])
         self.assertIn("read-only check", public_switch_checker["boundaries"])
@@ -1597,7 +1597,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(current_switch["status"], "public-email-switch-complete")
         self.assertEqual(current_switch["filesStillUsingCurrentEmail"], 0)
         self.assertEqual(current_switch["currentEmail"], "support@gcagochina.com")
-        self.assertEqual(current_switch["legacyEmail"], "GCAgochina@outlook.com")
+        self.assertNotIn("legacyEmail", current_switch)
         self.assertEqual(current_switch["targetDomainEmail"], "support@gcagochina.com")
         self.assertEqual(current_switch["oldEmailFilePaths"], [])
         self.assertEqual(current_switch["targetAwareButStillTracked"], [])
@@ -1657,7 +1657,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertNotIn('href="domain-email.json"', page)
         self.assertNotIn('href="project.json"', page)
         self.assertNotIn("until domain email tests pass", page)
-        self.assertNotIn("GCAgochina@outlook.com", page)
+        self.assertNotIn("redacted-legacy-contact@example.invalid", page)
 
         self.assertEqual(data["schema"], DOMAIN_EMAIL_EVIDENCE_URL)
         self.assertEqual(data["pageUrl"], DOMAIN_EMAIL_EVIDENCE_PAGE_URL)
@@ -2428,7 +2428,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("BaseScan ticket", page)
         self.assertIn("签名记录", page)
         self.assertIn("不要说已通过", page)
-        self.assertIn("不要换回旧邮箱", page)
+        self.assertIn("统一项目邮箱", page)
         self.assertIn("不要使用旧池", page)
         self.assertIn("不要夸大安全", page)
         self.assertIn("第三方审计尚未完成", page)
@@ -2510,7 +2510,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("manual reserve-wallet processing", page)
         self.assertIn("BaseScan ticket", page)
         self.assertIn("不要说已通过", page)
-        self.assertIn("不要使用旧邮箱", page)
+        self.assertIn("统一项目邮箱", page)
         self.assertIn("不要使用旧池", page)
         self.assertIn("不要说外部审计完成", page)
         self.assertIn("不要说自动领取", page)
@@ -2801,7 +2801,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Policy: https://gcagochina.com/security.html", security)
         self.assertIn("Preferred-Languages: en, zh", security)
         self.assertIn("Expires: 2027-05-12T00:00:00+07:00", security)
-        self.assertNotIn("GCAgochina@outlook.com", security)
+        self.assertNotIn("redacted-legacy-contact@example.invalid", security)
 
     def test_public_site_discloses_current_operational_status(self):
         site = (ROOT / "site" / "index.html").read_text()
@@ -10558,7 +10558,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Public token icon download URL", submission)
         self.assertIn(RELEASE_GATES_PAGE_URL, submission)
         self.assertNotIn("https://x.com/GCAgochina", submission)
-        self.assertNotIn("Official contact email: `cxy070800@gmail.com`", submission)
+        self.assertNotIn("Official contact email: `redacted-personal-contact@example.invalid`", submission)
         self.assertNotIn("Gmail address", submission)
         self.assertIn("https://basescan.org/tokenupdate/", submission)
         self.assertIn(MAINNET_ADDRESS, submission)
@@ -10569,7 +10569,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("Return notice date: 2026-05-13", followup)
         self.assertIn("Latest return notice date: 2026-05-23", followup)
         self.assertIn("redacted non-domain legacy inbox", followup)
-        self.assertNotIn("cxy070800@gmail.com", followup)
+        self.assertNotIn("redacted-personal-contact@example.invalid", followup)
         self.assertIn("Base Mainnet", followup)
         self.assertIn("Chain ID: 8453", followup)
         self.assertIn(MAINNET_ADDRESS, followup)
@@ -10623,7 +10623,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertEqual(values["officialEmail"], "support@gcagochina.com")
         self.assertIn("Official public project email", values["officialEmailNote"])
         self.assertIn("non-domain legacy inbox", values["officialEmailNote"])
-        self.assertNotIn("cxy070800@gmail.com", values["officialEmailNote"])
+        self.assertNotIn("redacted-personal-contact@example.invalid", values["officialEmailNote"])
         self.assertEqual(values["targetPublicAllocation"], "400000000")
         self.assertEqual(values["targetPublicAllocationPercent"], 40)
         self.assertEqual(values["ownerHeldReserve"], "600000000")
@@ -11158,7 +11158,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("no wallet transaction, approve, swap, or contract operation", status)
         self.assertIn("archive the activation evidence packet before the next BaseScan submission", status)
         self.assertIn("redacted non-domain legacy inbox only for old thread monitoring", status)
-        self.assertNotIn("cxy070800@gmail.com", status)
+        self.assertNotIn("redacted-personal-contact@example.invalid", status)
         self.assertIn("For platform requests involving local member-ledger evidence", status)
         self.assertIn("Use `https://gcagochina.com/trust.html`", status)
         self.assertIn("Public trust center page and JSON prepared", status)
@@ -11543,7 +11543,7 @@ class LaunchPackageTests(unittest.TestCase):
         self.assertIn("launch/basescan_resubmission_package.md", tracker)
         self.assertIn("launch/basescan_resubmission_values.json", tracker)
         self.assertIn("redacted non-domain legacy inbox", tracker)
-        self.assertNotIn("cxy070800@gmail.com", tracker)
+        self.assertNotIn("redacted-personal-contact@example.invalid", tracker)
         self.assertIn("False-positive report submitted on 2026-05-10", tracker)
         self.assertIn("follow-up submitted on 2026-05-13", tracker)
         self.assertIn("owner observed no wallet risk warning visible on 2026-05-14", tracker)
@@ -11866,7 +11866,7 @@ class LaunchPackageTests(unittest.TestCase):
             "domain-email.html",
             "member-benefit-transfer.html",
             "release-gates.html",
-            "Tim Chen",
+            "Example Person",
             "CEO",
             "Founder",
         ):

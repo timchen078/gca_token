@@ -311,9 +311,9 @@ def build_reviewer_remediation_summary(form_fields: dict[str, Any]) -> list[dict
 
 def redact_forbidden_legacy_email(email: str) -> str:
     normalized = email.strip().lower()
-    if normalized == "gcagochina@outlook.com":
+    if normalized == "redacted-legacy-contact@example.invalid":
         return "redacted-legacy-outlook-inbox"
-    if normalized == "cxy070800@gmail.com":
+    if normalized == "redacted-personal-contact@example.invalid":
         return "redacted-non-domain-legacy-inbox"
     return "redacted-forbidden-legacy-email"
 

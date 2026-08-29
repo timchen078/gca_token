@@ -37,7 +37,7 @@ def utc_now() -> str:
 def build_matrix(config: dict[str, Any] | None = None, *, generated_at: str | None = None) -> dict[str, Any]:
     config = config or load_json(DEFAULT_CONFIG_PATH)
     target_email = config.get("targetDomainEmail", "support@gcagochina.com")
-    current_email = config.get("currentPublicEmail", "GCAgochina@outlook.com")
+    current_email = config.get("currentPublicEmail", "redacted-legacy-contact@example.invalid")
     domain = config.get("domain", "gcagochina.com")
 
     provider_options = [
@@ -107,7 +107,7 @@ def build_matrix(config: dict[str, Any] | None = None, *, generated_at: str | No
             ],
             "notEnoughIf": [
                 "the setup only forwards inbound mail to Outlook or Gmail",
-                "BaseScan replies are still sent from GCAgochina@outlook.com",
+                "BaseScan replies are still sent from redacted-legacy-contact@example.invalid",
             ],
         },
         {

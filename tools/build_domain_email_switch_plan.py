@@ -16,7 +16,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-CURRENT_EMAIL = "GCAgochina@outlook.com"
+CURRENT_EMAIL = "redacted-legacy-contact@example.invalid"
 TARGET_EMAIL = "support@gcagochina.com"
 
 SCAN_ROOTS = (

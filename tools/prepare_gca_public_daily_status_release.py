@@ -50,8 +50,8 @@ REQUIRED_STEP_IDS = {
 FORBIDDEN_PUBLIC_MARKERS = (
     "/Users/",
     "ADMIN_READ_TOKEN",
-    "cxy070800@gmail.com",
-    "GCAgochina@outlook.com",
+    "redacted-personal-contact@example.invalid",
+    "redacted-legacy-contact@example.invalid",
 )
 EPHEMERAL_SUMMARY_KEYS = frozenset({
     "summaryOutput",

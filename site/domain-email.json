@@ -68,7 +68,7 @@
       "Any required evidence file is missing from the private local evidence directory.",
       "DNS check no longer reports readyForBaseScanEmailEvidence true.",
       "Outbound visible sender is not support@gcagochina.com.",
-      "Public support/BaseScan files still publish the previous public email after the switch.",
+      "Public support/BaseScan files still publish a non-domain contact email after the switch.",
       "BaseScan resubmission preflight fails or reports readyForBaseScanResubmission false."
     ],
     "readyToResubmitWhen": [
@@ -320,14 +320,14 @@
   "operatorPublicSwitchChecker": {
     "tool": "tools/check_domain_email_public_switch.py",
     "command": "python3 tools/check_domain_email_public_switch.py --json --require-switched",
-    "purpose": "Read-only gate that verifies critical public, support, and BaseScan files no longer publish the previous public email and do publish support@gcagochina.com after domain email activation.",
+    "purpose": "Read-only gate that verifies critical public, support, and BaseScan files publish only the official project-domain contact support@gcagochina.com after activation.",
     "runAfter": [
       "domain email evidence packet is ready",
       "public files have been manually switched to support@gcagochina.com",
       "domain email switch plan has been reviewed"
     ],
     "blocksWhen": [
-      "any critical file still contains the previous public email",
+      "any critical file still contains a non-domain contact email",
       "any critical file is missing support@gcagochina.com after the switch",
       "any critical file listed in filesToUpdateAfterActivation is missing"
     ],
@@ -412,7 +412,6 @@
     "status": "public-email-switch-complete",
     "filesStillUsingCurrentEmail": 0,
     "currentEmail": "support@gcagochina.com",
-    "legacyEmail": "GCAgochina@outlook.com",
     "targetDomainEmail": "support@gcagochina.com",
     "oldEmailFilePaths": [],
     "targetAwareButStillTracked": [],
@@ -443,6 +442,5 @@
       "third-party audit completion before an independent report is published",
       "locked reserve before on-chain custody changes"
     ]
-  },
-  "previousPublicEmail": "GCAgochina@outlook.com"
+  }
 }

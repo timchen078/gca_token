@@ -23,7 +23,7 @@ from tools.build_domain_email_evidence_packet import (
 ROOT = Path(__file__).resolve().parents[1]
 DOMAIN_EMAIL_CONFIG = {
     "domain": "gcagochina.com",
-    "currentPublicEmail": "GCAgochina@outlook.com",
+    "currentPublicEmail": "redacted-legacy-contact@example.invalid",
     "targetDomainEmail": "support@gcagochina.com",
 }
 
@@ -121,7 +121,7 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
         markdown = render_evidence_checklist_markdown(checklist)
 
         self.assertEqual(checklist["schema"], "gca-domain-email-evidence-checklist-v1")
-        self.assertEqual(checklist["previousPublicEmail"], "GCAgochina@outlook.com")
+        self.assertEqual(checklist["previousPublicEmail"], "redacted-legacy-contact@example.invalid")
         self.assertEqual(checklist["targetDomainEmail"], "support@gcagochina.com")
         self.assertEqual(checklist["status"], "blocked-until-domain-email-evidence-collected")
         self.assertTrue(checklist["evidenceDirectoryIgnoredByGit"])
@@ -131,8 +131,8 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
         self.assertTrue(all(item["safeToCommit"] is False for item in checklist["requiredEvidenceFiles"]))
         self.assertIn("domain-email-provider-active.png", markdown)
         self.assertIn("domain-email-outbound-test.png", markdown)
-        self.assertIn("Previous public email: `GCAgochina@outlook.com`", markdown)
-        self.assertIn("previous email GCAgochina@outlook.com", markdown)
+        self.assertIn("Previous public email: `redacted-legacy-contact@example.invalid`", markdown)
+        self.assertIn("previous email redacted-legacy-contact@example.invalid", markdown)
         self.assertNotIn("Public support/BaseScan files still publish support@gcagochina.com after the switch.", markdown)
         self.assertIn("Private mailbox screenshots", markdown)
 
@@ -161,7 +161,7 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
         markdown = md_path.read_text(encoding="utf-8")
 
         self.assertEqual(checklist["schema"], "gca-domain-email-evidence-checklist-v1")
-        self.assertEqual(checklist["previousPublicEmail"], "GCAgochina@outlook.com")
+        self.assertEqual(checklist["previousPublicEmail"], "redacted-legacy-contact@example.invalid")
         self.assertEqual(checklist["currentPublicEmail"], "support@gcagochina.com")
         self.assertEqual(checklist["targetDomainEmail"], "support@gcagochina.com")
         self.assertEqual(checklist["status"], "evidence-collected-private-ready")
@@ -171,8 +171,8 @@ class DomainEmailEvidencePacketTests(unittest.TestCase):
         self.assertFalse(checklist["boundaries"]["touchesWalletsOrContracts"])
         self.assertIn("domain-email-dns-mx-spf-dkim-dmarc.txt", markdown)
         self.assertIn("tools/check_basescan_resubmission_readiness.py", markdown)
-        self.assertIn("Previous public email: `GCAgochina@outlook.com`", markdown)
-        self.assertIn("previous email GCAgochina@outlook.com", markdown)
+        self.assertIn("Previous public email: `redacted-legacy-contact@example.invalid`", markdown)
+        self.assertIn("previous email redacted-legacy-contact@example.invalid", markdown)
         self.assertNotIn("Public support/BaseScan files still publish support@gcagochina.com after the switch.", markdown)
         self.assertIn("Private mailbox screenshots and proof files must stay", markdown)
 

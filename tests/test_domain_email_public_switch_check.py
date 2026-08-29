@@ -41,8 +41,8 @@ class DomainEmailPublicSwitchCheckTests(unittest.TestCase):
 
         self.assertEqual(report["schema"], "gca-domain-email-public-switch-check-v1")
         self.assertEqual(report["currentEmail"], "support@gcagochina.com")
-        self.assertEqual(report["legacyEmail"], "GCAgochina@outlook.com")
-        self.assertIn("cxy070800@gmail.com", report["forbiddenLegacyEmails"])
+        self.assertEqual(report["legacyEmail"], "redacted-legacy-contact@example.invalid")
+        self.assertIn("redacted-personal-contact@example.invalid", report["forbiddenLegacyEmails"])
         self.assertEqual(report["targetDomainEmail"], "support@gcagochina.com")
         self.assertEqual(report["status"], "public-email-switch-complete")
         self.assertTrue(report["readyForBaseScanPublicEmailAlignment"])
@@ -78,7 +78,7 @@ class DomainEmailPublicSwitchCheckTests(unittest.TestCase):
     def test_legacy_personal_gmail_blocks_readiness_even_when_target_email_is_present(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            legacy_personal_gmail = "cxy070800@gmail.com"
+            legacy_personal_gmail = "redacted-personal-contact@example.invalid"
             config_path = write_fixture(
                 root,
                 {
@@ -133,7 +133,7 @@ class DomainEmailPublicSwitchCheckTests(unittest.TestCase):
 
         self.assertIn("# GCA Domain Email Public Switch Check", markdown)
         self.assertIn("Current public email: `support@gcagochina.com`", markdown)
-        self.assertIn("Legacy email scanned: `GCAgochina@outlook.com`", markdown)
+        self.assertIn("Legacy email scanned: `redacted-legacy-contact@example.invalid`", markdown)
         for email in DEFAULT_FORBIDDEN_LEGACY_EMAILS:
             self.assertIn(email, markdown)
         self.assertIn("Ready for BaseScan public email alignment: `true`", markdown)

@@ -21,7 +21,7 @@ Project:
 - Contract: `0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - BaseScan: `https://basescan.org/address/0x3197c42f4a06f7be32a9a742ac2a766f0ff682c6`
 - Website: `https://gcagochina.com/`
-- Contact email: `GCAgochina@outlook.com`
+- Contact email: `support@gcagochina.com`
 
 Audit scope:
 

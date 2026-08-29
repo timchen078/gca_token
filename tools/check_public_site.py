@@ -296,7 +296,7 @@ FORBIDDEN_PUBLIC_CLAIM_PATTERNS = [
     "刷量",
     "对倒",
 ]
-LEGACY_PERSONAL_GMAIL = "cxy070800@gmail.com"
+LEGACY_PERSONAL_GMAIL = "redacted-personal-contact@example.invalid"
 PENDING_WORKER_READINESS_AT = "2026-08-10T13:21:00Z"
 PENDING_WORKER_PUBLIC_ROUTE_AT = "2026-08-10T13:23:22Z"
 PENDING_WORKER_ADMIN_ROUTE_AT = "2026-08-10T13:23:40Z"
@@ -323,8 +323,8 @@ EndpointCheck = tuple[str, Callable[[str], None]]
 
 def assert_contains(text: str, expected: str, label: str) -> None:
     compatible_options = {
-        "GCAgochina@outlook.com": ("support@gcagochina.com",),
-        "Contact: mailto:GCAgochina@outlook.com": ("Contact: mailto:support@gcagochina.com",),
+        "redacted-legacy-contact@example.invalid": ("support@gcagochina.com",),
+        "Contact: mailto:redacted-legacy-contact@example.invalid": ("Contact: mailto:support@gcagochina.com",),
         "Not active yet": ("Active and evidence-ready", "mailbox active", "domain email evidence path is ready"),
         "Required before resubmission": ("Ready for owner resubmission", "ready for owner resubmission"),
         "MX Missing": ("MX Present", "MX present"),
@@ -706,7 +706,7 @@ def validate_register_page(text: str) -> None:
         "自动提交未完成",
         "bot-field",
         'website: document.getElementById("website").value.trim()',
-        "GCAgochina@outlook.com",
+        "redacted-legacy-contact@example.invalid",
         "Base Mainnet / chainId 8453",
         MAINNET_ADDRESS,
         "私钥",
@@ -750,7 +750,7 @@ def validate_unsubscribe_page(text: str) -> None:
         "https://gca-registration-api.gcagochina.workers.dev",
         "contactSuppressionRequested",
         "noSecretsNoCustody",
-        "GCAgochina@outlook.com",
+        "redacted-legacy-contact@example.invalid",
         "自动提交未完成",
         "bot-field",
         'website: document.getElementById("website").value.trim()',
@@ -1063,7 +1063,7 @@ def validate_zh_about_page(text: str) -> None:
     ):
         assert_contains(text, expected, label)
     for forbidden in (
-        "Tim Chen",
+        "Example Person",
         "CEO",
         "创始人",
         "公司",
@@ -1107,7 +1107,7 @@ def validate_zh_team_page(text: str) -> None:
     ):
         assert_contains(text, expected, label)
     for forbidden in (
-        "Tim Chen",
+        "Example Person",
         "CEO",
         "创始人",
         "公司",
@@ -1130,7 +1130,7 @@ def validate_domain_email_page(text: str) -> None:
     for expected in (
         "GCA Domain Email Setup Plan",
         "BaseScan Email Remediation",
-        "GCAgochina@outlook.com",
+        "redacted-legacy-contact@example.invalid",
         "support@gcagochina.com",
         "Not active yet",
         "Required before resubmission",
@@ -1176,11 +1176,11 @@ def validate_domain_email_page(text: str) -> None:
         "tools/check_domain_email_public_switch.py --json --require-switched",
         "Cloudflare Email Routing only",
         "Ready Means All Five Are True",
-        "no critical file still publishing the old Outlook email",
+        "every critical file using the official project-domain contact",
         "Switch Plan Generator",
         "Find Every Public Email Reference Before Switching",
         "Current Preflight Snapshot",
-        "0 Critical Files Still Publish The Old Outlook Email",
+        "0 Critical Files Publish A Non-Domain Contact",
         "site/project.json",
         "launch/basescan_resubmission_package.md",
         "site/reviewer-kit.json",
@@ -1387,14 +1387,14 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong public switch checker tool")
     if "--require-switched" not in public_switch_checker.get("command", ""):
         raise SiteCheckError(f"{label}: missing public switch checker require gate")
-    if "no longer publish the previous public email" not in public_switch_checker.get("purpose", ""):
-        raise SiteCheckError(f"{label}: missing public switch checker legacy-email purpose")
+    if "publish only the official project-domain contact" not in public_switch_checker.get("purpose", ""):
+        raise SiteCheckError(f"{label}: missing public switch checker domain-only purpose")
     if "support@gcagochina.com" not in public_switch_checker.get("purpose", ""):
         raise SiteCheckError(f"{label}: missing public switch checker target-email purpose")
     if "domain email switch plan has been reviewed" not in public_switch_checker.get("runAfter", []):
         raise SiteCheckError(f"{label}: missing public switch checker run-after gate")
-    if "any critical file still contains the previous public email" not in public_switch_checker.get("blocksWhen", []):
-        raise SiteCheckError(f"{label}: missing public switch checker legacy-email block")
+    if "any critical file still contains a non-domain contact email" not in public_switch_checker.get("blocksWhen", []):
+        raise SiteCheckError(f"{label}: missing public switch checker non-domain-email block")
     if "tools/check_basescan_resubmission_readiness.py" not in public_switch_checker.get("enforcedBy", []):
         raise SiteCheckError(f"{label}: missing public switch checker preflight enforcement")
     if "tools/build_basescan_submission_package.py" not in public_switch_checker.get("enforcedBy", []):
@@ -1418,8 +1418,8 @@ def validate_domain_email_json(text: str) -> None:
         raise SiteCheckError(f"{label}: wrong current old-email file count")
     if current_switch.get("currentEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong current switch email")
-    if current_switch.get("legacyEmail") != "GCAgochina@outlook.com":
-        raise SiteCheckError(f"{label}: wrong current switch legacy email")
+    if "legacyEmail" in current_switch:
+        raise SiteCheckError(f"{label}: public switch snapshot must not expose a legacy email")
     if current_switch.get("targetDomainEmail") != "support@gcagochina.com":
         raise SiteCheckError(f"{label}: wrong current switch target email")
     if current_switch.get("status") != "public-email-switch-complete" and "site/project.json" not in current_switch.get("oldEmailFilePaths", []):
@@ -1489,7 +1489,7 @@ def validate_domain_email_evidence_page(text: str) -> None:
     assert_not_contains(text, 'href="domain-email.json"', label)
     assert_not_contains(text, 'href="project.json"', label)
     assert_not_contains(text, "until domain email tests pass", label)
-    assert_not_contains(text, "GCAgochina@outlook.com", label)
+    assert_not_contains(text, "redacted-legacy-contact@example.invalid", label)
     assert_no_forbidden_public_claims(text, label)
 
 
@@ -2877,7 +2877,7 @@ def validate_zh_apply_page(text: str) -> None:
         "中文会员审核资料清单",
         "仍需补域名邮箱后再提交",
         "2026-05-23 被退回整改",
-        "GCAgochina@outlook.com",
+        "redacted-legacy-contact@example.invalid",
     ):
         assert_not_contains(text, forbidden, label)
     assert_current_pool_text(text, label)
@@ -2960,7 +2960,7 @@ def validate_zh_domain_email_page(text: str) -> None:
         "GCA 中文域名邮箱整改",
         "BaseScan 邮箱整改",
         "support@gcagochina.com",
-        "旧 Outlook 邮箱",
+        "官方域名邮箱",
         "2026-05-30 已通过",
         "可一次干净重提",
         "可以说已启用",
@@ -3020,9 +3020,9 @@ def validate_zh_domain_email_page(text: str) -> None:
         "不会写 DNS",
         "不会操作钱包或合约",
         "邮箱切换清单",
-        "复核官网是否还残留旧邮箱引用",
+        "复核官网是否统一使用域名邮箱",
         "当前预检快照",
-        "旧 Outlook 邮箱残留数量为 0",
+        "非域名联系邮箱残留数量为 0",
         "site/project.json",
         "launch/basescan_resubmission_package.md",
         "site/reviewer-kit.json",
@@ -3209,7 +3209,7 @@ def validate_zh_basescan_submit_page(text: str) -> None:
         "BaseScan ticket",
         "签名记录",
         "不要说已通过",
-        "不要换回旧邮箱",
+        "统一项目邮箱",
         "不要使用旧池",
         "不要夸大安全",
         "第三方审计尚未完成",
@@ -3323,7 +3323,7 @@ def validate_zh_basescan_handoff_page(text: str) -> None:
         "提交后保存记录",
         "BaseScan ticket",
         "不要说已通过",
-        "不要使用旧邮箱",
+        "统一项目邮箱",
         "不要使用旧池",
         "不要说外部审计完成",
         "不要说自动领取",
@@ -3736,7 +3736,7 @@ def validate_zh_faq_page(text: str) -> None:
         "platform-replies.html",
         "仍需补域名邮箱后再提交",
         "BaseScan 公开代币资料 2026-05-23 被退回整改",
-        "GCAgochina@outlook.com",
+        "redacted-legacy-contact@example.invalid",
         "中文项目进度",
         "zh-status.html",
         "中文路线图",
@@ -5114,7 +5114,7 @@ def validate_whitepaper_page(text: str) -> None:
     ):
         assert_contains(text, expected, label)
     for forbidden in (
-        "Tim Chen",
+        "Example Person",
         "CEO",
         "Founder",
         "Company",
@@ -5194,7 +5194,7 @@ def validate_zh_whitepaper_page(text: str) -> None:
     ):
         assert_contains(text, expected, label)
     for forbidden in (
-        "Tim Chen",
+        "Example Person",
         "CEO",
         "创始人",
         "公司",
@@ -17974,7 +17974,7 @@ def validate_security_txt(text: str) -> None:
     assert_contains(text, "Policy: https://gcagochina.com/security.html", label)
     assert_contains(text, "Canonical: https://gcagochina.com/.well-known/security.txt", label)
     assert_contains(text, "Expires: 2027-05-12T00:00:00+07:00", label)
-    assert_not_contains(text, "GCAgochina@outlook.com", label)
+    assert_not_contains(text, "redacted-legacy-contact@example.invalid", label)
 
 
 def validate_sitemap(text: str) -> None:

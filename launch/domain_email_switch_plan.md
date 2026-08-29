@@ -1,7 +1,7 @@
 # GCA Domain Email Public Switch Plan
 
 - Current public email: `support@gcagochina.com`
-- Legacy email scanned: `GCAgochina@outlook.com`
+- Legacy email scanned: `redacted-legacy-contact@example.invalid`
 - Target domain email: `support@gcagochina.com`
 - Status: `public-email-switch-complete`
 - Files requiring switch after activation: `0`

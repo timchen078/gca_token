@@ -11,7 +11,7 @@ from tools.build_domain_email_provider_matrix import build_matrix, main, render_
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = {
     "domain": "gcagochina.com",
-    "currentPublicEmail": "GCAgochina@outlook.com",
+    "currentPublicEmail": "redacted-legacy-contact@example.invalid",
     "targetDomainEmail": "support@gcagochina.com",
 }
 
@@ -21,7 +21,7 @@ class DomainEmailProviderMatrixTests(unittest.TestCase):
         matrix = build_matrix(CONFIG, generated_at="2026-05-26T00:00:00Z")
 
         self.assertEqual(matrix["schema"], "gca-domain-email-provider-matrix-v1")
-        self.assertEqual(matrix["currentPublicEmail"], "GCAgochina@outlook.com")
+        self.assertEqual(matrix["currentPublicEmail"], "redacted-legacy-contact@example.invalid")
         self.assertEqual(matrix["targetDomainEmail"], "support@gcagochina.com")
         self.assertEqual(matrix["status"], "choose-full-mailbox-before-basescan-resubmission")
         self.assertTrue(matrix["noLivePricing"])
@@ -35,7 +35,7 @@ class DomainEmailProviderMatrixTests(unittest.TestCase):
         self.assertEqual(options["cloudflare-email-routing-only"]["fit"], "not-sufficient-alone")
         self.assertEqual(options["smtp-or-api-send-only"]["fit"], "not-sufficient-alone")
         self.assertTrue(any("only forwarding inbound mail" in item for item in options["zoho-mail"]["notEnoughIf"]))
-        self.assertTrue(any("BaseScan replies are still sent from GCAgochina@outlook.com" in item for item in options["cloudflare-email-routing-only"]["notEnoughIf"]))
+        self.assertTrue(any("BaseScan replies are still sent from redacted-legacy-contact@example.invalid" in item for item in options["cloudflare-email-routing-only"]["notEnoughIf"]))
 
         records = {record["record"]: record for record in matrix["recordsToCollectFromProvider"]}
         self.assertTrue(records["MX"]["doNotGuess"])

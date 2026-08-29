@@ -152,7 +152,7 @@ migrations_dir = "migrations"
         self.assertIn("wrangler-account-id", report["failedChecks"])
 
     def test_legacy_contact_email_blocks_static_readiness(self):
-        self.write_config(contact_email="GCAgochina@outlook.com")
+        self.write_config(contact_email="redacted-legacy-contact@example.invalid")
         report = readiness.build_report(self.tmp)
         self.assertFalse(report["readyToAttemptDeploy"])
         self.assertIn("worker-contact-email", report["failedChecks"])
@@ -162,19 +162,19 @@ migrations_dir = "migrations"
             ["wrangler", "whoami"],
             1,
             stdout="",
-            stderr='ADMIN_READ_TOKEN=secret-value\n🪵  Logs were written to "/Users/abc/Library/Preferences/.wrangler/logs/wrangler.log"\n',
+            stderr='ADMIN_READ_TOKEN=secret-value\n🪵  Logs were written to "/Users/example/Library/Preferences/.wrangler/logs/wrangler.log"\n',
         )
         summary = readiness.sanitized_command_result(result)["summary"]
         self.assertIn("ADMIN_READ_TOKEN=<redacted>", summary)
         self.assertNotIn("secret-value", summary)
-        self.assertNotIn("/Users/abc", summary)
+        self.assertNotIn("/Users/", summary)
         self.assertNotIn("wrangler.log", summary)
 
         log_only = subprocess.CompletedProcess(
             ["wrangler", "whoami"],
             1,
             stdout="",
-            stderr='🪵  Logs were written to "/Users/abc/Library/Preferences/.wrangler/logs/wrangler.log"\n',
+            stderr='🪵  Logs were written to "/Users/example/Library/Preferences/.wrangler/logs/wrangler.log"\n',
         )
         self.assertEqual(
             readiness.sanitized_command_result(log_only)["summary"],

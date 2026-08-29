@@ -151,7 +151,7 @@ def build_evidence_checklist(
     generated_at: str | None = None,
 ) -> dict[str, Any]:
     domain = str(domain_email_config.get("domain") or "gcagochina.com")
-    previous_email = str(domain_email_config.get("previousPublicEmail") or "GCAgochina@outlook.com")
+    previous_email = str(domain_email_config.get("previousPublicEmail") or "redacted-legacy-contact@example.invalid")
     current_email = str(domain_email_config.get("currentPublicEmail") or previous_email)
     target_email = str(domain_email_config.get("targetDomainEmail") or "support@gcagochina.com")
     status = build_evidence_directory_status(evidence_dir)

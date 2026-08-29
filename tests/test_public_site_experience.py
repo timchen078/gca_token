@@ -346,7 +346,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
             self.assertIn('assets/gca-core.css?v=20260812-2', whitepaper)
             self.assertIn('assets/gca-site.css?v=20260812-3', whitepaper)
             self.assertIn('assets/gca-site.js?v=20260813-1', whitepaper)
-            self.assertNotIn("Tim Chen", whitepaper)
+            self.assertNotIn("Example Person", whitepaper)
             self.assertNotIn("CEO", whitepaper)
 
     def test_member_access_restores_non_sensitive_device_snapshot(self):
@@ -533,7 +533,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("https://gcagochina.com/portfolio-risk.html", sitemap)
 
     def test_member_workspace_engine_validates_snapshot_journal_and_request(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -660,7 +660,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(portfolio_service["stage"], "public-preview")
 
     def test_member_workspace_builds_bounded_priority_workflow_queue(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -801,7 +801,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('href="risk-passport.html"', zh_site_map)
 
     def test_risk_passport_engine_rejects_tampered_or_private_fields(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -960,7 +960,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('href="workspace-vault.html"', risk_passport)
 
     def test_workspace_vault_engine_encrypts_and_rejects_tampering(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -1008,7 +1008,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertFalse(result["bundle"]["boundaries"]["uploadedByPage"])
 
     def test_workspace_vault_restore_engine_plans_noops_and_rolls_back(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -1140,7 +1140,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('"url": "https://gcagochina.com/risk-calculator.html"', credits)
 
     def test_risk_calculator_formula_module(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -1227,7 +1227,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('"url": "https://gcagochina.com/entry-ready.html"', credits)
 
     def test_entry_ready_engine_blocks_incomplete_and_passes_complete_plan(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -1377,7 +1377,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertTrue(service["publicPreview"]["backupMayContainUnfinishedOptionIds"])
 
     def test_risk_training_engine_scores_threshold_and_builds_review_plan(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -1535,7 +1535,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('(\"/liquidation-replay.html\", validate_liquidation_replay_page)', public_checker)
 
     def test_liquidation_replay_engine_calculates_loss_and_escalates_risk(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -1661,7 +1661,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('(\"/backtest-lab.html\", validate_backtest_lab_page)', public_checker)
 
     def test_backtest_lab_engine_calculates_expectancy_and_drawdown(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -1757,7 +1757,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn('(\"/risk-warning.html\", validate_risk_warning_page)', public_checker)
 
     def test_risk_warning_engine_scores_standard_and_blocked_setups(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -1906,7 +1906,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("learn:", engine)
 
     def test_risk_tools_workflow_engine_returns_expected_order(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -1944,7 +1944,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(json.loads(fallback.stdout)["mode"], "prepare")
 
     def test_risk_tools_trade_plan_builds_fragment_only_handoffs(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -2115,7 +2115,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(credits["officialLinks"]["researchNotes"], "https://gcagochina.com/research-notes.html")
 
     def test_research_notes_engine_validates_filters_and_merges_backups(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -2288,7 +2288,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertNotIn("trade-plan-ledger", {item["id"] for item in credits["serviceCatalog"]})
 
     def test_trade_plan_engine_calculates_readiness_handoffs_and_backups(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -2369,7 +2369,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(len(result["removed"]), 2)
 
     def test_research_plan_journal_handoffs_are_bounded_and_manual(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -2519,7 +2519,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertIn("Portfolio Risk Map", access["serviceModules"])
 
     def test_portfolio_risk_engine_calculates_limits_and_validates_backups(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")
@@ -2675,7 +2675,7 @@ class PublicSiteExperienceTests(unittest.TestCase):
         self.assertEqual(credits["officialLinks"]["tradeJournal"], "https://gcagochina.com/trade-journal.html")
 
     def test_trade_journal_engine_normalizes_summarizes_and_backs_up(self):
-        bundled_node = Path("/Users/abc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node")
+        bundled_node = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
         node = shutil.which("node") or (str(bundled_node) if bundled_node.exists() else "")
         if not node:
             self.skipTest("Node.js is unavailable")

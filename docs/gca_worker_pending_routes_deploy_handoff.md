@@ -53,7 +53,7 @@ The deployment blocker is cleared. For future releases, do not apply remote migr
 
 ## Preconditions
 
-- Work only from `/Users/abc/Desktop/gca_token`.
+- Work only from `/path/to/gca_token`.
 - Cloudflare login or API token must target the account that owns the `gca-registration-api` Worker and the `gca_registration` D1 database.
 - The readiness report must show `cloudflare-auth-session`, `cloudflare-d1-visible`, and `cloudflare-worker-deploy-permission` as passed.
 - If the readiness report contains `authRecovery.status: cloudflare-auth-or-permission-blocked`, follow `authRecovery.safeNextActions` before applying migrations or deploying.
@@ -68,7 +68,7 @@ The deployment blocker is cleared. For future releases, do not apply remote migr
 Run from repo root:
 
 ```bash
-cd /Users/abc/Desktop/gca_token
+cd /path/to/gca_token
 python3 tools/check_gca_worker_deploy_readiness.py --run-wrangler --run-cloudflare --require-deploy-auth
 ```
 
@@ -81,7 +81,7 @@ Stop if any required check fails.
 Only after Gate 1 passes, run:
 
 ```bash
-cd /Users/abc/Desktop/gca_token/cloudflare/gca-registration-worker
+cd /path/to/gca_token/cloudflare/gca-registration-worker
 npx wrangler d1 migrations apply gca_registration --remote
 ```
 
@@ -101,7 +101,7 @@ Stop if Wrangler reports a remote D1 migration error.
 Only after Gate 2 passes, run:
 
 ```bash
-cd /Users/abc/Desktop/gca_token/cloudflare/gca-registration-worker
+cd /path/to/gca_token/cloudflare/gca-registration-worker
 npx wrangler deploy
 ```
 
@@ -112,7 +112,7 @@ Do not change public site status for a future release until the post-deploy chec
 Run from repo root:
 
 ```bash
-cd /Users/abc/Desktop/gca_token
+cd /path/to/gca_token
 python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes
 ```
 
@@ -123,7 +123,7 @@ This verifies public health/config version fields, CORS, and unauthenticated adm
 Run from repo root:
 
 ```bash
-cd /Users/abc/Desktop/gca_token
+cd /path/to/gca_token
 python3 tools/check_gca_registration_api.py --token-file cloudflare/gca-registration-worker/.env.admin.local --limit 5 --include-service-routes
 ```
 
@@ -134,7 +134,7 @@ This checks token-protected reads for the live and newly deployed operator route
 Use only after Gates 1 through 5 pass:
 
 ```bash
-cd /Users/abc/Desktop/gca_token
+cd /path/to/gca_token
 python3 tools/export_cloudflare_member_access.py \
   --token-file cloudflare/gca-registration-worker/.env.admin.local \
   --limit 100 \
@@ -153,7 +153,7 @@ Gates 1 through 5 passed for the 2026-08-10 deployment. For future deployments:
 3. Run:
 
 ```bash
-cd /Users/abc/Desktop/gca_token
+cd /path/to/gca_token
 python3 -m unittest discover tests
 python3 tools/check_public_site.py --base-url http://127.0.0.1:8799
 python3 tools/check_gca_registration_api.py --public-only --timeout 30 --include-service-routes

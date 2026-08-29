@@ -74,7 +74,7 @@ def build_checklist(
     sender_evidence = (
         "The official project-domain mailbox support@gcagochina.com is active, public DNS records pass MX/SPF/DKIM/DMARC checks, inbound and outbound tests are archived privately, and public support/BaseScan materials publish the same domain email."
         if domain_email_ready
-        else "Current public email is still GCAgochina@outlook.com. Domain email setup is published, but the latest DNS snapshot is not ready for BaseScan evidence."
+        else "Current public email is still redacted-legacy-contact@example.invalid. Domain email setup is published, but the latest DNS snapshot is not ready for BaseScan evidence."
     )
     sender_action = (
         "Submit one clean BaseScan token-profile update from support@gcagochina.com, attaching the public evidence links and retaining private mailbox screenshots for reviewer follow-up."
