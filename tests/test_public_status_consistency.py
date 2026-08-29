@@ -16,6 +16,7 @@ SERVICE_REQUEST_ENDPOINT = "/gca/account-service-requests"
 LAST_UPDATED = "2026-08-10"
 CORE_PAGE_LAST_UPDATED = "2026-08-12"
 VISITOR_IDENTITY_LAST_UPDATED = "2026-08-13"
+PRIVACY_RECRAWL_LAST_UPDATED = "2026-08-29"
 MEMBER_PAGE_LAST_UPDATED = "2026-08-11"
 CONTENT_CYCLE_LAST_UPDATED = "2026-08-11"
 
@@ -329,10 +330,6 @@ class PublicStatusConsistencyTests(unittest.TestCase):
             "",
             "zh-cn.html",
             "start.html",
-            "about.html",
-            "zh-about.html",
-            "team.html",
-            "zh-team.html",
             "whitepaper.html",
             "zh-whitepaper.html",
             "support.html",
@@ -343,6 +340,10 @@ class PublicStatusConsistencyTests(unittest.TestCase):
         ):
             url = f"https://gcagochina.com/{path}"
             self.assertEqual(sitemap.get(url), VISITOR_IDENTITY_LAST_UPDATED, url)
+
+        for path in ("about.html", "zh-about.html", "team.html", "zh-team.html"):
+            url = f"https://gcagochina.com/{path}"
+            self.assertEqual(sitemap.get(url), PRIVACY_RECRAWL_LAST_UPDATED, url)
 
         self.assertEqual(
             sitemap.get("https://gcagochina.com/members.html"),

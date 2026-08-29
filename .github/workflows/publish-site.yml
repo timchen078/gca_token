@@ -66,3 +66,22 @@ jobs:
 
           git commit -m "Publish site from ${GITHUB_SHA::7} [skip ci]"
           git push origin HEAD:gh-pages
+
+      - name: Notify IndexNow after deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          key="b72f6e37c84a4d659820a9137e4c1fd8"
+          key_url="https://gcagochina.com/${key}.txt"
+          for attempt in {1..12}; do
+            if [[ "$(curl --fail --silent --show-error --location "$key_url" || true)" == "$key" ]]; then
+              python tools/submit_indexnow.py --submit --json
+              exit 0
+            fi
+            echo "Waiting for the published IndexNow key (${attempt}/12)..."
+            sleep 10
+          done
+
+          echo "Published IndexNow key did not become available in time." >&2
+          exit 1
